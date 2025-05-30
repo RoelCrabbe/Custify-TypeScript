@@ -1,0 +1,64 @@
+{
+    "name": "@roelcrabbe/custify-typescript",
+    "version": "0.0.1",
+    "description": "Custify – A simple, modern CRM for startups built with React + Tailwind.",
+    "author": "Roel Crabbé",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RoelCrabbe/Custify-TypeScript"
+    },
+    "prisma": {
+        "schema": "repository/prisma/schema.prisma"
+    },
+    "scripts": {
+        "start": "nodemon -L app.ts --delay 3",
+        "dev": "nodemon -L app.ts --delay 3",
+        "build": "tsc --noEmit",
+        "format": "prettier --write .",
+        "format:push": "npm run format && git add . && git commit -m \"Prettier: Auto Formatting\" && git push",
+        "refresh": "npm cache verify && npm audit fix && npm outdated"
+    },
+    "nodemonConfig": {
+        "ext": "ts",
+        "delay": "3",
+        "execMap": {
+            "ts": "ts-node"
+        }
+    },
+    "dependencies": {
+        "@prisma/client": "^6.8.2",
+        "bcrypt": "^6.0.0",
+        "bcryptjs": "^3.0.2",
+        "body-parser": "^2.2.0",
+        "casual": "^1.6.2",
+        "cors": "^2.8.5",
+        "date-fns": "^4.1.0",
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0",
+        "express-jwt": "^8.5.1",
+        "helmet": "^8.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "prettier": "^3.5.3",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^5.0.2",
+        "@types/body-parser": "^1.19.5",
+        "@types/cors": "^2.8.18",
+        "@types/express": "^5.0.2",
+        "@types/jest": "^29.5.14",
+        "@types/jsonwebtoken": "^9.0.9",
+        "@types/node": "^22.15.27",
+        "@types/swagger-jsdoc": "^6.0.4",
+        "@types/swagger-ui-express": "^4.1.8",
+        "jest": "^29.7.0",
+        "nodemon": "^3.1.10",
+        "prettier-plugin-organize-imports": "^4.1.0",
+        "prisma": "^6.8.2",
+        "ts-jest": "^29.3.4",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    }
+}
