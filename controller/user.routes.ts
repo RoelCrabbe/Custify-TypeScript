@@ -1,6 +1,6 @@
+import { userService } from '@services/user.service';
+import { JwtToken } from '@types';
 import express, { NextFunction, Request, Response } from 'express';
-import { userService } from '../service/user.service';
-import { JwtToken } from '../types';
 
 const userRouter = express.Router();
 

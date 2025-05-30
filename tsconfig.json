@@ -7,8 +7,16 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "types": ["node", "@types/jest"]
+        "types": ["node", "@types/jest"],
+        "baseUrl": "./",
+        "paths": {
+            "@types": ["types/index.ts"],
+            "@models/*": ["models/*"],
+            "@utils/*": ["utils/*"],
+            "@services/*": ["services/*"],
+            "@repository/*": ["repository/*"]
+        }
     },
-    "include": ["src/**/*.ts", "app.ts"],
+    "include": ["**/*.ts", "app.ts"],
     "exclude": ["node_modules", "dist"]
 }

@@ -9,16 +9,22 @@ datasource db {
 }
 
 model User {
-    // ModelBase
+    // ModelBase - Database managed metadata
     id                  Int             @id @default(autoincrement())
     createdDate         DateTime?       @default(now())
-    updatedDate         DateTime?       @updatedAt
+    modifiedDate        DateTime?       @updatedAt
+    createdById         Int?
+    modifiedById        Int?
 
-    // Model
+    // User Model - Business fields
     userName            String          @unique
     firstName           String
     lastName            String
     email               String          @unique
     passWord            String
-    role                String
+    role                String          @default("USER")
+    isActive            Boolean         @default(true)
+    phoneNumber         String?
+
+    @@map("users")
 }

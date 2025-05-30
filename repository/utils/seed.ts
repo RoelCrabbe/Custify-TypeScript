@@ -1,7 +1,8 @@
+import { User } from '@models/user';
 import { PrismaClient } from '@prisma/client';
+import { Role } from '@types';
 import bcrypt from 'bcrypt';
 import casual from 'casual';
-import { Role } from '../../types';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,9 @@ const customUsers = [
         lastName: 'Crabbé',
         userName: 'Roel_Crabbe',
         email: 'roel.crabbe@example.com',
-        password: '@Roel_Crabbe123',
+        passWord: '@Roel_Crabbe123',
+        phoneNumber: '0612345678',
+        isActive: true,
         role: Role.ADMIN,
     },
 ];
@@ -21,47 +24,63 @@ const main = async () => {
     await prisma.user.deleteMany();
     console.log('Cleaned the database!');
 
-    // Step 1: Add custom users to the database and get their IDs
+    // Step 2: Seed custom users
     const createdCustomUsers = await Promise.all(
         customUsers.map(async (user) => {
-            const passwordHash = await bcrypt.hash(user.password, 12);
+            const hashedPassword = await bcrypt.hash(user.passWord, 12);
+            const newUser = new User({
+                ...user,
+                passWord: hashedPassword,
+            });
+
             return prisma.user.create({
                 data: {
-                    userName: user.userName,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    passWord: passwordHash,
-                    role: user.role,
+                    userName: newUser.getUserName(),
+                    firstName: newUser.getFirstName(),
+                    lastName: newUser.getLastName(),
+                    email: newUser.getEmail(),
+                    passWord: newUser.getPassWord(),
+                    role: newUser.getRole(),
+                    isActive: newUser.getIsActive(),
+                    phoneNumber: newUser.getPhoneNumber(),
                 },
             });
         }),
     );
 
-    // Step 2: Add custom users to the new random users to the database
-    const users = [
-        ...createdCustomUsers,
-        ...(await Promise.all(
-            Array.from({ length: 20 }).map(async () => {
-                const firstName = casual.first_name;
-                const lastName = casual.last_name;
-                const username = firstName + '_' + lastName;
-                const password = await bcrypt.hash('@' + username + '123', 12);
-                const email = firstName.toLowerCase() + '.' + lastName.toLowerCase() + '@gmail.com';
+    // Step 3: Seed 20 random users
+    const randomUsers = await Promise.all(
+        Array.from({ length: 10 }).map(async () => {
+            const firstName = casual.first_name;
+            const lastName = casual.last_name;
+            const userName = `${firstName}_${lastName}`;
+            const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@gmail.com`;
+            const plainPassword = `@${userName}123`;
+            const hashedPassword = await bcrypt.hash(plainPassword, 12);
 
-                return prisma.user.create({
-                    data: {
-                        userName: username,
-                        firstName: firstName,
-                        lastName: lastName,
-                        email: email,
-                        passWord: password,
-                        role: Role.USER,
-                    },
-                });
-            }),
-        )),
-    ];
+            const newUser = User.create({
+                userName,
+                firstName,
+                lastName,
+                email,
+                passWord: hashedPassword,
+                phoneNumber: casual.phone,
+            });
+
+            return prisma.user.create({
+                data: {
+                    userName: newUser.getUserName(),
+                    firstName: newUser.getFirstName(),
+                    lastName: newUser.getLastName(),
+                    email: newUser.getEmail(),
+                    passWord: newUser.getPassWord(),
+                    role: newUser.getRole(),
+                    isActive: newUser.getIsActive(),
+                    phoneNumber: newUser.getPhoneNumber(),
+                },
+            });
+        }),
+    );
 
     console.log('Database seeded successfully!');
 };

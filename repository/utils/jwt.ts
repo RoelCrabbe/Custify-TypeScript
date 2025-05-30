@@ -1,6 +1,6 @@
+import { JwtToken, Role } from '@types';
+import { processEnv } from '@utils/processEnv';
 import jwt from 'jsonwebtoken';
-import { JwtToken, Role } from '../../types';
-import { processEnv } from '../../utils/processEnv';
 
 const generateJwtToken = ({ userId, role }: JwtToken) => {
     const options = {

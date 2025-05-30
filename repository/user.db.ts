@@ -1,4 +1,4 @@
-import { User } from '../model/user';
+import { User } from '@models/user';
 import database from './utils/database';
 
 const getAllUsers = async (): Promise<User[]> => {

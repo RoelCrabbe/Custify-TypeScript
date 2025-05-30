@@ -1,8 +1,8 @@
-import bcrypt from 'bcrypt';
-import { User } from '../model/user';
-import { userDb } from '../repository/user.db';
-import { generateJwtToken } from '../repository/utils/jwt';
-import { AuthenticationResponse, JwtToken, Role } from '../types';
+import { User } from '@models/user';
+import { userDb } from '@repository/user.db';
+import { generateJwtToken } from '@repository/utils/jwt';
+import { AuthenticationResponse, JwtToken } from '@types';
+import bcrypt from 'bcryptjs';
 
 const getUserByUserName = async ({ userName }: { userName: string }): Promise<User> => {
     const user = await userDb.getUserByUserName({ userName });
@@ -28,31 +28,37 @@ const loginUser = async (userInput: any): Promise<AuthenticationResponse> => {
     if (!isValidPassword) throw new Error('Invalid credentials.');
 
     return {
-        token: generateJwtToken({ userId: user.getId()!, role: user.getRole() }),
+        token: generateJwtToken({
+            userId: user.getId()!,
+            role: user.getRole(),
+        }),
     };
 };
 
 const registerUser = async (userInput: any): Promise<AuthenticationResponse> => {
-    const { userName, passWord, firstName, lastName, email } = userInput;
+    const { userName, passWord, firstName, lastName, email, phoneNumber } = userInput;
 
     const existingUser = await userDb.getUserByUserName({ userName });
     if (existingUser) throw new Error(`User with username <${userName}> already exists.`);
 
     const hashedPassword = await bcrypt.hash(passWord, 12);
 
-    const newUser = new User({
+    const newUser = User.create({
         userName,
         firstName,
         lastName,
         email,
         passWord: hashedPassword,
-        role: Role.USER,
+        phoneNumber,
     });
 
     const createdUser = await userDb.createUser(newUser);
 
     return {
-        token: generateJwtToken({ userId: createdUser.getId()!, role: createdUser.getRole() }),
+        token: generateJwtToken({
+            userId: createdUser.getId()!,
+            role: createdUser.getRole(),
+        }),
     };
 };
 
