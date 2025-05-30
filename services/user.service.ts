@@ -36,10 +36,22 @@ const loginUser = async (userInput: any): Promise<AuthenticationResponse> => {
 };
 
 const registerUser = async (userInput: any): Promise<AuthenticationResponse> => {
-    const { userName, passWord, firstName, lastName, email, phoneNumber } = userInput;
+    const { firstName, lastName, email, phoneNumber, userName, passWord } = userInput;
 
-    const existingUser = await userDb.getUserByUserName({ userName });
-    if (existingUser) throw new Error(`User with username <${userName}> already exists.`);
+    const existingUser = await userDb.getUniqueUser({
+        email,
+        userName,
+    });
+
+    if (existingUser) {
+        if (existingUser.getEmail() === email) {
+            throw new Error(`User with email <${email}> already exists.`);
+        }
+
+        if (existingUser.getUserName() === userName) {
+            throw new Error(`User with username <${userName}> already exists.`);
+        }
+    }
 
     const hashedPassword = await bcrypt.hash(passWord, 12);
 
