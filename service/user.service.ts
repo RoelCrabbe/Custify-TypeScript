@@ -58,7 +58,6 @@ const registerUser = async (userInput: any): Promise<AuthenticationResponse> => 
 
 const getCurrentUser = async ({ auth }: { auth: JwtToken }): Promise<User> => {
     const { role, userId } = auth;
-    console.log(role, userId);
     return await getUserById({ userId });
 };
 

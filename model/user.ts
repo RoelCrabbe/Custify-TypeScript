@@ -87,6 +87,19 @@ export class User extends ModelBase {
         );
     }
 
+    toJSON() {
+        return {
+            id: this.id,
+            userName: this.userName,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            role: this.role,
+            createdDate: this.createdDate,
+            updatedDate: this.updatedDate,
+        };
+    }
+
     static from({
         id,
         userName,
