@@ -1,13 +1,16 @@
-const getApiPort = (): number => {
-    const value = process.env.API_PORT;
-    const port = value ? parseInt(value, 10) : 3000;
-    return isNaN(port) ? 3000 : port;
+const getApiUrl = (): string => {
+    const url = process.env.NEXT_PUBLIC_API_URL;
+    return url?.trim() || 'http://localhost:3000';
 };
 
-const getFrontEndPort = (): number => {
-    const value = process.env.FRONT_END_PORT;
-    const port = value ? parseInt(value, 10) : 8080;
-    return isNaN(port) ? 8080 : port;
+const getWebSocketUrl = (): string => {
+    const url = process.env.NEXT_WEBSOCKET_API_URL;
+    return url?.trim() || 'ws://localhost:8765';
+};
+
+const getBaseUrl = (): string => {
+    const url = process.env.NEXT_BASE_API_URL;
+    return url?.trim() || 'http://localhost:8080';
 };
 
 const getDatabaseUrl = (): string => {
@@ -27,8 +30,9 @@ const getJwtExpiresHours = (): number => {
 };
 
 export const processEnv = {
-    getApiPort,
-    getFrontEndPort,
+    getApiUrl,
+    getWebSocketUrl,
+    getBaseUrl,
     getDatabaseUrl,
     getJwtSecret,
     getJwtExpiresHours,

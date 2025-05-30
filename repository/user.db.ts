@@ -4,7 +4,7 @@ import database from './utils/database';
 const getAllUsers = async (): Promise<User[]> => {
     try {
         const usersPrisma = await database.user.findMany({ orderBy: { id: 'asc' } });
-        return usersPrisma.map((user) => User.from(user));
+        return usersPrisma.map((user: any) => User.from(user));
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
@@ -45,7 +45,7 @@ const getUsersByIds = async ({ userIds }: { userIds: number[] }): Promise<User[]
             },
         });
 
-        return users.map((user) => User.from(user));
+        return users.map((user: any) => User.from(user));
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');

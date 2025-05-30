@@ -21,12 +21,12 @@ app.use(
 );
 
 dotenv.config();
-const publicApiPort = processEnv.getApiPort();
-const publicFrontEndPort = processEnv.getFrontEndPort();
+const publicApiPort = processEnv.getApiUrl();
+const publicFrontEndPort = processEnv.getBaseUrl();
 
 app.use(
     cors({
-        origin: `http://localhost:${publicFrontEndPort}`,
+        origin: publicFrontEndPort,
     }),
     bodyParser.json(),
 );
@@ -70,7 +70,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     }
 });
 
-app.listen(publicApiPort, () => {
+app.listen(3000, () => {
     console.log(`Custify-TypeScript Running on port ${publicApiPort}.`);
-    console.log(`Swagger running on http://localhost:${publicApiPort}/api-docs.`);
+    console.log(`Swagger running on ${publicApiPort}/api-docs.`);
 });
