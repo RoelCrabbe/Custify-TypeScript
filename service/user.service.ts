@@ -12,6 +12,18 @@ const getUserByUserName = async ({ userName }: { userName: string }): Promise<Us
     return user;
 };
 
+const loginUser = async (userInput: any): Promise<AuthenticationResponse> => {
+    const { userName, passWord } = userInput;
+    const user = await getUserByUserName({ userName });
+
+    const isValidPassword = await bcrypt.compare(passWord, user.getPassWord());
+    if (!isValidPassword) throw new Error('Invalid credentials.');
+
+    return {
+        token: generateJwtToken({ userId: user.getId()!, role: user.getRole() }),
+    };
+};
+
 const registerUser = async (userInput: any): Promise<AuthenticationResponse> => {
     const { userName, passWord, firstName, lastName, email } = userInput;
 
@@ -32,27 +44,7 @@ const registerUser = async (userInput: any): Promise<AuthenticationResponse> => 
     const createdUser = await userDb.createUser(newUser);
 
     return {
-        userId: createdUser.getId(),
         token: generateJwtToken({ userId: createdUser.getId()!, role: createdUser.getRole() }),
-        userName: createdUser.getUserName(),
-        fullName: `${createdUser.getFirstName()} ${createdUser.getLastName()}`,
-        role: createdUser.getRole(),
-    };
-};
-
-const loginUser = async (userInput: any): Promise<AuthenticationResponse> => {
-    const { userName, passWord } = userInput;
-    const user = await getUserByUserName({ userName });
-
-    const isValidPassword = await bcrypt.compare(passWord, user.getPassWord());
-    if (!isValidPassword) throw new Error('Invalid credentials.');
-
-    return {
-        userId: user.getId(),
-        token: generateJwtToken({ userId: user.getId()!, role: user.getRole() }),
-        userName: user.getUserName(),
-        fullName: `${user.getFirstName()} ${user.getLastName()}`,
-        role: user.getRole(),
     };
 };
 
