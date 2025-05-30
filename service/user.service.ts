@@ -2,12 +2,20 @@ import bcrypt from 'bcrypt';
 import { User } from '../model/user';
 import { userDb } from '../repository/user.db';
 import { generateJwtToken } from '../repository/utils/jwt';
-import { AuthenticationResponse, Role } from '../types';
+import { AuthenticationResponse, JwtToken, Role } from '../types';
 
 const getUserByUserName = async ({ userName }: { userName: string }): Promise<User> => {
     const user = await userDb.getUserByUserName({ userName });
     if (!user) {
         throw new Error(`User with username <${userName}> does not exist.`);
+    }
+    return user;
+};
+
+const getUserById = async ({ userId }: { userId: number }): Promise<User> => {
+    const user = await userDb.getUserById({ id: userId });
+    if (!user) {
+        throw new Error(`User with id <${userId}> does not exist.`);
     }
     return user;
 };
@@ -48,8 +56,16 @@ const registerUser = async (userInput: any): Promise<AuthenticationResponse> => 
     };
 };
 
+const getCurrentUser = async ({ auth }: { auth: JwtToken }): Promise<User> => {
+    const { role, userId } = auth;
+    console.log(role, userId);
+    return await getUserById({ userId });
+};
+
 export const userService = {
     getUserByUserName,
+    getUserById,
     registerUser,
     loginUser,
+    getCurrentUser,
 };

@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { userService } from '../service/user.service';
+import { JwtToken } from '../types';
 
 const userRouter = express.Router();
 
@@ -16,6 +17,18 @@ userRouter.post('/register', async (req: Request, res: Response, next: NextFunct
     try {
         const response = await userService.registerUser(<any>req.body);
         res.status(201).json({ message: 'Register Successfully', ...response });
+    } catch (error) {
+        next(error);
+    }
+});
+
+userRouter.get('/current', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const reqHeader = req as Request & { auth: JwtToken };
+        const response = await userService.getCurrentUser({
+            auth: reqHeader.auth,
+        });
+        res.status(200).json(response);
     } catch (error) {
         next(error);
     }
