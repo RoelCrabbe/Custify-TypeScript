@@ -13,9 +13,9 @@
     },
     "scripts": {
         "start": "nodemon -L app.ts --delay 3",
-        "dev": "nodemon -L app.ts --delay 3",
+        "dev": "npx prisma generate && nodemon -L app.ts --delay 3",
         "build": "tsc --noEmit",
-        "seed": "ts-node repository/utils/seed.ts",
+        "seed": "ts-node -r tsconfig-paths/register repository/utils/seed.ts",
         "migrate:dev": "npx prisma migrate dev && npx prisma generate && npm run seed",
         "format": "prettier --write .",
         "format:push": "npm run format && git add . && git commit -m \"Prettier: Auto Formatting\" && git push",

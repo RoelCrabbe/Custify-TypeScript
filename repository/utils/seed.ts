@@ -1,7 +1,7 @@
 import { User } from '@models/user';
 import { PrismaClient } from '@prisma/client';
 import { Role } from '@types';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import casual from 'casual';
 
 const prisma = new PrismaClient();
