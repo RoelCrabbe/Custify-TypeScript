@@ -79,10 +79,15 @@ const getCurrentUser = async ({ auth }: { auth: JwtToken }): Promise<User> => {
     return await getUserById({ userId });
 };
 
+const getAllUsers = async (): Promise<User[]> => {
+    return await userDb.getAllUsers();
+};
+
 export const userService = {
     getUserByUserName,
     getUserById,
     registerUser,
     loginUser,
     getCurrentUser,
+    getAllUsers,
 };

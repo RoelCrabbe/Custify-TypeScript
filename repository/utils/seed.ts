@@ -67,6 +67,12 @@ const main = async () => {
                 phoneNumber: casual.phone,
             });
 
+            if (Math.random() < 0.2) {
+                newUser.deactivate();
+            } else {
+                newUser.activate();
+            }
+
             return prisma.user.create({
                 data: {
                     userName: newUser.getUserName(),
