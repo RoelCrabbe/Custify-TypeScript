@@ -34,7 +34,6 @@ This backend works seamlessly with the [Custify React Frontend](https://github.c
 - **⚡ Real-time Support** - WebSocket integration for live updates
 - **🛡️ Security First** - Industry-standard security practices and validation
 - **📈 Scalable Architecture** - Built to handle growing business needs
-- **🔄 CRUD Operations** - Complete customer, lead, and contact management
 
 ## 🛠️ Tech Stack
 
@@ -155,6 +154,24 @@ const customersResponse = await fetch('/api/customers', {
 });
 ```
 
+## 🤝 Contributing
+
+We welcome contributions to the Custify Backend! Here's how you can help:
+
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/AmazingFeature`)
+3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
+4. **Push to the branch** (`git push origin feature/AmazingFeature`)
+5. **Open a Pull Request**
+
+### Development Guidelines
+
+- Follow TypeScript best practices
+- Maintain API documentation
+- Write comprehensive tests
+- Use conventional commit messages
+- Ensure proper error handling
+
 ## 📚 API Documentation
 
 For detailed API documentation, visit our [API Docs](https://github.com/RoelCrabbe/Custify-TypeScript/wiki/API-Documentation) or run the development server and navigate to `/api/docs`.
@@ -180,8 +197,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Authentication powered by [JWT](https://jwt.io/)
 - TypeScript for type safety
 
+## 📊 Project Status
+
+**🚧 In Progress** - This project is actively being developed. Features and documentation may change frequently.
+
+---
+
 <div align="center">
 
 **Star ⭐ this repository if you found it helpful!**
+
+[Report Bug](https://github.com/RoelCrabbe/Custify-TypeScript/issues) · [Request Feature](https://github.com/RoelCrabbe/Custify-TypeScript/issues) · [Documentation](https://github.com/RoelCrabbe/Custify-TypeScript/wiki)
 
 </div>
