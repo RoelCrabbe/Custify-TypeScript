@@ -1,3 +1,4 @@
+import { NotFoundError } from '@exceptions/*';
 import { User } from '@models/user';
 import { userDb } from '@repository/user.db';
 import { generateJwtToken } from '@repository/utils/jwt';
@@ -7,7 +8,7 @@ import bcrypt from 'bcryptjs';
 const getUserByUserName = async ({ userName }: { userName: string }): Promise<User> => {
     const user = await userDb.getUserByUserName({ userName });
     if (!user) {
-        throw new Error(`User with username <${userName}> does not exist.`);
+        throw new NotFoundError(`User with username <${userName}> does not exist.`);
     }
     return user;
 };

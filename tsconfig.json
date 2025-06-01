@@ -14,7 +14,8 @@
             "@models/*": ["models/*"],
             "@utils/*": ["utils/*"],
             "@services/*": ["services/*"],
-            "@repository/*": ["repository/*"]
+            "@repository/*": ["repository/*"],
+            "@exceptions/*": ["exceptions/index.ts"]
         }
     },
     "include": ["**/*.ts", "app.ts"],
