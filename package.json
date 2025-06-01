@@ -12,25 +12,15 @@
         "schema": "src/prisma/schema.prisma"
     },
     "scripts": {
+        "dev": "npx prisma generate && tsup app.ts --watch --onSuccess \"node dist/app.js\"",
+        "build": "npx prisma generate && tsup app.ts --format cjs --dts",
         "start": "node dist/app.js",
-        "dev": "npx prisma generate && nodemon app.ts",
-        "build": "tsc",
+        "type-check": "tsc --noEmit",
         "seed": "ts-node -r tsconfig-paths/register src/config/seed.ts",
         "migrate:dev": "npx prisma migrate dev && npx prisma generate && npm run seed",
         "format": "prettier --write .",
         "format:push": "npm run format && git add . && git commit -m \"Prettier: Auto Formatting\" && git push",
         "refresh": "npm cache verify && npm audit fix && npm outdated"
-    },
-    "nodemonConfig": {
-        "watch": [
-            "src",
-            "app.ts"
-        ],
-        "ext": "ts",
-        "delay": "3",
-        "execMap": {
-            "ts": "ts-node -r tsconfig-paths/register"
-        }
     },
     "dependencies": {
         "@prisma/client": "^6.8.2",
@@ -65,6 +55,7 @@
         "ts-jest": "^29.3.4",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
+        "tsup": "^8.5.0",
         "typescript": "^5.8.3"
     }
 }
