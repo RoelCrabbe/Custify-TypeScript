@@ -1,13 +1,15 @@
+import { authRouter } from '@auth/index';
+import userRouter from '@user/controller';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 import { expressjwt } from 'express-jwt';
 import helmet from 'helmet';
+import { processEnv } from 'shared';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { userRouter } from './controller/user.routes';
-import { processEnv } from './utils/processEnv';
+dotenv.config();
 
 const app = express();
 app.use(helmet());
@@ -20,7 +22,6 @@ app.use(
     }),
 );
 
-dotenv.config();
 const publicApiPort = processEnv.getApiUrl();
 const publicFrontEndPort = processEnv.getBaseUrl();
 
@@ -31,12 +32,14 @@ app.use(
     bodyParser.json(),
 );
 
+app.use('/auth', authRouter);
+
 app.use(
     expressjwt({
         secret: processEnv.getJwtSecret(),
         algorithms: ['HS256'],
     }).unless({
-        path: ['/api-docs', /^\/api-docs\/.*/, '/users/login', '/users/register'],
+        path: ['/api-docs', /^\/api-docs\/.*/],
     }),
 );
 

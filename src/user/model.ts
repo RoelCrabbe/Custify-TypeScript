@@ -1,4 +1,4 @@
-import { UserBase } from '@models/base/userBase';
+import { UserBase } from '@base/userBase';
 import { User as PrismaUser } from '@prisma/client';
 import { Role } from '@types';
 

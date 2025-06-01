@@ -1,4 +1,4 @@
-import { EntityBase } from '@models/base/entityBase';
+import { EntityBase } from '@base/entityBase';
 import { Role } from '@types';
 
 export abstract class UserBase extends EntityBase {

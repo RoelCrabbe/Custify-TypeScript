@@ -1,7 +1,7 @@
-import { User } from '@models/user';
-import database from './utils/database';
+import database from '@config/prismaClient';
+import { User } from '@user/model';
 
-const getAllUsers = async (): Promise<User[]> => {
+export const getAllUsers = async (): Promise<User[]> => {
     try {
         const usersPrisma = await database.user.findMany({ orderBy: { id: 'asc' } });
         return usersPrisma.map((user: any) => User.from(user));
@@ -11,7 +11,11 @@ const getAllUsers = async (): Promise<User[]> => {
     }
 };
 
-const getUserByUserName = async ({ userName }: { userName: string }): Promise<User | null> => {
+export const getUserByUserName = async ({
+    userName,
+}: {
+    userName: string;
+}): Promise<User | null> => {
     try {
         const userPrisma = await database.user.findFirst({
             where: { userName },
@@ -24,7 +28,7 @@ const getUserByUserName = async ({ userName }: { userName: string }): Promise<Us
     }
 };
 
-const getUserById = async ({ id }: { id: number }): Promise<User | null> => {
+export const getUserById = async ({ id }: { id: number }): Promise<User | null> => {
     try {
         const userPrisma = await database.user.findFirst({
             where: { id },
@@ -37,7 +41,7 @@ const getUserById = async ({ id }: { id: number }): Promise<User | null> => {
     }
 };
 
-const createUser = async (user: User): Promise<User> => {
+export const createUser = async (user: User): Promise<User> => {
     try {
         const userPrisma = await database.user.create({
             data: {
@@ -59,7 +63,7 @@ const createUser = async (user: User): Promise<User> => {
     }
 };
 
-const getUniqueUser = async ({
+export const getUniqueUser = async ({
     email,
     userName,
 }: {
@@ -78,12 +82,4 @@ const getUniqueUser = async ({
         console.error(error);
         throw new Error('Database error. See server log for details.');
     }
-};
-
-export const userDb = {
-    getAllUsers,
-    getUserByUserName,
-    getUserById,
-    createUser,
-    getUniqueUser,
 };

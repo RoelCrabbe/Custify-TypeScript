@@ -9,19 +9,22 @@
         "url": "https://github.com/RoelCrabbe/Custify-TypeScript"
     },
     "prisma": {
-        "schema": "repository/prisma/schema.prisma"
+        "schema": "src/prisma/schema.prisma"
     },
     "scripts": {
-        "start": "nodemon -L app.ts --delay 3",
-        "dev": "npx prisma generate && nodemon -L app.ts --delay 3",
-        "build": "tsc --noEmit",
-        "seed": "ts-node -r tsconfig-paths/register repository/utils/seed.ts",
+        "start": "node dist/app.js",
+        "dev": "npx prisma generate && nodemon src/app.ts",
+        "build": "tsc",
+        "seed": "ts-node -r tsconfig-paths/register src/prisma/seed.ts",
         "migrate:dev": "npx prisma migrate dev && npx prisma generate && npm run seed",
         "format": "prettier --write .",
         "format:push": "npm run format && git add . && git commit -m \"Prettier: Auto Formatting\" && git push",
         "refresh": "npm cache verify && npm audit fix && npm outdated"
     },
     "nodemonConfig": {
+        "watch": [
+            "src"
+        ],
         "ext": "ts",
         "delay": "3",
         "execMap": {

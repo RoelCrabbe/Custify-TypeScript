@@ -1,10 +1,8 @@
-import { User } from '@models/user';
-import { PrismaClient } from '@prisma/client';
+import database from '@config/prismaClient';
 import { Role } from '@types';
+import { User } from '@user/model';
 import bcrypt from 'bcryptjs';
 import casual from 'casual';
-
-const prisma = new PrismaClient();
 
 const customUsers = [
     {
@@ -21,7 +19,7 @@ const customUsers = [
 
 const main = async () => {
     // Step 1: Clean the database
-    await prisma.user.deleteMany();
+    await database.user.deleteMany();
     console.log('Cleaned the database!');
 
     // Step 2: Seed custom users
@@ -33,7 +31,7 @@ const main = async () => {
                 passWord: hashedPassword,
             });
 
-            return prisma.user.create({
+            return database.user.create({
                 data: {
                     userName: newUser.getUserName(),
                     firstName: newUser.getFirstName(),
@@ -73,7 +71,7 @@ const main = async () => {
                 newUser.activate();
             }
 
-            return prisma.user.create({
+            return database.user.create({
                 data: {
                     userName: newUser.getUserName(),
                     firstName: newUser.getFirstName(),
@@ -94,10 +92,10 @@ const main = async () => {
 (async () => {
     try {
         await main();
-        await prisma.$disconnect();
+        await database.$disconnect();
     } catch (error) {
         console.error(error);
-        await prisma.$disconnect();
+        await database.$disconnect();
         process.exit(1);
     }
 })();

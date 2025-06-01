@@ -8,16 +8,18 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "types": ["node", "@types/jest"],
-        "baseUrl": "./",
+        "baseUrl": "./src",
         "paths": {
-            "@types": ["types/index.ts"],
-            "@models/*": ["models/*"],
-            "@utils/*": ["utils/*"],
-            "@services/*": ["services/*"],
-            "@repository/*": ["repository/*"],
-            "@exceptions/*": ["exceptions/index.ts"]
+            "@types": ["shared/types/index.ts"],
+            "@types/*": ["shared/types/*"],
+            "@exceptions/*": ["shared/exceptions/*"],
+            "@utils/*": ["shared/utils/*"],
+            "@base/*": ["base/*"],
+            "@user/*": ["user/*"],
+            "@auth/*": ["auth/*"],
+            "@config/*": ["config/*"]
         }
     },
-    "include": ["**/*.ts", "app.ts"],
+    "include": ["src/**/*.ts"],
     "exclude": ["node_modules", "dist"]
 }
