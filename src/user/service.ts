@@ -23,7 +23,20 @@ export const getUserByUserName = async ({ userName }: { userName: string }): Pro
 export const getUserById = async ({ userId }: { userId: number }): Promise<User> => {
     const user = await userRepository.getUserById({ id: userId });
     if (!user) {
-        throw new Error(`User with id <${userId}> does not exist.`);
+        throw new NotFoundError(`User with id <${userId}> does not exist.`);
     }
     return user;
+};
+
+export const assertUserNotExists = async ({
+    email,
+    userName,
+}: {
+    email: string;
+    userName: string;
+}): Promise<void> => {
+    const user_name = await userRepository.getUserByUserName({ userName });
+    if (user_name) throw new Error(`User with username <${userName}> already exists.`);
+    const user_email = await userRepository.getUserByEmail({ email });
+    if (user_email) throw new Error(`User with email <${email}> already exists.`);
 };

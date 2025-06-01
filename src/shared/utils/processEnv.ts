@@ -1,15 +1,11 @@
-export const getApiUrl = (): string => {
-    const url = process.env.NEXT_PUBLIC_API_URL;
-    return url?.trim() || 'http://localhost:3000';
-};
-
-export const getWebSocketUrl = (): string => {
-    const url = process.env.NEXT_WEBSOCKET_API_URL;
-    return url?.trim() || 'ws://localhost:8765';
+export const getApiPort = (): number => {
+    const value = process.env.NEXT_PUBLIC_API_PORT;
+    const port = value ? parseInt(value, 10) : 3000;
+    return isNaN(port) ? 3000 : port;
 };
 
 export const getBaseUrl = (): string => {
-    const url = process.env.NEXT_BASE_API_URL;
+    const url = process.env.NEXT_PUBLIC_SITE_URL;
     return url?.trim() || 'http://localhost:8080';
 };
 

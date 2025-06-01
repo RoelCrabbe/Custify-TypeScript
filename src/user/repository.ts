@@ -28,6 +28,19 @@ export const getUserByUserName = async ({
     }
 };
 
+export const getUserByEmail = async ({ email }: { email: string }): Promise<User | null> => {
+    try {
+        const userPrisma = await database.user.findFirst({
+            where: { email },
+        });
+
+        return userPrisma ? User.from(userPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export const getUserById = async ({ id }: { id: number }): Promise<User | null> => {
     try {
         const userPrisma = await database.user.findFirst({
@@ -57,27 +70,6 @@ export const createUser = async (user: User): Promise<User> => {
         });
 
         return User.from(userPrisma);
-    } catch (error) {
-        console.error(error);
-        throw new Error('Database error. See server log for details.');
-    }
-};
-
-export const getUniqueUser = async ({
-    email,
-    userName,
-}: {
-    email: string;
-    userName: string;
-}): Promise<User | null> => {
-    try {
-        const userPrisma = await database.user.findFirst({
-            where: {
-                OR: [{ email }, { userName }],
-            },
-        });
-
-        return userPrisma ? User.from(userPrisma) : null;
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
