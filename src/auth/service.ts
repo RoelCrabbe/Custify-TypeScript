@@ -1,10 +1,14 @@
-import { AuthenticationResponse } from '@types';
+import { AuthenticationResponse, UserInput } from '@types';
 import { userRepository, userService } from '@user/index';
 import { User } from '@user/model';
 import { generateJwtToken } from '@utils/jwt';
 import bcrypt from 'bcryptjs';
 
-export const loginUser = async (userInput: any): Promise<AuthenticationResponse> => {
+export const loginUser = async ({
+    userInput,
+}: {
+    userInput: UserInput;
+}): Promise<AuthenticationResponse> => {
     const { userName, passWord } = userInput;
     const fUser = await userService.getUserByUserName({ userName });
 
@@ -19,7 +23,11 @@ export const loginUser = async (userInput: any): Promise<AuthenticationResponse>
     };
 };
 
-export const registerUser = async (userInput: any): Promise<AuthenticationResponse> => {
+export const registerUser = async ({
+    userInput,
+}: {
+    userInput: UserInput;
+}): Promise<AuthenticationResponse> => {
     const { firstName, lastName, email, phoneNumber, userName, passWord } = userInput;
 
     await userService.assertUserNotExists({ email, userName });

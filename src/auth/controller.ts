@@ -1,11 +1,13 @@
 import { authService } from '@auth/index';
+import { UserInput } from '@types';
 import express, { NextFunction, Request, Response } from 'express';
 
 const authRouter = express.Router();
 
 authRouter.post('/login', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const response = await authService.loginUser(<any>req.body);
+        const user = <UserInput>req.body;
+        const response = await authService.loginUser({ userInput: user });
         res.status(200).json({ message: 'Login Successfully', ...response });
     } catch (error) {
         next(error);
@@ -14,7 +16,8 @@ authRouter.post('/login', async (req: Request, res: Response, next: NextFunction
 
 authRouter.post('/register', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const response = await authService.registerUser(<any>req.body);
+        const user = <UserInput>req.body;
+        const response = await authService.registerUser({ userInput: user });
         res.status(201).json({ message: 'Register Successfully', ...response });
     } catch (error) {
         next(error);

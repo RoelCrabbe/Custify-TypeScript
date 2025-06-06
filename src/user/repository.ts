@@ -13,12 +13,17 @@ export const getAllUsers = async (): Promise<User[]> => {
 
 export const getUserByUserName = async ({
     userName,
+    excludeUserId,
 }: {
     userName: string;
+    excludeUserId?: number;
 }): Promise<User | null> => {
     try {
         const userPrisma = await database.user.findFirst({
-            where: { userName },
+            where: {
+                userName,
+                ...(excludeUserId && { id: { not: excludeUserId } }),
+            },
         });
 
         return userPrisma ? User.from(userPrisma) : null;
@@ -28,10 +33,19 @@ export const getUserByUserName = async ({
     }
 };
 
-export const getUserByEmail = async ({ email }: { email: string }): Promise<User | null> => {
+export const getUserByEmail = async ({
+    email,
+    excludeUserId,
+}: {
+    email: string;
+    excludeUserId?: number;
+}): Promise<User | null> => {
     try {
         const userPrisma = await database.user.findFirst({
-            where: { email },
+            where: {
+                email,
+                ...(excludeUserId && { id: { not: excludeUserId } }),
+            },
         });
 
         return userPrisma ? User.from(userPrisma) : null;
@@ -57,6 +71,29 @@ export const getUserById = async ({ id }: { id: number }): Promise<User | null> 
 export const createUser = async (user: User): Promise<User> => {
     try {
         const userPrisma = await database.user.create({
+            data: {
+                userName: user.getUserName(),
+                firstName: user.getFirstName(),
+                lastName: user.getLastName(),
+                email: user.getEmail(),
+                role: user.getRole(),
+                passWord: user.getPassWord(),
+                isActive: user.getIsActive(),
+                phoneNumber: user.getPhoneNumber(),
+            },
+        });
+
+        return User.from(userPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+export const updateUser = async (user: User): Promise<User> => {
+    try {
+        const userPrisma = await database.user.update({
+            where: { id: user.getId() },
             data: {
                 userName: user.getUserName(),
                 firstName: user.getFirstName(),

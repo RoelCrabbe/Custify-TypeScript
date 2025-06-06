@@ -126,6 +126,35 @@ export class User extends UserBase {
         });
     }
 
+    static update(
+        existingUser: User,
+        updateData: {
+            userName?: string;
+            firstName?: string;
+            lastName?: string;
+            email?: string;
+            passWord?: string;
+            phoneNumber?: string;
+            role?: Role;
+            isActive?: boolean;
+            modifiedById?: number;
+        },
+    ): User {
+        return new User({
+            id: existingUser.getId(),
+            userName: updateData.userName ?? existingUser.getUserName(),
+            firstName: updateData.firstName ?? existingUser.getFirstName(),
+            lastName: updateData.lastName ?? existingUser.getLastName(),
+            email: updateData.email ?? existingUser.getEmail(),
+            passWord: updateData.passWord ?? existingUser.getPassWord(),
+            role: updateData.role ?? existingUser.getRole(),
+            isActive: updateData.isActive ?? existingUser.getIsActive(),
+            phoneNumber: updateData.phoneNumber ?? existingUser.getPhoneNumber(),
+            createdById: existingUser.getCreatedById(),
+            modifiedById: updateData.modifiedById ?? existingUser.getModifiedById(),
+        });
+    }
+
     activate(): void {
         this.isActive = true;
     }
