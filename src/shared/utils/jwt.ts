@@ -7,6 +7,7 @@ export const generateJwtToken = ({ userId, role }: JwtToken) => {
         expiresIn: getJwtExpiresHours() * 60 * 60,
         issuer: 'Custify-TypeScript',
     };
+
     try {
         return jwt.sign({ userId, role }, getJwtSecret(), options);
     } catch (error) {

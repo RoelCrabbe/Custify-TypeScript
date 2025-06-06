@@ -39,7 +39,7 @@ export abstract class UserBase extends EntityBase {
         this.lastName = userData.lastName;
         this.email = userData.email;
         this.passWord = userData.passWord;
-        this.role = userData.role ?? Role.USER;
+        this.role = userData.role ?? Role.Guest;
         this.isActive = userData.isActive ?? true;
         this.phoneNumber = userData.phoneNumber;
     }
@@ -62,6 +62,10 @@ export abstract class UserBase extends EntityBase {
 
     getEmail(): string {
         return this.email;
+    }
+
+    setRole(role: Role): void {
+        this.role = role;
     }
 
     getRole(): Role {

@@ -1,6 +1,6 @@
 import { UserBase } from '@base/userBase';
 import { User as PrismaUser } from '@prisma/client';
-import { Role } from '@types';
+import { Role, isValidRole } from '@types';
 
 export class User extends UserBase {
     constructor(user: {
@@ -48,8 +48,8 @@ export class User extends UserBase {
         if (!user.passWord?.trim()) {
             throw new Error('User validation: Password is required');
         }
-        if (user.role && !Object.values(Role).includes(user.role)) {
-            throw new Error('User validation: Invalid role');
+        if (!isValidRole(user.role)) {
+            throw new Error('User validation: Role is invalid or missing.');
         }
     }
 
@@ -121,7 +121,7 @@ export class User extends UserBase {
     }): User {
         return new User({
             ...userData,
-            role: Role.USER,
+            role: Role.Guest,
             isActive: true,
         });
     }

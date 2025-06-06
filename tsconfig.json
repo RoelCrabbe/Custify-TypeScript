@@ -14,7 +14,7 @@
             "@config": ["config/index.ts"],
             "@exceptions/*": ["shared/exceptions/*"],
             "@exceptions": ["shared/exceptions/index.ts"],
-            "@types": ["shared/types/index.ts"],
+            "@types": ["shared/types"],
             "@types/*": ["shared/types/*"],
             "@user/*": ["user/*"],
             "@user": ["user/index.ts"],

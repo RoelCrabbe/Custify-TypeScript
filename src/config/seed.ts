@@ -13,7 +13,7 @@ const customUsers = [
         passWord: '@Roel_Crabbe123',
         phoneNumber: '0612345678',
         isActive: true,
-        role: Role.ADMIN,
+        role: Role.Admin,
     },
 ];
 
@@ -65,7 +65,10 @@ const main = async () => {
                 phoneNumber: casual.phone,
             });
 
-            if (Math.random() < 0.2) {
+            const chance = Math.random() < 0.2;
+            newUser.setRole(chance ? Role.HumanResources : Role.Guest);
+
+            if (chance) {
                 newUser.deactivate();
             } else {
                 newUser.activate();
