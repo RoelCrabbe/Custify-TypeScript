@@ -57,7 +57,7 @@ export const updateUser = async ({
 }): Promise<User> => {
     if (!userInput.id) throw new Error('User id is required');
 
-    const { id, firstName, lastName, email, phoneNumber, userName, passWord, role, isActive } =
+    const { id, firstName, lastName, email, phoneNumber, userName, passWord, role, status } =
         userInput;
 
     const existingUser = await userService.getUserById({ userId: id });
@@ -80,9 +80,9 @@ export const updateUser = async ({
         email,
         phoneNumber,
         userName,
-        passWord: hashedPassword,
+        passWord: hashedPassword || existingUser.getPassWord(),
         role,
-        isActive,
+        status,
         modifiedById: currentUser.getId(),
     });
 

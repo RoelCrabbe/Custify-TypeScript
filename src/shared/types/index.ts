@@ -1,5 +1,5 @@
-import { Role } from '@types';
-export * from './role';
+import { Role } from '@user/role';
+import { Status } from '@user/status';
 
 export type AuthenticationResponse = {
     token?: string;
@@ -18,6 +18,6 @@ export type UserInput = {
     email: string;
     passWord: string;
     role: Role;
-    isActive: boolean;
+    status: Status;
     phoneNumber?: string;
 };

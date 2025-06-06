@@ -1,6 +1,7 @@
 import database from '@config/prismaClient';
-import { Role } from '@types';
 import { User } from '@user/model';
+import { Role } from '@user/role';
+import { Status } from '@user/status';
 import bcrypt from 'bcryptjs';
 import casual from 'casual';
 
@@ -12,7 +13,7 @@ const customUsers = [
         email: 'roel.crabbe@example.com',
         passWord: '@Roel_Crabbe123',
         phoneNumber: '0612345678',
-        isActive: true,
+        status: Status.Active,
         role: Role.Admin,
     },
 ];
@@ -39,7 +40,7 @@ const main = async () => {
                     email: newUser.getEmail(),
                     passWord: newUser.getPassWord(),
                     role: newUser.getRole(),
-                    isActive: newUser.getIsActive(),
+                    status: newUser.getStatus(),
                     phoneNumber: newUser.getPhoneNumber(),
                 },
             });
@@ -65,13 +66,18 @@ const main = async () => {
                 phoneNumber: casual.phone,
             });
 
-            const chance = Math.random() < 0.2;
-            newUser.setRole(chance ? Role.HumanResources : Role.Guest);
+            const chanceRoleHR = Math.random() < 0.2;
+            const chanceInactive = Math.random() < 0.3;
+            const chanceDelete = Math.random() < 0.1;
 
-            if (chance) {
-                newUser.deactivate();
-            } else {
-                newUser.activate();
+            if (chanceRoleHR) {
+                newUser.roleHumanResource();
+            }
+
+            if (chanceInactive) {
+                newUser.statusInActive();
+            } else if (chanceDelete) {
+                newUser.statusDelete();
             }
 
             return database.user.create({
@@ -82,7 +88,7 @@ const main = async () => {
                     email: newUser.getEmail(),
                     passWord: newUser.getPassWord(),
                     role: newUser.getRole(),
-                    isActive: newUser.getIsActive(),
+                    status: newUser.getStatus(),
                     phoneNumber: newUser.getPhoneNumber(),
                 },
             });

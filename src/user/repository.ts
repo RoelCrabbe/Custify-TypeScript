@@ -76,9 +76,9 @@ export const createUser = async (user: User): Promise<User> => {
                 firstName: user.getFirstName(),
                 lastName: user.getLastName(),
                 email: user.getEmail(),
-                role: user.getRole(),
                 passWord: user.getPassWord(),
-                isActive: user.getIsActive(),
+                role: user.getRole(),
+                status: user.getStatus(),
                 phoneNumber: user.getPhoneNumber(),
             },
         });
@@ -99,9 +99,9 @@ export const updateUser = async (user: User): Promise<User> => {
                 firstName: user.getFirstName(),
                 lastName: user.getLastName(),
                 email: user.getEmail(),
-                role: user.getRole(),
                 passWord: user.getPassWord(),
-                isActive: user.getIsActive(),
+                role: user.getRole(),
+                status: user.getStatus(),
                 phoneNumber: user.getPhoneNumber(),
             },
         });

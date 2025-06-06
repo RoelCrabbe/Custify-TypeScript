@@ -1,5 +1,5 @@
 import { AuthenticationResponse, UserInput } from '@types';
-import { userRepository, userService } from '@user/index';
+import { isActiveStatus, userRepository, userService } from '@user/index';
 import { User } from '@user/model';
 import { generateJwtToken } from '@utils/jwt';
 import bcrypt from 'bcryptjs';
@@ -15,7 +15,8 @@ export const loginUser = async ({
     const isCorrectPassword = await bcrypt.compare(passWord, fUser.getPassWord());
     if (!isCorrectPassword) throw new Error('Invalid credentials.');
 
-    if (!fUser.getIsActive()) throw new Error('User is not active. Notify management.');
+    if (!isActiveStatus(fUser.getStatus()))
+        throw new Error('Account is inactive. Contact management.');
 
     return {
         token: generateJwtToken({

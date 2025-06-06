@@ -1,6 +1,7 @@
 import { UserBase } from '@base/userBase';
 import { User as PrismaUser } from '@prisma/client';
-import { Role, isValidRole } from '@types';
+import { isValidRole, Role } from '@user/role';
+import { isValidStatus, Status } from '@user/status';
 
 export class User extends UserBase {
     constructor(user: {
@@ -10,7 +11,7 @@ export class User extends UserBase {
         email: string;
         passWord: string;
         role: Role;
-        isActive: boolean;
+        status: Status;
         phoneNumber?: string;
         id?: number;
         createdDate?: Date;
@@ -29,6 +30,7 @@ export class User extends UserBase {
         email: string;
         passWord: string;
         role?: Role;
+        status?: Status;
     }): void {
         if (!user.userName?.trim()) {
             throw new Error('User validation: Username is required');
@@ -51,6 +53,9 @@ export class User extends UserBase {
         if (!isValidRole(user.role)) {
             throw new Error('User validation: Role is invalid or missing.');
         }
+        if (!isValidStatus(user.status)) {
+            throw new Error('User validation: Status is invalid or missing.');
+        }
     }
 
     equals(user: User): boolean {
@@ -59,7 +64,8 @@ export class User extends UserBase {
             this.firstName === user.getFirstName() &&
             this.lastName === user.getLastName() &&
             this.email === user.getEmail() &&
-            this.role === user.getRole()
+            this.role === user.getRole() &&
+            this.status === user.getStatus()
         );
     }
 
@@ -72,7 +78,7 @@ export class User extends UserBase {
             fullName: this.getFullName(),
             email: this.email,
             role: this.role,
-            isActive: this.isActive,
+            status: this.status,
             phoneNumber: this.phoneNumber,
             createdDate: this.createdDate,
             modifiedDate: this.modifiedDate,
@@ -87,7 +93,7 @@ export class User extends UserBase {
         email,
         passWord,
         role,
-        isActive,
+        status,
         phoneNumber,
         createdDate,
         modifiedDate,
@@ -102,7 +108,7 @@ export class User extends UserBase {
             email,
             passWord,
             role: role as Role,
-            isActive: isActive,
+            status: status as Status,
             phoneNumber: phoneNumber || undefined,
             createdDate: createdDate || undefined,
             modifiedDate: modifiedDate || undefined,
@@ -122,21 +128,21 @@ export class User extends UserBase {
         return new User({
             ...userData,
             role: Role.Guest,
-            isActive: true,
+            status: Status.Active,
         });
     }
 
     static update(
         existingUser: User,
         updateData: {
-            userName?: string;
-            firstName?: string;
-            lastName?: string;
-            email?: string;
-            passWord?: string;
+            userName: string;
+            firstName: string;
+            lastName: string;
+            email: string;
+            passWord: string;
+            role: Role;
+            status: Status;
             phoneNumber?: string;
-            role?: Role;
-            isActive?: boolean;
             modifiedById?: number;
         },
     ): User {
@@ -148,18 +154,34 @@ export class User extends UserBase {
             email: updateData.email ?? existingUser.getEmail(),
             passWord: updateData.passWord ?? existingUser.getPassWord(),
             role: updateData.role ?? existingUser.getRole(),
-            isActive: updateData.isActive ?? existingUser.getIsActive(),
+            status: updateData.status ?? existingUser.getStatus(),
             phoneNumber: updateData.phoneNumber ?? existingUser.getPhoneNumber(),
             createdById: existingUser.getCreatedById(),
             modifiedById: updateData.modifiedById ?? existingUser.getModifiedById(),
         });
     }
 
-    activate(): void {
-        this.isActive = true;
+    roleGuest(): void {
+        this.role = Role.Guest;
     }
 
-    deactivate(): void {
-        this.isActive = false;
+    roleHumanResource(): void {
+        this.role = Role.HumanResources;
+    }
+
+    roleAdmin(): void {
+        this.role = Role.Admin;
+    }
+
+    statusActive(): void {
+        this.status = Status.Active;
+    }
+
+    statusInActive(): void {
+        this.status = Status.InActive;
+    }
+
+    statusDelete(): void {
+        this.status = Status.Deleted;
     }
 }

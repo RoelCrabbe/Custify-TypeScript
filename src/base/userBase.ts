@@ -1,5 +1,6 @@
 import { EntityBase } from '@base/entityBase';
-import { Role } from '@types';
+import { Role } from '@user/role';
+import { Status } from '@user/status';
 
 export abstract class UserBase extends EntityBase {
     protected userName: string;
@@ -8,7 +9,7 @@ export abstract class UserBase extends EntityBase {
     protected email: string;
     protected passWord: string;
     protected role: Role;
-    protected isActive: boolean;
+    protected status: Status;
     protected phoneNumber?: string;
 
     constructor(userData: {
@@ -17,8 +18,8 @@ export abstract class UserBase extends EntityBase {
         lastName: string;
         email: string;
         passWord: string;
-        role?: Role;
-        isActive?: boolean;
+        role: Role;
+        status: Status;
         phoneNumber?: string;
         id?: number;
         createdDate?: Date;
@@ -40,7 +41,7 @@ export abstract class UserBase extends EntityBase {
         this.email = userData.email;
         this.passWord = userData.passWord;
         this.role = userData.role ?? Role.Guest;
-        this.isActive = userData.isActive ?? true;
+        this.status = userData.status ?? Status.Active;
         this.phoneNumber = userData.phoneNumber;
     }
 
@@ -72,8 +73,8 @@ export abstract class UserBase extends EntityBase {
         return this.role;
     }
 
-    getIsActive(): boolean {
-        return this.isActive;
+    getStatus(): Status {
+        return this.status;
     }
 
     getPhoneNumber(): string | undefined {

@@ -22,8 +22,8 @@ model User {
     lastName            String
     email               String          @unique
     passWord            String
-    role                String          @default("USER")
-    isActive            Boolean         @default(true)
+    role                String          @default("Guest")
+    status              String          @default("Active")
     phoneNumber         String?
 
     @@map("users")
