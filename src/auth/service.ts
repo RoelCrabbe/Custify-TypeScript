@@ -15,6 +15,8 @@ export const loginUser = async ({
     const isCorrectPassword = await bcrypt.compare(passWord, fUser.getPassWord());
     if (!isCorrectPassword) throw new Error('Invalid credentials.');
 
+    if (!fUser.getIsActive()) throw new Error('User is not active. Notify management.');
+
     return {
         token: generateJwtToken({
             userId: fUser.getId()!,
