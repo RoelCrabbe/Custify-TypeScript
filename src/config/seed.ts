@@ -58,12 +58,15 @@ const main = async () => {
             const hashedPassword = await bcrypt.hash(plainPassword, 12);
 
             const newUser = User.create({
-                userName,
-                firstName,
-                lastName,
-                email,
-                passWord: hashedPassword,
-                phoneNumber: casual.phone,
+                currentUser: null,
+                userData: {
+                    userName,
+                    firstName,
+                    lastName,
+                    email,
+                    passWord: hashedPassword,
+                    phoneNumber: casual.phone,
+                },
             });
 
             const chanceRoleHR = Math.random() < 0.2;

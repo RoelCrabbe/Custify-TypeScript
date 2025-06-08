@@ -1,8 +1,14 @@
+import { ErrorSeverity, ErrorType } from '@exceptions';
+
 export class CustifyError extends Error {
     public readonly statusCode: number;
-    public readonly severity: SeverityType;
+    public readonly severity: ErrorSeverity;
 
-    constructor(message: string, statusCode = 400, severity: SeverityType = SeverityType.Handled) {
+    constructor(
+        message: string,
+        statusCode = 400,
+        severity: ErrorSeverity = ErrorSeverity.Handled,
+    ) {
         super(message);
         Object.setPrototypeOf(this, new.target.prototype);
 
@@ -17,7 +23,7 @@ export class CustifyError extends Error {
         return this.statusCode;
     }
 
-    getStatusMessage(): string {
+    getType(): ErrorType {
         return ErrorType[this.name as keyof typeof ErrorType] ?? 'Application Error';
     }
 
@@ -25,28 +31,10 @@ export class CustifyError extends Error {
         return this.message;
     }
 
-    getSeverity(): SeverityType {
+    getSeverity(): ErrorSeverity {
         return this.severity;
     }
 }
-
-export const ErrorType = {
-    NotFoundError: 'Not Found',
-    ValidationError: 'Validation Error',
-    AuthenticationError: 'Authentication Error',
-} as const;
-
-export type ErrorType = (typeof ErrorType)[keyof typeof ErrorType];
-
-export const SeverityType = {
-    Handled: 'Handled',
-    Unhandled: 'Unhandled',
-    InputError: 'InputError',
-    SystemError: 'SystemError',
-    SecurityError: 'SecurityError',
-} as const;
-
-export type SeverityType = (typeof SeverityType)[keyof typeof SeverityType];
 
 export class NotFoundError extends CustifyError {
     constructor(message: string) {
@@ -57,14 +45,14 @@ export class NotFoundError extends CustifyError {
 
 export class AuthenticationError extends CustifyError {
     constructor(message: string) {
-        super(message, 401, SeverityType.SecurityError);
+        super(message, 401, ErrorSeverity.SecurityError);
         this.name = 'AuthenticationError';
     }
 }
 
 export class ValidationError extends CustifyError {
     constructor(message: string) {
-        super(message, 400, SeverityType.InputError);
+        super(message, 400, ErrorSeverity.InputError);
         this.name = 'ValidationError';
     }
 }

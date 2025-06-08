@@ -16,11 +16,11 @@ export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
         const errorLogPrisma = await database.errorLog.create({
             data: {
                 type: errorLog.getType(),
+                severity: errorLog.getSeverity(),
+                httpMethod: errorLog.getHttpMethod(),
                 errorMessage: errorLog.getErrorMessage(),
                 stackTrace: errorLog.getStackTrace(),
                 requestPath: errorLog.getRequestPath(),
-                httpMethod: errorLog.getHttpMethod(),
-                severity: errorLog.getSeverity(),
                 createdDate: errorLog.getCreatedDate(),
                 createdById: errorLog.getCreatedById(),
                 modifiedDate: errorLog.getModifiedDate(),
@@ -41,11 +41,11 @@ export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
             where: { id: errorLog.getId() },
             data: {
                 type: errorLog.getType(),
+                severity: errorLog.getSeverity(),
+                httpMethod: errorLog.getHttpMethod(),
                 errorMessage: errorLog.getErrorMessage(),
                 stackTrace: errorLog.getStackTrace(),
                 requestPath: errorLog.getRequestPath(),
-                httpMethod: errorLog.getHttpMethod(),
-                severity: errorLog.getSeverity(),
                 createdDate: errorLog.getCreatedDate(),
                 createdById: errorLog.getCreatedById(),
                 modifiedDate: errorLog.getModifiedDate(),

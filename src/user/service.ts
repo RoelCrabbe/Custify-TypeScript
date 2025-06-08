@@ -1,8 +1,8 @@
+import { AuthenticationError, NotFoundError, ValidationError } from '@middleware/exceptions';
 import { JwtToken, UserInput } from '@types';
 import { userRepository, userService } from '@user/index';
 import { User } from '@user/model';
 import bcrypt from 'bcryptjs';
-import { AuthenticationError, NotFoundError, ValidationError } from 'shared';
 
 export const getAllUsers = async (): Promise<User[]> => {
     return await userRepository.getAllUsers();

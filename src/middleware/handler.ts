@@ -1,4 +1,4 @@
-import { CustifyError } from '@exceptions/index';
+import { CustifyError } from '@middleware/exceptions/index';
 import { errorLogService } from '@middleware/index';
 import { JwtToken } from '@types';
 import { NextFunction, Request, Response } from 'express';
@@ -19,7 +19,7 @@ export const handleErrorMiddleware = async ({
         await errorLogService.createErrorLog({ err, req, auth: header.auth });
 
         return res.status(err.getStatusCode()).json({
-            status: err.getStatusMessage(),
+            status: err.getType(),
             message: err.getMessage(),
         });
     }

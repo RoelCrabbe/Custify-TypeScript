@@ -38,12 +38,12 @@ model ErrorLog {
     modifiedById        Int?
 
     // ErrorLog Model - Business fields
-    type                String
+    type                String          @default("Application Error")
+    severity            String          @default("Handled")
+    httpMethod          String          @default("Post")
     errorMessage        String
     stackTrace          String
     requestPath         String
-    httpMethod          String
-    severity            String         @default("Handled")
 
     @@map("errorlogs")
 }

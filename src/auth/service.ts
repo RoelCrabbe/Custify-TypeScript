@@ -1,4 +1,4 @@
-import { AuthenticationError } from '@exceptions/index';
+import { AuthenticationError } from '@middleware/exceptions';
 import { AuthenticationResponse, UserInput } from '@types';
 import { isActiveStatus, userRepository, userService } from '@user/index';
 import { User } from '@user/model';

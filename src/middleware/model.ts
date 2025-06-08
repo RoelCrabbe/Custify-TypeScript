@@ -1,23 +1,28 @@
 import { EntityBase } from '@base/entityBase';
-import { SeverityType, ValidationError } from '@exceptions/index';
+import {
+    ErrorSeverity,
+    ErrorType,
+    HttpMethod,
+    ValidationError,
+} from '@middleware/exceptions/index';
 import { ErrorLog as PrismaErrorLog } from '@prisma/client';
 import { User } from '@user/model';
 
 export class ErrorLog extends EntityBase {
-    public readonly type: string;
+    public readonly type: ErrorType;
+    public readonly severity: ErrorSeverity;
+    public readonly httpMethod: HttpMethod;
     public readonly errorMessage: string;
     public readonly stackTrace: string;
     public readonly requestPath: string;
-    public readonly httpMethod: string;
-    public readonly severity: SeverityType;
 
     constructor(log: {
-        type: string;
+        type: ErrorType;
+        severity: ErrorSeverity;
+        httpMethod: HttpMethod;
         errorMessage: string;
         stackTrace: string;
         requestPath: string;
-        httpMethod: string;
-        severity: SeverityType;
         id?: number;
         createdDate?: Date;
         modifiedDate?: Date;
@@ -36,14 +41,21 @@ export class ErrorLog extends EntityBase {
     }
 
     private validate(log: {
-        type: string;
+        type: ErrorType;
+        severity: ErrorSeverity;
+        httpMethod: HttpMethod;
         errorMessage: string;
         stackTrace: string;
         requestPath: string;
-        httpMethod: string;
     }): void {
         if (!log.type?.trim()) {
             throw new ValidationError('ErrorLog validation: Type is required');
+        }
+        if (!log.severity?.trim()) {
+            throw new ValidationError('ErrorLog validation: Severity is required');
+        }
+        if (!log.httpMethod?.trim()) {
+            throw new ValidationError('ErrorLog validation: Http Method is required');
         }
         if (!log.errorMessage?.trim()) {
             throw new ValidationError('ErrorLog validation: Error message is required');
@@ -54,13 +66,18 @@ export class ErrorLog extends EntityBase {
         if (!log.requestPath?.trim()) {
             throw new ValidationError('ErrorLog validation: Request Path is required');
         }
-        if (!log.httpMethod?.trim()) {
-            throw new ValidationError('ErrorLog validation: Http Method is required');
-        }
     }
 
     getType(): string {
         return this.type;
+    }
+
+    getSeverity(): ErrorSeverity {
+        return this.severity;
+    }
+
+    getHttpMethod(): string {
+        return this.httpMethod;
     }
 
     getErrorMessage(): string {
@@ -75,22 +92,14 @@ export class ErrorLog extends EntityBase {
         return this.requestPath;
     }
 
-    getHttpMethod(): string {
-        return this.httpMethod;
-    }
-
-    getSeverity(): SeverityType {
-        return this.severity;
-    }
-
     equals(log: ErrorLog): boolean {
         return (
             this.type === log.getType() &&
+            this.severity === log.getSeverity() &&
+            this.httpMethod === log.getHttpMethod() &&
             this.errorMessage === log.getErrorMessage() &&
             this.stackTrace === log.getStackTrace() &&
-            this.requestPath === log.getRequestPath() &&
-            this.httpMethod === log.getHttpMethod() &&
-            this.severity === log.getSeverity()
+            this.requestPath === log.getRequestPath()
         );
     }
 
@@ -98,11 +107,11 @@ export class ErrorLog extends EntityBase {
         return {
             id: this.getId(),
             type: this.type,
+            severity: this.severity,
+            httpMethod: this.httpMethod,
             errorMessage: this.errorMessage,
             stackTrace: this.stackTrace,
             requestPath: this.requestPath,
-            httpMethod: this.httpMethod,
-            severity: this.severity,
             createdDate: this.getCreatedDate(),
             modifiedDate: this.getModifiedDate(),
             createdById: this.getCreatedById(),
@@ -113,11 +122,11 @@ export class ErrorLog extends EntityBase {
     static from({
         id,
         type,
+        severity,
+        httpMethod,
         errorMessage,
         stackTrace,
         requestPath,
-        httpMethod,
-        severity,
         createdDate,
         modifiedDate,
         createdById,
@@ -125,12 +134,12 @@ export class ErrorLog extends EntityBase {
     }: PrismaErrorLog): ErrorLog {
         return new ErrorLog({
             id,
-            type,
+            type: type as ErrorType,
+            severity: severity as ErrorSeverity,
+            httpMethod: httpMethod as HttpMethod,
             errorMessage,
             stackTrace,
             requestPath,
-            httpMethod,
-            severity: severity as SeverityType,
             createdDate: createdDate || undefined,
             modifiedDate: modifiedDate || undefined,
             createdById: createdById || undefined,
@@ -144,12 +153,12 @@ export class ErrorLog extends EntityBase {
     }: {
         currentUser: User | null;
         errorData: {
-            type: string;
+            type: ErrorType;
+            severity: ErrorSeverity;
+            httpMethod: HttpMethod;
             errorMessage: string;
             stackTrace: string;
             requestPath: string;
-            httpMethod: string;
-            severity: SeverityType;
         };
     }): ErrorLog {
         return new ErrorLog({
@@ -167,12 +176,12 @@ export class ErrorLog extends EntityBase {
         currentUser: User;
         existingLog: ErrorLog;
         updateData: {
-            type: string;
+            type: ErrorType;
+            severity: ErrorSeverity;
+            httpMethod: HttpMethod;
             errorMessage: string;
             stackTrace: string;
             requestPath: string;
-            httpMethod: string;
-            severity: SeverityType;
         };
     }): ErrorLog {
         return new ErrorLog({
