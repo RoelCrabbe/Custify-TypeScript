@@ -1,4 +1,5 @@
 import { authRouter } from '@auth/index';
+import errorLogRouter from '@middleware/controller';
 import { handleErrorMiddleware } from '@middleware/handler';
 import { userRouter } from '@user/index';
 import * as bodyParser from 'body-parser';
@@ -64,6 +65,7 @@ app.use(
 );
 
 app.use('/users', userRouter);
+app.use('/error-logs', errorLogRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(async (err: Error, req: Request, res: Response, next: NextFunction) => {

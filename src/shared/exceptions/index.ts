@@ -1,14 +1,14 @@
 export class CustifyError extends Error {
     public readonly statusCode: number;
-    public readonly isOperational: boolean;
+    public readonly severity: SeverityType;
 
-    constructor(message: string, statusCode = 400, isOperational = true) {
+    constructor(message: string, statusCode = 400, severity: SeverityType = SeverityType.Handled) {
         super(message);
         Object.setPrototypeOf(this, new.target.prototype);
 
         this.name = this.constructor.name;
         this.statusCode = statusCode;
-        this.isOperational = isOperational;
+        this.severity = severity;
 
         Error.captureStackTrace(this, this.constructor);
     }
@@ -24,6 +24,10 @@ export class CustifyError extends Error {
     getMessage(): string {
         return this.message;
     }
+
+    getSeverity(): SeverityType {
+        return this.severity;
+    }
 }
 
 export const ErrorType = {
@@ -32,7 +36,17 @@ export const ErrorType = {
     AuthenticationError: 'Authentication Error',
 } as const;
 
-export type ErrorType = keyof typeof ErrorType;
+export type ErrorType = (typeof ErrorType)[keyof typeof ErrorType];
+
+export const SeverityType = {
+    Handled: 'Handled',
+    Unhandled: 'Unhandled',
+    InputError: 'InputError',
+    SystemError: 'SystemError',
+    SecurityError: 'SecurityError',
+} as const;
+
+export type SeverityType = (typeof SeverityType)[keyof typeof SeverityType];
 
 export class NotFoundError extends CustifyError {
     constructor(message: string) {
@@ -43,14 +57,14 @@ export class NotFoundError extends CustifyError {
 
 export class AuthenticationError extends CustifyError {
     constructor(message: string) {
-        super(message, 400);
+        super(message, 401, SeverityType.SecurityError);
         this.name = 'AuthenticationError';
     }
 }
 
 export class ValidationError extends CustifyError {
     constructor(message: string) {
-        super(message, 400);
+        super(message, 400, SeverityType.InputError);
         this.name = 'ValidationError';
     }
 }

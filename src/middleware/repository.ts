@@ -1,6 +1,16 @@
 import database from '@config/prismaClient';
 import { ErrorLog } from '@middleware/model';
 
+export const getAllErrorLogs = async (): Promise<ErrorLog[]> => {
+    try {
+        const errorLogPrisma = await database.errorLog.findMany({ orderBy: { id: 'asc' } });
+        return errorLogPrisma.map((errorLog: any) => ErrorLog.from(errorLog));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
     try {
         const errorLogPrisma = await database.errorLog.create({
@@ -10,7 +20,7 @@ export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
                 stackTrace: errorLog.getStackTrace(),
                 requestPath: errorLog.getRequestPath(),
                 httpMethod: errorLog.getHttpMethod(),
-                isExpectedFailure: errorLog.getIsExpectedFailure(),
+                severity: errorLog.getSeverity(),
                 createdDate: errorLog.getCreatedDate(),
                 createdById: errorLog.getCreatedById(),
                 modifiedDate: errorLog.getModifiedDate(),
@@ -35,7 +45,7 @@ export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
                 stackTrace: errorLog.getStackTrace(),
                 requestPath: errorLog.getRequestPath(),
                 httpMethod: errorLog.getHttpMethod(),
-                isExpectedFailure: errorLog.getIsExpectedFailure(),
+                severity: errorLog.getSeverity(),
                 createdDate: errorLog.getCreatedDate(),
                 createdById: errorLog.getCreatedById(),
                 modifiedDate: errorLog.getModifiedDate(),

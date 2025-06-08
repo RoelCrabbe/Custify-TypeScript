@@ -43,7 +43,7 @@ model ErrorLog {
     stackTrace          String
     requestPath         String
     httpMethod          String
-    isExpectedFailure   Boolean         @default(false)
+    severity            String         @default("Handled")
 
     @@map("errorlogs")
 }

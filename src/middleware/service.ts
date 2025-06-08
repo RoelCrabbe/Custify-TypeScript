@@ -5,12 +5,16 @@ import { JwtToken } from '@types';
 import { getCurrentUser } from '@user/service';
 import { Request } from 'express';
 
+export const getAllErrorLogs = async (): Promise<ErrorLog[]> => {
+    return await errorLogRepository.getAllErrorLogs();
+};
+
 export const createErrorLog = async ({
     err,
     req,
     auth,
 }: {
-    err: Error;
+    err: CustifyError;
     req: Request;
     auth: JwtToken;
 }): Promise<ErrorLog> => {
@@ -21,12 +25,12 @@ export const createErrorLog = async ({
         ErrorLog.create({
             currentUser,
             errorData: {
-                type: err.name,
-                errorMessage: err.message,
+                type: err.getStatusMessage(),
+                errorMessage: err.getMessage(),
                 stackTrace: err.stack || '',
                 requestPath: req.url,
                 httpMethod: req.method,
-                isExpectedFailure: (err instanceof CustifyError) as boolean,
+                severity: err.getSeverity(),
             },
         }),
     );

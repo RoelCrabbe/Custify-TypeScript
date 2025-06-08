@@ -1,5 +1,5 @@
 import { EntityBase } from '@base/entityBase';
-import { ValidationError } from '@exceptions/index';
+import { SeverityType, ValidationError } from '@exceptions/index';
 import { ErrorLog as PrismaErrorLog } from '@prisma/client';
 import { User } from '@user/model';
 
@@ -9,7 +9,7 @@ export class ErrorLog extends EntityBase {
     public readonly stackTrace: string;
     public readonly requestPath: string;
     public readonly httpMethod: string;
-    public readonly isExpectedFailure: boolean;
+    public readonly severity: SeverityType;
 
     constructor(log: {
         type: string;
@@ -17,7 +17,7 @@ export class ErrorLog extends EntityBase {
         stackTrace: string;
         requestPath: string;
         httpMethod: string;
-        isExpectedFailure?: boolean;
+        severity: SeverityType;
         id?: number;
         createdDate?: Date;
         modifiedDate?: Date;
@@ -31,7 +31,7 @@ export class ErrorLog extends EntityBase {
         this.stackTrace = log.stackTrace;
         this.requestPath = log.requestPath;
         this.httpMethod = log.httpMethod;
-        this.isExpectedFailure = log.isExpectedFailure ?? false;
+        this.severity = log.severity;
         this.validate(log);
     }
 
@@ -79,8 +79,8 @@ export class ErrorLog extends EntityBase {
         return this.httpMethod;
     }
 
-    getIsExpectedFailure(): boolean {
-        return this.isExpectedFailure;
+    getSeverity(): SeverityType {
+        return this.severity;
     }
 
     equals(log: ErrorLog): boolean {
@@ -90,7 +90,7 @@ export class ErrorLog extends EntityBase {
             this.stackTrace === log.getStackTrace() &&
             this.requestPath === log.getRequestPath() &&
             this.httpMethod === log.getHttpMethod() &&
-            this.isExpectedFailure === log.getIsExpectedFailure()
+            this.severity === log.getSeverity()
         );
     }
 
@@ -102,7 +102,7 @@ export class ErrorLog extends EntityBase {
             stackTrace: this.stackTrace,
             requestPath: this.requestPath,
             httpMethod: this.httpMethod,
-            isExpectedFailure: this.isExpectedFailure,
+            severity: this.severity,
             createdDate: this.getCreatedDate(),
             modifiedDate: this.getModifiedDate(),
             createdById: this.getCreatedById(),
@@ -117,7 +117,7 @@ export class ErrorLog extends EntityBase {
         stackTrace,
         requestPath,
         httpMethod,
-        isExpectedFailure,
+        severity,
         createdDate,
         modifiedDate,
         createdById,
@@ -130,7 +130,7 @@ export class ErrorLog extends EntityBase {
             stackTrace,
             requestPath,
             httpMethod,
-            isExpectedFailure,
+            severity: severity as SeverityType,
             createdDate: createdDate || undefined,
             modifiedDate: modifiedDate || undefined,
             createdById: createdById || undefined,
@@ -149,7 +149,7 @@ export class ErrorLog extends EntityBase {
             stackTrace: string;
             requestPath: string;
             httpMethod: string;
-            isExpectedFailure?: boolean;
+            severity: SeverityType;
         };
     }): ErrorLog {
         return new ErrorLog({
@@ -172,7 +172,7 @@ export class ErrorLog extends EntityBase {
             stackTrace: string;
             requestPath: string;
             httpMethod: string;
-            isExpectedFailure?: boolean;
+            severity: SeverityType;
         };
     }): ErrorLog {
         return new ErrorLog({
@@ -182,7 +182,7 @@ export class ErrorLog extends EntityBase {
             stackTrace: updateData.stackTrace ?? existingLog.getStackTrace(),
             requestPath: updateData.requestPath ?? existingLog.getRequestPath(),
             httpMethod: updateData.httpMethod ?? existingLog.getHttpMethod(),
-            isExpectedFailure: updateData.isExpectedFailure ?? existingLog.getIsExpectedFailure(),
+            severity: updateData.severity ?? existingLog.getSeverity(),
             createdDate: existingLog.getCreatedDate(),
             createdById: existingLog.getCreatedById(),
             modifiedDate: existingLog.getModifiedDate(),
