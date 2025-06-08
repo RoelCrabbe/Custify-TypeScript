@@ -2,7 +2,7 @@ import { JwtToken, UserInput } from '@types';
 import { userRepository, userService } from '@user/index';
 import { User } from '@user/model';
 import bcrypt from 'bcryptjs';
-import { NotFoundError } from 'shared';
+import { AuthenticationError, NotFoundError, ValidationError } from 'shared';
 
 export const getAllUsers = async (): Promise<User[]> => {
     return await userRepository.getAllUsers();
@@ -29,22 +29,47 @@ export const getUserById = async ({ userId }: { userId: number }): Promise<User>
     return user;
 };
 
-export const assertUserNotExists = async ({
+export const registrationAssertUserNotExists = async ({
+    email,
+    userName,
+}: {
+    email: string;
+    userName: string;
+}): Promise<void> => {
+    const [userByName, userByEmail] = await Promise.all([
+        userRepository.getUserByUserName({ userName }),
+        userRepository.getUserByEmail({ email }),
+    ]);
+
+    if (userByName) {
+        throw new AuthenticationError(`User with username <${userName}> already exists.`);
+    }
+    if (userByEmail) {
+        throw new AuthenticationError(`User with email <${email}> already exists.`);
+    }
+};
+
+export const updateAssertUserNotExists = async ({
     email,
     userName,
     excludeUserId,
 }: {
     email?: string;
     userName?: string;
-    excludeUserId?: number;
+    excludeUserId: number;
 }): Promise<void> => {
     if (userName) {
-        const user_name = await userRepository.getUserByUserName({ userName, excludeUserId });
-        if (user_name) throw new Error(`User with username <${userName}> already exists.`);
+        const userByName = await userRepository.getUserByUserName({ userName, excludeUserId });
+        if (userByName) {
+            throw new ValidationError(`User with username <${userName}> already exists.`);
+        }
     }
+
     if (email) {
-        const user_email = await userRepository.getUserByEmail({ email, excludeUserId });
-        if (user_email) throw new Error(`User with email <${email}> already exists.`);
+        const userByEmail = await userRepository.getUserByEmail({ email, excludeUserId });
+        if (userByEmail) {
+            throw new ValidationError(`User with email <${email}> already exists.`);
+        }
     }
 };
 
@@ -55,7 +80,7 @@ export const updateUser = async ({
     userInput: UserInput;
     auth: JwtToken;
 }): Promise<User> => {
-    if (!userInput.id) throw new Error('User id is required');
+    if (!userInput.id) throw new ValidationError('User id is required');
 
     const { id, firstName, lastName, email, phoneNumber, userName, passWord, role, status } =
         userInput;
@@ -64,26 +89,29 @@ export const updateUser = async ({
     const currentUser = await getCurrentUser({ auth });
 
     if (email && email !== existingUser.getEmail()) {
-        await userService.assertUserNotExists({ email, excludeUserId: id });
+        await userService.updateAssertUserNotExists({ email, excludeUserId: id });
     }
 
     if (userName && userName !== existingUser.getUserName()) {
-        await userService.assertUserNotExists({ userName, excludeUserId: id });
+        await userService.updateAssertUserNotExists({ userName, excludeUserId: id });
     }
 
     let hashedPassword;
     if (passWord && passWord.trim()) hashedPassword = await bcrypt.hash(passWord, 12);
 
-    const updatedUser = User.update(existingUser, {
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        userName,
-        passWord: hashedPassword || existingUser.getPassWord(),
-        role,
-        status,
-        modifiedById: currentUser.getId(),
+    const updatedUser = User.update({
+        currentUser,
+        existingUser,
+        updateData: {
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            userName,
+            passWord: hashedPassword || existingUser.getPassWord(),
+            role,
+            status,
+        },
     });
 
     return await userRepository.updateUser(updatedUser);

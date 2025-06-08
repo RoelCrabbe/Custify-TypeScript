@@ -1,3 +1,4 @@
+import { AuthenticationError } from '@exceptions/index';
 import { AuthenticationResponse, UserInput } from '@types';
 import { isActiveStatus, userRepository, userService } from '@user/index';
 import { User } from '@user/model';
@@ -13,10 +14,10 @@ export const loginUser = async ({
     const fUser = await userService.getUserByUserName({ userName });
 
     const isCorrectPassword = await bcrypt.compare(passWord, fUser.getPassWord());
-    if (!isCorrectPassword) throw new Error('Invalid credentials.');
+    if (!isCorrectPassword) throw new AuthenticationError('Invalid credentials.');
 
     if (!isActiveStatus(fUser.getStatus()))
-        throw new Error('Account is inactive. Contact management.');
+        throw new AuthenticationError('Account is inactive. Contact management.');
 
     return {
         token: generateJwtToken({
@@ -33,17 +34,20 @@ export const registerUser = async ({
 }): Promise<AuthenticationResponse> => {
     const { firstName, lastName, email, phoneNumber, userName, passWord } = userInput;
 
-    await userService.assertUserNotExists({ email, userName });
+    await userService.registrationAssertUserNotExists({ email, userName });
     const hashedPassword = await bcrypt.hash(passWord, 12);
 
     const nUser = await userRepository.createUser(
         User.create({
-            userName,
-            firstName,
-            lastName,
-            email,
-            passWord: hashedPassword,
-            phoneNumber,
+            currentUser: null,
+            userData: {
+                userName,
+                firstName,
+                lastName,
+                email,
+                passWord: hashedPassword,
+                phoneNumber,
+            },
         }),
     );
 

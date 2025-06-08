@@ -80,6 +80,10 @@ export const createUser = async (user: User): Promise<User> => {
                 role: user.getRole(),
                 status: user.getStatus(),
                 phoneNumber: user.getPhoneNumber(),
+                createdDate: user.getCreatedDate(),
+                createdById: user.getCreatedById(),
+                modifiedDate: user.getModifiedDate(),
+                modifiedById: user.getModifiedById(),
             },
         });
 
@@ -103,6 +107,10 @@ export const updateUser = async (user: User): Promise<User> => {
                 role: user.getRole(),
                 status: user.getStatus(),
                 phoneNumber: user.getPhoneNumber(),
+                createdDate: user.getCreatedDate(),
+                createdById: user.getCreatedById(),
+                modifiedDate: user.getModifiedDate(),
+                modifiedById: user.getModifiedById(),
             },
         });
 

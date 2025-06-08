@@ -28,3 +28,22 @@ model User {
 
     @@map("users")
 }
+
+model ErrorLog {
+    // ModelBase - Database managed metadata
+    id                  Int             @id @default(autoincrement())
+    createdDate         DateTime?       @default(now())
+    modifiedDate        DateTime?       @updatedAt
+    createdById         Int?
+    modifiedById        Int?
+
+    // ErrorLog Model - Business fields
+    type                String
+    errorMessage        String
+    stackTrace          String
+    requestPath         String
+    httpMethod          String
+    isExpectedFailure   Boolean         @default(false)
+
+    @@map("errorlogs")
+}

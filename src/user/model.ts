@@ -1,4 +1,5 @@
 import { UserBase } from '@base/userBase';
+import { ValidationError } from '@exceptions/index';
 import { User as PrismaUser } from '@prisma/client';
 import { isValidRole, Role } from '@user/role';
 import { isValidStatus, Status } from '@user/status';
@@ -33,28 +34,25 @@ export class User extends UserBase {
         status?: Status;
     }): void {
         if (!user.userName?.trim()) {
-            throw new Error('User validation: Username is required');
-        }
-        if (user.userName.length < 3) {
-            throw new Error('User validation: Username must be at least 3 characters long');
+            throw new ValidationError('User validation: Username is required');
         }
         if (!user.firstName?.trim()) {
-            throw new Error('User validation: First name is required');
+            throw new ValidationError('User validation: First name is required');
         }
         if (!user.lastName?.trim()) {
-            throw new Error('User validation: Last name is required');
+            throw new ValidationError('User validation: Last name is required');
         }
         if (!user.email?.trim()) {
-            throw new Error('User validation: Email is required');
+            throw new ValidationError('User validation: Email is required');
         }
         if (!user.passWord?.trim()) {
-            throw new Error('User validation: Password is required');
+            throw new ValidationError('User validation: Password is required');
         }
         if (!isValidRole(user.role)) {
-            throw new Error('User validation: Role is invalid or missing.');
+            throw new ValidationError('User validation: Role is invalid or missing.');
         }
         if (!isValidStatus(user.status)) {
-            throw new Error('User validation: Status is invalid or missing.');
+            throw new ValidationError('User validation: Status is invalid or missing.');
         }
     }
 
@@ -71,7 +69,7 @@ export class User extends UserBase {
 
     toJSON() {
         return {
-            id: this.id,
+            id: this.getId(),
             userName: this.userName,
             firstName: this.firstName,
             lastName: this.lastName,
@@ -80,8 +78,10 @@ export class User extends UserBase {
             role: this.role,
             status: this.status,
             phoneNumber: this.phoneNumber,
-            createdDate: this.createdDate,
-            modifiedDate: this.modifiedDate,
+            createdDate: this.getCreatedDate(),
+            modifiedDate: this.getModifiedDate(),
+            createdById: this.getCreatedById(),
+            modifiedById: this.getModifiedById(),
         };
     }
 
@@ -117,23 +117,36 @@ export class User extends UserBase {
         });
     }
 
-    static create(userData: {
-        userName: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        passWord: string;
-        phoneNumber?: string;
+    static create({
+        currentUser,
+        userData,
+    }: {
+        currentUser: User | null;
+        userData: {
+            userName: string;
+            firstName: string;
+            lastName: string;
+            email: string;
+            passWord: string;
+            phoneNumber?: string;
+        };
     }): User {
         return new User({
             ...userData,
             role: Role.Guest,
             status: Status.Active,
+            createdById: currentUser?.getId() ?? undefined,
+            modifiedById: currentUser?.getId() ?? undefined,
         });
     }
 
-    static update(
-        existingUser: User,
+    static update({
+        currentUser,
+        existingUser,
+        updateData,
+    }: {
+        currentUser: User;
+        existingUser: User;
         updateData: {
             userName: string;
             firstName: string;
@@ -143,9 +156,8 @@ export class User extends UserBase {
             role: Role;
             status: Status;
             phoneNumber?: string;
-            modifiedById?: number;
-        },
-    ): User {
+        };
+    }): User {
         return new User({
             id: existingUser.getId(),
             userName: updateData.userName ?? existingUser.getUserName(),
@@ -156,8 +168,10 @@ export class User extends UserBase {
             role: updateData.role ?? existingUser.getRole(),
             status: updateData.status ?? existingUser.getStatus(),
             phoneNumber: updateData.phoneNumber ?? existingUser.getPhoneNumber(),
+            createdDate: existingUser.getCreatedDate(),
             createdById: existingUser.getCreatedById(),
-            modifiedById: updateData.modifiedById ?? existingUser.getModifiedById(),
+            modifiedDate: existingUser.getModifiedDate(),
+            modifiedById: currentUser.getId()!,
         });
     }
 

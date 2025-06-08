@@ -1,4 +1,5 @@
 import { authRouter } from '@auth/index';
+import { handleErrorMiddleware } from '@middleware/handler';
 import { userRouter } from '@user/index';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
@@ -65,14 +66,8 @@ app.use(
 app.use('/users', userRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    if (err.name === 'UnauthorizedError') {
-        res.status(401).json({ status: 'Unauthorized', message: err.message });
-    } else if (err.name === 'NotFoundError') {
-        res.status(404).json({ status: 'Not Found', message: err.message });
-    } else {
-        res.status(400).json({ status: 'Application Error', message: err.message });
-    }
+app.use(async (err: Error, req: Request, res: Response, next: NextFunction) => {
+    await handleErrorMiddleware({ err, req, res, next });
 });
 
 app.listen(publicApiPort, () => {

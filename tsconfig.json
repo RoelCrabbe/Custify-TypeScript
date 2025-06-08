@@ -20,6 +20,8 @@
             "@user": ["user/index.ts"],
             "@utils/*": ["shared/utils/*"],
             "@utils": ["shared/utils/index.ts"],
+            "@middleware/*": ["middleware/*"],
+            "@middleware": ["middleware/index.ts"],
             "@shared/*": ["shared/*"],
             "@prisma/*": ["prisma/*"]
         },
