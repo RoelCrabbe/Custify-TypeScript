@@ -42,7 +42,7 @@ model ErrorLog {
     severity            String          @default("Handled")
     httpMethod          String          @default("Post")
     errorMessage        String
-    stackTrace          String
+    stackTrace          String          @default("No StackTrace Available")
     requestPath         String
 
     @@map("errorlogs")

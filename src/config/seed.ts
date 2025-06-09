@@ -1,7 +1,6 @@
 import database from '@config/prismaClient';
+import { Role, Status } from '@user/enums';
 import { User } from '@user/model';
-import { Role } from '@user/role';
-import { Status } from '@user/status';
 import bcrypt from 'bcryptjs';
 import casual from 'casual';
 

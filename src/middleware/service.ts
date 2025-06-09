@@ -33,7 +33,7 @@ export const createErrorLog = async ({
                 severity: err.getSeverity(),
                 httpMethod,
                 errorMessage: err.getMessage(),
-                stackTrace: err.stack || '',
+                stackTrace: err.stack || 'No StackTrace Available',
                 requestPath: req.url,
             },
         }),

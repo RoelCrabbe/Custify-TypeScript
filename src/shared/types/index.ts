@@ -1,5 +1,4 @@
-import { Role } from '@user/role';
-import { Status } from '@user/status';
+import { Role, Status } from '@user/enums';
 
 export type AuthenticationResponse = {
     token?: string;
