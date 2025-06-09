@@ -20,6 +20,33 @@ const customUsers = [
     },
 ];
 
+const generateStackTrace = (errorType: string, message: string): string => {
+    const fileName = casual.random_element(['auth.js', 'user.js', 'app.js', 'index.js', 'db.js']);
+    const modulePath = casual.random_element([
+        'D:\\Projects\\Custify\\dist\\',
+        'C:\\Users\\dev\\Repos\\api\\build\\',
+        '/usr/src/app/dist/',
+        '/app/server/build/',
+    ]);
+
+    const funcName = casual.random_element([
+        'loginUser',
+        'createAccount',
+        'getUserData',
+        'verifyToken',
+        'fetchSession',
+        'handleError',
+    ]);
+
+    const lines: string[] = [
+        `${errorType}: ${message}`,
+        `    at Object.${funcName} (${modulePath}${fileName}:${casual.integer(100, 999)}:${casual.integer(10, 80)})`,
+        `    at async ${modulePath}${casual.random_element(['index.js', fileName])}:${casual.integer(10, 99)}:${casual.integer(10, 80)}`,
+    ];
+
+    return lines.join('\n');
+};
+
 // --- Step 2: Main Seeding Function ---
 const main = async () => {
     // Clean the database
@@ -70,7 +97,6 @@ const main = async () => {
                 },
             });
 
-            // Optional role/status randomization
             const chanceRoleHR = Math.random() < 0.2;
             const chanceInactive = Math.random() < 0.3;
             const chanceDelete = Math.random() < 0.1;
@@ -111,14 +137,15 @@ const main = async () => {
                 severity: casual.random_element(errorSeverities),
                 httpMethod: casual.random_element(httpMethods),
                 errorMessage: casual.sentence,
-                stackTrace: `Error at ${casual.url} on line ${casual.integer(10, 200)}`,
                 requestPath: casual.url,
                 status: casual.random_element(errorStatuses),
             };
 
+            const stackTrace = generateStackTrace(errorData.type, errorData.errorMessage);
+
             const newErrorLog = ErrorLog.create({
                 currentUser: { getId: () => randomUser.id } as User,
-                errorData,
+                errorData: { ...errorData, stackTrace },
             });
 
             await database.errorLog.create({
