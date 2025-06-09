@@ -1,13 +1,13 @@
 import { CustifyError } from '@error-log/exceptions';
-import { errorLogRepository, HttpMethod, isValidMethod } from '@error-log/index';
+import { errorLogRepository, ErrorStatus, HttpMethod, isValidMethod } from '@error-log/index';
 import { ErrorLog } from '@error-log/model';
 import { JwtToken } from '@types';
 import { getCurrentUser } from '@user/service';
 import { capitalizeFirstLetter } from '@utils/string';
 import { Request } from 'express';
 
-export const getAllErrorLogs = async (): Promise<ErrorLog[]> => {
-    return await errorLogRepository.getAllErrorLogs();
+export const getAllNewErrorLogs = async (): Promise<ErrorLog[]> => {
+    return await errorLogRepository.getAllNewErrorLogs();
 };
 
 export const createErrorLog = async ({
@@ -35,6 +35,7 @@ export const createErrorLog = async ({
                 errorMessage: err.getMessage(),
                 stackTrace: err.stack || 'No StackTrace Available',
                 requestPath: req.url,
+                status: ErrorStatus.New,
             },
         }),
     );

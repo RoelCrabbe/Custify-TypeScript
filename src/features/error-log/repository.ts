@@ -1,9 +1,17 @@
 import database from '@config/prismaClient';
+import { ErrorStatus } from '@error-log/enums';
 import { ErrorLog } from '@error-log/model';
 
-export const getAllErrorLogs = async (): Promise<ErrorLog[]> => {
+export const getAllNewErrorLogs = async (): Promise<ErrorLog[]> => {
     try {
-        const errorLogPrisma = await database.errorLog.findMany({ orderBy: { id: 'asc' } });
+        const errorLogPrisma = await database.errorLog.findMany({
+            where: {
+                status: ErrorStatus.New,
+            },
+            orderBy: {
+                id: 'asc',
+            },
+        });
         return errorLogPrisma.map((errorLog: any) => ErrorLog.from(errorLog));
     } catch (error) {
         console.error(error);
@@ -21,6 +29,10 @@ export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
                 errorMessage: errorLog.getErrorMessage(),
                 stackTrace: errorLog.getStackTrace(),
                 requestPath: errorLog.getRequestPath(),
+                status: errorLog.getStatus(),
+                isArchived: errorLog.getIsArchived(),
+                archivedBy: errorLog.getArchivedBy(),
+                archivedDate: errorLog.getArchivedDate(),
                 createdDate: errorLog.getCreatedDate(),
                 createdById: errorLog.getCreatedById(),
                 modifiedDate: errorLog.getModifiedDate(),
@@ -46,6 +58,10 @@ export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
                 errorMessage: errorLog.getErrorMessage(),
                 stackTrace: errorLog.getStackTrace(),
                 requestPath: errorLog.getRequestPath(),
+                status: errorLog.getStatus(),
+                isArchived: errorLog.getIsArchived(),
+                archivedBy: errorLog.getArchivedBy(),
+                archivedDate: errorLog.getArchivedDate(),
                 createdDate: errorLog.getCreatedDate(),
                 createdById: errorLog.getCreatedById(),
                 modifiedDate: errorLog.getModifiedDate(),
