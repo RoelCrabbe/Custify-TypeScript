@@ -48,3 +48,7 @@ export const ErrorStatus = {
 } as const;
 
 export type ErrorStatus = (typeof ErrorStatus)[keyof typeof ErrorStatus];
+
+export const isValidStatus = (status: unknown): status is ErrorStatus => {
+    return typeof status === 'string' && Object.values(ErrorStatus).includes(status as ErrorStatus);
+};
