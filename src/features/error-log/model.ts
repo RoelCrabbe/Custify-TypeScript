@@ -1,11 +1,6 @@
 import { EntityBase } from '@base/entityBase';
-import {
-    ErrorSeverity,
-    ErrorType,
-    HttpMethod,
-    ValidationError,
-} from '@middleware/exceptions/index';
-import { ErrorLog as PrismaErrorLog } from '@prisma/client';
+import { ErrorSeverity, ErrorType, HttpMethod, ValidationError } from '@error-log/exceptions';
+import { PrismaErrorLog } from '@prisma/index';
 import { User } from '@user/model';
 
 export class ErrorLog extends EntityBase {

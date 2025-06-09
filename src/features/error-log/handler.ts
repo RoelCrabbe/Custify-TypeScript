@@ -1,5 +1,5 @@
-import { CustifyError } from '@middleware/exceptions/index';
-import { errorLogService } from '@middleware/index';
+import { CustifyError } from '@error-log/exceptions';
+import { errorLogService } from '@error-log/index';
 import { JwtToken } from '@types';
 import { NextFunction, Request, Response } from 'express';
 

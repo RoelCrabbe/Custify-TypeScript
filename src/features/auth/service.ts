@@ -1,6 +1,7 @@
-import { AuthenticationError } from '@middleware/exceptions';
+import { AuthenticationError } from '@error-log/exceptions';
 import { AuthenticationResponse, UserInput } from '@types';
-import { isActiveStatus, userRepository, userService } from '@user/index';
+import { isActiveStatus } from '@user/enums';
+import { userRepository, userService } from '@user/index';
 import { User } from '@user/model';
 import { generateJwtToken } from '@utils/jwt';
 import bcrypt from 'bcryptjs';

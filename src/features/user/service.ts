@@ -1,4 +1,4 @@
-import { AuthenticationError, NotFoundError, ValidationError } from '@middleware/exceptions';
+import { AuthenticationError, NotFoundError, ValidationError } from '@error-log/exceptions';
 import { JwtToken, UserInput } from '@types';
 import { userRepository, userService } from '@user/index';
 import { User } from '@user/model';

@@ -1,5 +1,5 @@
 import database from '@config/prismaClient';
-import { ErrorLog } from '@middleware/model';
+import { ErrorLog } from '@error-log/model';
 
 export const getAllErrorLogs = async (): Promise<ErrorLog[]> => {
     try {

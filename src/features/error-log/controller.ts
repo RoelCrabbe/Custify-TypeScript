@@ -1,4 +1,4 @@
-import { errorLogService } from '@middleware/index';
+import { errorLogService } from '@error-log/index';
 import express, { NextFunction, Request, Response } from 'express';
 
 const errorLogRouter = express.Router();

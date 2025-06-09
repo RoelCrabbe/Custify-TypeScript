@@ -1,14 +1,14 @@
 import { authRouter } from '@auth/index';
-import errorLogRouter from '@middleware/controller';
-import { handleErrorMiddleware } from '@middleware/handler';
-import { userRouter } from '@user/index';
+import errorLogRouter from '@error-log/controller';
+import { handleErrorMiddleware } from '@error-log/handler';
+import { processEnv } from '@shared/index';
+import userRouter from '@user/controller';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 import { expressjwt } from 'express-jwt';
 import helmet from 'helmet';
-import { processEnv } from 'shared';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 

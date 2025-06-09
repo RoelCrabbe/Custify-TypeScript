@@ -1,6 +1,6 @@
-import { CustifyError, HttpMethod, isValidMethod } from '@middleware/exceptions/index';
-import { errorLogRepository } from '@middleware/index';
-import { ErrorLog } from '@middleware/model';
+import { CustifyError, HttpMethod, isValidMethod } from '@error-log/exceptions';
+import { errorLogRepository } from '@error-log/index';
+import { ErrorLog } from '@error-log/model';
 import { JwtToken } from '@types';
 import { getCurrentUser } from '@user/service';
 import { capitalizeFirstLetter } from '@utils/string';

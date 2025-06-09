@@ -1,6 +1,6 @@
 import { UserBase } from '@base/userBase';
-import { ValidationError } from '@middleware/exceptions/index';
-import { User as PrismaUser } from '@prisma/client';
+import { ValidationError } from '@error-log/exceptions';
+import { PrismaUser } from '@prisma/index';
 import { Role, Status, isValidRole, isValidStatus } from '@user/enums';
 
 export class User extends UserBase {

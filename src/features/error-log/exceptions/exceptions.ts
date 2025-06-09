@@ -1,4 +1,4 @@
-import { ErrorSeverity, ErrorType } from '@exceptions/enums';
+import { ErrorSeverity, ErrorType } from '@error-log/exceptions/enums';
 
 export class CustifyError extends Error {
     public readonly statusCode: number;
