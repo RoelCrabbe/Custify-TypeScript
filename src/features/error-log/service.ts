@@ -1,5 +1,5 @@
-import { CustifyError, HttpMethod, isValidMethod } from '@error-log/exceptions';
-import { errorLogRepository } from '@error-log/index';
+import { CustifyError } from '@error-log/exceptions';
+import { errorLogRepository, HttpMethod, isValidMethod } from '@error-log/index';
 import { ErrorLog } from '@error-log/model';
 import { JwtToken } from '@types';
 import { getCurrentUser } from '@user/service';
