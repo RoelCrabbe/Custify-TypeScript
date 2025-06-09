@@ -159,7 +159,6 @@ export class ErrorLog extends EntityBase {
         return new ErrorLog({
             ...errorData,
             createdById: currentUser?.getId() ?? undefined,
-            modifiedById: currentUser?.getId() ?? undefined,
         });
     }
 

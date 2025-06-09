@@ -135,7 +135,6 @@ export class User extends UserBase {
             role: Role.Guest,
             status: Status.Active,
             createdById: currentUser?.getId() ?? undefined,
-            modifiedById: currentUser?.getId() ?? undefined,
         });
     }
 
