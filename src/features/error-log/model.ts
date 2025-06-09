@@ -80,7 +80,7 @@ export class ErrorLog extends EntityBase {
         }
     }
 
-    getType(): string {
+    getType(): ErrorType {
         return this.type;
     }
 

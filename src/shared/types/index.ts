@@ -1,4 +1,4 @@
-import { Role, Status } from '@user/enums';
+import { UserRole, UserStatus } from '@user/enums';
 
 export type AuthenticationResponse = {
     token?: string;
@@ -6,7 +6,7 @@ export type AuthenticationResponse = {
 
 export type JwtToken = {
     userId: number;
-    role: Role;
+    role: UserRole;
 };
 
 export type UserInput = {
@@ -16,7 +16,7 @@ export type UserInput = {
     lastName: string;
     email: string;
     passWord: string;
-    role: Role;
-    status: Status;
+    role: UserRole;
+    status: UserStatus;
     phoneNumber?: string;
 };
