@@ -27,7 +27,7 @@ export const isValidSeverity = (severity: unknown): severity is ErrorSeverity =>
     );
 };
 
-export const HttpMethod = {
+export const ErrorHttpMethod = {
     Get: 'Get',
     Post: 'Post',
     Put: 'Put',
@@ -35,10 +35,13 @@ export const HttpMethod = {
     Delete: 'Delete',
 } as const;
 
-export type HttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod];
+export type ErrorHttpMethod = (typeof ErrorHttpMethod)[keyof typeof ErrorHttpMethod];
 
-export const isValidMethod = (method: unknown): method is HttpMethod => {
-    return typeof method === 'string' && Object.values(HttpMethod).includes(method as HttpMethod);
+export const isValidErrorHttpMethod = (method: unknown): method is ErrorHttpMethod => {
+    return (
+        typeof method === 'string' &&
+        Object.values(ErrorHttpMethod).includes(method as ErrorHttpMethod)
+    );
 };
 
 export const ErrorStatus = {

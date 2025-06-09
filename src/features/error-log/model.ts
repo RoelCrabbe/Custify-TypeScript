@@ -1,5 +1,5 @@
 import { EntityBase } from '@base/entityBase';
-import { ErrorSeverity, ErrorStatus, ErrorType, HttpMethod } from '@error-log/enums';
+import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log/enums';
 import { ValidationError } from '@error-log/exceptions';
 import { PrismaErrorLog } from '@prisma/index';
 import { User } from '@user/model';
@@ -7,7 +7,7 @@ import { User } from '@user/model';
 export class ErrorLog extends EntityBase {
     public readonly type: ErrorType;
     public readonly severity: ErrorSeverity;
-    public readonly httpMethod: HttpMethod;
+    public readonly httpMethod: ErrorHttpMethod;
     public readonly errorMessage: string;
     public readonly stackTrace: string;
     public readonly requestPath: string;
@@ -19,7 +19,7 @@ export class ErrorLog extends EntityBase {
     constructor(log: {
         type: ErrorType;
         severity: ErrorSeverity;
-        httpMethod: HttpMethod;
+        httpMethod: ErrorHttpMethod;
         errorMessage: string;
         stackTrace: string;
         requestPath: string;
@@ -51,7 +51,7 @@ export class ErrorLog extends EntityBase {
     private validate(log: {
         type: ErrorType;
         severity: ErrorSeverity;
-        httpMethod: HttpMethod;
+        httpMethod: ErrorHttpMethod;
         errorMessage: string;
         stackTrace: string;
         requestPath: string;
@@ -88,7 +88,7 @@ export class ErrorLog extends EntityBase {
         return this.severity;
     }
 
-    getHttpMethod(): string {
+    getHttpMethod(): ErrorHttpMethod {
         return this.httpMethod;
     }
 
@@ -173,7 +173,7 @@ export class ErrorLog extends EntityBase {
             id,
             type: type as ErrorType,
             severity: severity as ErrorSeverity,
-            httpMethod: httpMethod as HttpMethod,
+            httpMethod: httpMethod as ErrorHttpMethod,
             errorMessage,
             stackTrace,
             requestPath,
@@ -196,7 +196,7 @@ export class ErrorLog extends EntityBase {
         errorData: {
             type: ErrorType;
             severity: ErrorSeverity;
-            httpMethod: HttpMethod;
+            httpMethod: ErrorHttpMethod;
             errorMessage: string;
             stackTrace: string;
             requestPath: string;
@@ -219,7 +219,7 @@ export class ErrorLog extends EntityBase {
         updateData: {
             type: ErrorType;
             severity: ErrorSeverity;
-            httpMethod: HttpMethod;
+            httpMethod: ErrorHttpMethod;
             errorMessage: string;
             stackTrace: string;
             requestPath: string;

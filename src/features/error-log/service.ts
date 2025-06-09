@@ -1,5 +1,10 @@
 import { CustifyError } from '@error-log/exceptions';
-import { errorLogRepository, ErrorStatus, HttpMethod, isValidMethod } from '@error-log/index';
+import {
+    ErrorHttpMethod,
+    errorLogRepository,
+    ErrorStatus,
+    isValidErrorHttpMethod,
+} from '@error-log/index';
 import { ErrorLog } from '@error-log/model';
 import { JwtToken } from '@types';
 import { getCurrentUser } from '@user/service';
@@ -23,7 +28,7 @@ export const createErrorLog = async ({
     if (auth) currentUser = await getCurrentUser({ auth });
 
     const rawMethod = capitalizeFirstLetter(req.method);
-    const httpMethod: HttpMethod = isValidMethod(rawMethod) ? rawMethod : 'Get';
+    const httpMethod: ErrorHttpMethod = isValidErrorHttpMethod(rawMethod) ? rawMethod : 'Get';
 
     return await errorLogRepository.createErrorLog(
         ErrorLog.create({

@@ -1,5 +1,5 @@
 import database from '@config/prismaClient';
-import { Role, Status } from '@user/enums';
+import { UserRole, UserStatus } from '@user/enums';
 import { User } from '@user/model';
 import bcrypt from 'bcryptjs';
 import casual from 'casual';
@@ -12,8 +12,8 @@ const customUsers = [
         email: 'roel.crabbe@example.com',
         passWord: '@Roel_Crabbe123',
         phoneNumber: '0612345678',
-        status: Status.Active,
-        role: Role.Admin,
+        status: UserStatus.Active,
+        role: UserRole.Admin,
     },
 ];
 

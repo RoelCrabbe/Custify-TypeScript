@@ -1,7 +1,6 @@
 import { AuthenticationError } from '@error-log/exceptions';
 import { AuthenticationResponse, UserInput } from '@types';
-import { isActiveStatus } from '@user/enums';
-import { userRepository, userService } from '@user/index';
+import { isActiveUserStatus, userRepository, userService } from '@user/index';
 import { User } from '@user/model';
 import { generateJwtToken } from '@utils/jwt';
 import bcrypt from 'bcryptjs';
@@ -17,7 +16,7 @@ export const loginUser = async ({
     const isCorrectPassword = await bcrypt.compare(passWord, fUser.getPassWord());
     if (!isCorrectPassword) throw new AuthenticationError('Invalid credentials.');
 
-    if (!isActiveStatus(fUser.getStatus()))
+    if (!isActiveUserStatus(fUser.getStatus()))
         throw new AuthenticationError('Account is inactive. Contact management.');
 
     return {

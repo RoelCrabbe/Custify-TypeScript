@@ -1,7 +1,7 @@
 import { UserBase } from '@base/userBase';
 import { ValidationError } from '@error-log/exceptions';
 import { PrismaUser } from '@prisma/index';
-import { Role, Status, isValidRole, isValidStatus } from '@user/enums';
+import { UserRole, UserStatus, isValidUserRole, isValidUserStatus } from '@user/enums';
 
 export class User extends UserBase {
     constructor(user: {
@@ -10,8 +10,8 @@ export class User extends UserBase {
         lastName: string;
         email: string;
         passWord: string;
-        role: Role;
-        status: Status;
+        role: UserRole;
+        status: UserStatus;
         phoneNumber?: string;
         id?: number;
         createdDate?: Date;
@@ -29,8 +29,8 @@ export class User extends UserBase {
         lastName: string;
         email: string;
         passWord: string;
-        role?: Role;
-        status?: Status;
+        role?: UserRole;
+        status?: UserStatus;
     }): void {
         if (!user.userName?.trim()) {
             throw new ValidationError('User validation: Username is required');
@@ -47,10 +47,10 @@ export class User extends UserBase {
         if (!user.passWord?.trim()) {
             throw new ValidationError('User validation: Password is required');
         }
-        if (!isValidRole(user.role)) {
+        if (!isValidUserRole(user.role)) {
             throw new ValidationError('User validation: Role is invalid or missing.');
         }
-        if (!isValidStatus(user.status)) {
+        if (!isValidUserStatus(user.status)) {
             throw new ValidationError('User validation: Status is invalid or missing.');
         }
     }
@@ -106,8 +106,8 @@ export class User extends UserBase {
             lastName,
             email,
             passWord,
-            role: role as Role,
-            status: status as Status,
+            role: role as UserRole,
+            status: status as UserStatus,
             phoneNumber: phoneNumber || undefined,
             createdDate: createdDate || undefined,
             modifiedDate: modifiedDate || undefined,
@@ -132,8 +132,8 @@ export class User extends UserBase {
     }): User {
         return new User({
             ...userData,
-            role: Role.Guest,
-            status: Status.Active,
+            role: UserRole.Guest,
+            status: UserStatus.Active,
             createdById: currentUser?.getId() ?? undefined,
         });
     }
@@ -151,8 +151,8 @@ export class User extends UserBase {
             lastName: string;
             email: string;
             passWord: string;
-            role: Role;
-            status: Status;
+            role: UserRole;
+            status: UserStatus;
             phoneNumber?: string;
         };
     }): User {
@@ -174,26 +174,26 @@ export class User extends UserBase {
     }
 
     roleGuest(): void {
-        this.role = Role.Guest;
+        this.role = UserRole.Guest;
     }
 
     roleHumanResource(): void {
-        this.role = Role.HumanResources;
+        this.role = UserRole.HumanResources;
     }
 
     roleAdmin(): void {
-        this.role = Role.Admin;
+        this.role = UserRole.Admin;
     }
 
     statusActive(): void {
-        this.status = Status.Active;
+        this.status = UserStatus.Active;
     }
 
     statusInActive(): void {
-        this.status = Status.InActive;
+        this.status = UserStatus.InActive;
     }
 
     statusDelete(): void {
-        this.status = Status.Deleted;
+        this.status = UserStatus.Deleted;
     }
 }

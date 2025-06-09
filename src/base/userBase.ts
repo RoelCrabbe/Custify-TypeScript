@@ -1,5 +1,5 @@
 import { EntityBase } from '@base/entityBase';
-import { Role, Status } from '@user/enums';
+import { UserRole, UserStatus } from '@user/enums';
 
 export abstract class UserBase extends EntityBase {
     protected userName: string;
@@ -7,8 +7,8 @@ export abstract class UserBase extends EntityBase {
     protected lastName: string;
     protected email: string;
     protected passWord: string;
-    protected role: Role;
-    protected status: Status;
+    protected role: UserRole;
+    protected status: UserStatus;
     protected phoneNumber?: string;
 
     constructor(userData: {
@@ -17,8 +17,8 @@ export abstract class UserBase extends EntityBase {
         lastName: string;
         email: string;
         passWord: string;
-        role: Role;
-        status: Status;
+        role: UserRole;
+        status: UserStatus;
         phoneNumber?: string;
         id?: number;
         createdDate?: Date;
@@ -39,8 +39,8 @@ export abstract class UserBase extends EntityBase {
         this.lastName = userData.lastName;
         this.email = userData.email;
         this.passWord = userData.passWord;
-        this.role = userData.role ?? Role.Guest;
-        this.status = userData.status ?? Status.Active;
+        this.role = userData.role ?? UserRole.Guest;
+        this.status = userData.status ?? UserStatus.Active;
         this.phoneNumber = userData.phoneNumber;
     }
 
@@ -64,15 +64,11 @@ export abstract class UserBase extends EntityBase {
         return this.email;
     }
 
-    setRole(role: Role): void {
-        this.role = role;
-    }
-
-    getRole(): Role {
+    getRole(): UserRole {
         return this.role;
     }
 
-    getStatus(): Status {
+    getStatus(): UserStatus {
         return this.status;
     }
 
