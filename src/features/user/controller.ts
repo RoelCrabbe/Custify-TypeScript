@@ -39,4 +39,14 @@ userRouter.put('/', async (req: Request, res: Response, next: NextFunction) => {
     }
 });
 
+userRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = Number(req.params.id);
+        const response = await userService.getUserById({ userId });
+        res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export default userRouter;

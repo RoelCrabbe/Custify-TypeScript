@@ -18,6 +18,16 @@ const customUsers = [
         status: UserStatus.Active,
         role: UserRole.Admin,
     },
+    {
+        firstName: 'Daan',
+        lastName: 'Crabbé',
+        userName: 'Daan_Crabbe',
+        email: 'daan.crabbe@example.com',
+        passWord: '@RDaan_Crabbe123',
+        phoneNumber: '0612345678',
+        status: UserStatus.Active,
+        role: UserRole.Admin,
+    },
 ];
 
 const generateStackTrace = (errorType: string, message: string): string => {
@@ -45,6 +55,12 @@ const generateStackTrace = (errorType: string, message: string): string => {
     ];
 
     return lines.join('\n');
+};
+
+const getRandomAdminId = (users: any[]): number | null => {
+    const admins = users.filter((user) => user.role === UserRole.Admin);
+    if (admins.length === 0) return null;
+    return casual.random_element(admins).id as number;
 };
 
 // --- Step 2: Main Seeding Function ---
@@ -148,19 +164,27 @@ const main = async () => {
                 errorData: { ...errorData, stackTrace },
             });
 
+            const adminId = getRandomAdminId(allUsers);
+
+            const baseData: any = {
+                type: newErrorLog.getType(),
+                severity: newErrorLog.getSeverity(),
+                httpMethod: newErrorLog.getHttpMethod(),
+                errorMessage: newErrorLog.getErrorMessage(),
+                stackTrace: newErrorLog.getStackTrace(),
+                requestPath: newErrorLog.getRequestPath(),
+                status: newErrorLog.getStatus(),
+                isArchived: false,
+                createdById: randomUser.id,
+            };
+
+            if (newErrorLog.getStatus() === ErrorStatus.Resolved) {
+                baseData.archivedBy = adminId;
+                baseData.archivedDate = new Date();
+            }
+
             await database.errorLog.create({
-                data: {
-                    type: newErrorLog.getType(),
-                    severity: newErrorLog.getSeverity(),
-                    httpMethod: newErrorLog.getHttpMethod(),
-                    errorMessage: newErrorLog.getErrorMessage(),
-                    stackTrace: newErrorLog.getStackTrace(),
-                    requestPath: newErrorLog.getRequestPath(),
-                    status: newErrorLog.getStatus(),
-                    isArchived: false,
-                    createdById: randomUser.id,
-                    createdDate: new Date(),
-                },
+                data: baseData,
             });
         }),
     );

@@ -92,21 +92,29 @@ export const updateErrorLog = async ({
     const existingErrorLog = await getErrorLogById({ errorLogId: id });
     const currentUser = await getCurrentUser({ auth });
 
+    const updateData = {
+        type,
+        severity,
+        httpMethod,
+        errorMessage,
+        stackTrace,
+        requestPath,
+        status,
+        isArchived,
+        archivedBy,
+        archivedDate,
+    };
+
+    if (status === ErrorStatus.Resolved) {
+        updateData.isArchived = true;
+        updateData.archivedBy = currentUser.getId();
+        updateData.archivedDate = new Date();
+    }
+
     const updatedErrorLog = ErrorLog.update({
         currentUser,
         existingErrorLog,
-        updateData: {
-            type,
-            severity,
-            httpMethod,
-            errorMessage,
-            stackTrace,
-            requestPath,
-            status,
-            isArchived,
-            archivedBy,
-            archivedDate,
-        },
+        updateData,
     });
 
     return await errorLogRepository.updateErrorLog(updatedErrorLog);
