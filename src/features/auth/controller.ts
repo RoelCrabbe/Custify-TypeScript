@@ -8,7 +8,7 @@ authRouter.post('/login', async (req: Request, res: Response, next: NextFunction
     try {
         const user = <UserInput>req.body;
         const response = await authService.loginUser({ userInput: user });
-        res.status(200).json({ message: 'Login Successfully', ...response });
+        res.status(201).json({ message: 'Login Successfully', ...response });
     } catch (error) {
         next(error);
     }

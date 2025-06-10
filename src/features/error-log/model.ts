@@ -211,11 +211,11 @@ export class ErrorLog extends EntityBase {
 
     static update({
         currentUser,
-        existingLog,
+        existingErrorLog,
         updateData,
     }: {
         currentUser: User;
-        existingLog: ErrorLog;
+        existingErrorLog: ErrorLog;
         updateData: {
             type: ErrorType;
             severity: ErrorSeverity;
@@ -224,26 +224,26 @@ export class ErrorLog extends EntityBase {
             stackTrace: string;
             requestPath: string;
             status: ErrorStatus;
-            isArchived: boolean;
-            archivedBy: number;
-            archivedDate: Date;
+            isArchived?: boolean;
+            archivedBy?: number;
+            archivedDate?: Date;
         };
     }): ErrorLog {
         return new ErrorLog({
-            id: existingLog.getId(),
-            type: updateData.type ?? existingLog.getType(),
-            errorMessage: updateData.errorMessage ?? existingLog.getErrorMessage(),
-            stackTrace: updateData.stackTrace ?? existingLog.getStackTrace(),
-            requestPath: updateData.requestPath ?? existingLog.getRequestPath(),
-            httpMethod: updateData.httpMethod ?? existingLog.getHttpMethod(),
-            severity: updateData.severity ?? existingLog.getSeverity(),
-            status: updateData.status ?? existingLog.getStatus(),
-            isArchived: updateData.isArchived ?? existingLog.getIsArchived(),
-            archivedBy: updateData.archivedBy ?? existingLog.getArchivedBy(),
-            archivedDate: updateData.archivedDate ?? existingLog.getArchivedDate(),
-            createdDate: existingLog.getCreatedDate(),
-            createdById: existingLog.getCreatedById(),
-            modifiedDate: existingLog.getModifiedDate(),
+            id: existingErrorLog.getId(),
+            type: updateData.type ?? existingErrorLog.getType(),
+            errorMessage: updateData.errorMessage ?? existingErrorLog.getErrorMessage(),
+            stackTrace: updateData.stackTrace ?? existingErrorLog.getStackTrace(),
+            requestPath: updateData.requestPath ?? existingErrorLog.getRequestPath(),
+            httpMethod: updateData.httpMethod ?? existingErrorLog.getHttpMethod(),
+            severity: updateData.severity ?? existingErrorLog.getSeverity(),
+            status: updateData.status ?? existingErrorLog.getStatus(),
+            isArchived: updateData.isArchived ?? existingErrorLog.getIsArchived(),
+            archivedBy: updateData.archivedBy ?? existingErrorLog.getArchivedBy(),
+            archivedDate: updateData.archivedDate ?? existingErrorLog.getArchivedDate(),
+            createdDate: existingErrorLog.getCreatedDate(),
+            createdById: existingErrorLog.getCreatedById(),
+            modifiedDate: existingErrorLog.getModifiedDate(),
             modifiedById: currentUser.getId()!,
         });
     }

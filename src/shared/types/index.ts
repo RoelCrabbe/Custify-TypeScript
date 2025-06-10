@@ -1,3 +1,4 @@
+import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log/enums';
 import { UserRole, UserStatus } from '@user/enums';
 
 export type AuthenticationResponse = {
@@ -19,4 +20,18 @@ export type UserInput = {
     role: UserRole;
     status: UserStatus;
     phoneNumber?: string;
+};
+
+export type ErrorLogInput = {
+    id?: number;
+    type: ErrorType;
+    severity: ErrorSeverity;
+    httpMethod: ErrorHttpMethod;
+    errorMessage: string;
+    stackTrace: string;
+    requestPath: string;
+    status: ErrorStatus;
+    isArchived?: boolean;
+    archivedBy?: number;
+    archivedDate?: Date;
 };

@@ -75,3 +75,16 @@ export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
         throw new Error('Database error. See server log for details.');
     }
 };
+
+export const getErrorLogById = async ({ id }: { id: number }): Promise<ErrorLog | null> => {
+    try {
+        const errorLogPrisma = await database.errorLog.findFirst({
+            where: { id },
+        });
+
+        return errorLogPrisma ? ErrorLog.from(errorLogPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
