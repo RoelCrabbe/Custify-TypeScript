@@ -243,7 +243,6 @@ export class ErrorLog extends EntityBase {
             archivedDate: updateData.archivedDate ?? existingErrorLog.getArchivedDate(),
             createdDate: existingErrorLog.getCreatedDate(),
             createdById: existingErrorLog.getCreatedById(),
-            modifiedDate: existingErrorLog.getModifiedDate(),
             modifiedById: currentUser.getId()!,
         });
     }

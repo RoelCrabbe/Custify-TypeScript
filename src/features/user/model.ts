@@ -168,7 +168,6 @@ export class User extends UserBase {
             phoneNumber: updateData.phoneNumber ?? existingUser.getPhoneNumber(),
             createdDate: existingUser.getCreatedDate(),
             createdById: existingUser.getCreatedById(),
-            modifiedDate: existingUser.getModifiedDate(),
             modifiedById: currentUser.getId()!,
         });
     }
