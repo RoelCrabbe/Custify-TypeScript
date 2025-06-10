@@ -13,6 +13,24 @@ errorLogRouter.get('/', async (req: Request, res: Response, next: NextFunction) 
     }
 });
 
+errorLogRouter.get('/reviewed', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const response = await errorLogService.getAllReviewedErrorLogs();
+        res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
+errorLogRouter.get('/resolved', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const response = await errorLogService.getAllResolvedErrorLogs();
+        res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
 errorLogRouter.put('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const errorLog = <ErrorLogInput>req.body;

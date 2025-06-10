@@ -2,11 +2,11 @@ import database from '@config/prismaClient';
 import { ErrorStatus } from '@error-log/enums';
 import { ErrorLog } from '@error-log/model';
 
-export const getAllNewErrorLogs = async (): Promise<ErrorLog[]> => {
+export const getAllByStatus = async (status: ErrorStatus): Promise<ErrorLog[]> => {
     try {
         const errorLogPrisma = await database.errorLog.findMany({
             where: {
-                status: ErrorStatus.New,
+                status: status,
             },
             orderBy: {
                 id: 'asc',

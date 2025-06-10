@@ -12,7 +12,15 @@ import { capitalizeFirstLetter } from '@utils/string';
 import { Request } from 'express';
 
 export const getAllNewErrorLogs = async (): Promise<ErrorLog[]> => {
-    return await errorLogRepository.getAllNewErrorLogs();
+    return await errorLogRepository.getAllByStatus(ErrorStatus.New);
+};
+
+export const getAllReviewedErrorLogs = async (): Promise<ErrorLog[]> => {
+    return await errorLogRepository.getAllByStatus(ErrorStatus.Reviewed);
+};
+
+export const getAllResolvedErrorLogs = async (): Promise<ErrorLog[]> => {
+    return await errorLogRepository.getAllByStatus(ErrorStatus.Resolved);
 };
 
 export const createErrorLog = async ({
