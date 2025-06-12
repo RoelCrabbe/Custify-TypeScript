@@ -23,7 +23,7 @@ const customUsers = [
         lastName: 'Crabbé',
         userName: 'Daan_Crabbe',
         email: 'daan.crabbe@example.com',
-        passWord: '@RDaan_Crabbe123',
+        passWord: '@Daan_Crabbe123',
         phoneNumber: '0612345678',
         status: UserStatus.Active,
         role: UserRole.Admin,
@@ -164,8 +164,6 @@ const main = async () => {
                 errorData: { ...errorData, stackTrace },
             });
 
-            const adminId = getRandomAdminId(allUsers);
-
             const baseData: any = {
                 type: newErrorLog.getType(),
                 severity: newErrorLog.getSeverity(),
@@ -174,12 +172,12 @@ const main = async () => {
                 stackTrace: newErrorLog.getStackTrace(),
                 requestPath: newErrorLog.getRequestPath(),
                 status: newErrorLog.getStatus(),
-                isArchived: false,
                 createdById: randomUser.id,
             };
 
             if (newErrorLog.getStatus() === ErrorStatus.Resolved) {
-                baseData.archivedBy = adminId;
+                baseData.isArchived = true;
+                baseData.archivedBy = getRandomAdminId(allUsers);
                 baseData.archivedDate = new Date();
             }
 
