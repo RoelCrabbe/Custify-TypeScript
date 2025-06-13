@@ -31,7 +31,6 @@ export type ErrorLogInput = {
     stackTrace: string;
     requestPath: string;
     status: ErrorStatus;
-    isArchived?: boolean;
-    archivedBy?: number;
-    archivedDate?: Date;
+    resolvedById?: number;
+    resolvedDate?: Date;
 };

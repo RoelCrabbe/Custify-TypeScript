@@ -77,10 +77,10 @@ export class User extends UserBase {
             role: this.role,
             status: this.status,
             phoneNumber: this.phoneNumber,
-            createdDate: this.getCreatedDate(),
-            modifiedDate: this.getModifiedDate(),
             createdById: this.getCreatedById(),
+            createdDate: this.getCreatedDate(),
             modifiedById: this.getModifiedById(),
+            modifiedDate: this.getModifiedDate(),
         };
     }
 
@@ -94,10 +94,10 @@ export class User extends UserBase {
         role,
         status,
         phoneNumber,
-        createdDate,
-        modifiedDate,
         createdById,
+        createdDate,
         modifiedById,
+        modifiedDate,
     }: PrismaUser): User {
         return new User({
             id,
@@ -109,10 +109,10 @@ export class User extends UserBase {
             role: role as UserRole,
             status: status as UserStatus,
             phoneNumber: phoneNumber || undefined,
-            createdDate: createdDate || undefined,
-            modifiedDate: modifiedDate || undefined,
             createdById: createdById || undefined,
+            createdDate: createdDate || undefined,
             modifiedById: modifiedById || undefined,
+            modifiedDate: modifiedDate || undefined,
         });
     }
 
@@ -166,8 +166,8 @@ export class User extends UserBase {
             role: updateData.role ?? existingUser.getRole(),
             status: updateData.status ?? existingUser.getStatus(),
             phoneNumber: updateData.phoneNumber ?? existingUser.getPhoneNumber(),
-            createdDate: existingUser.getCreatedDate(),
             createdById: existingUser.getCreatedById(),
+            createdDate: existingUser.getCreatedDate(),
             modifiedById: currentUser.getId()!,
         });
     }

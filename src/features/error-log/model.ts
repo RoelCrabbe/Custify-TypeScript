@@ -12,9 +12,8 @@ export class ErrorLog extends EntityBase {
     public readonly stackTrace: string;
     public readonly requestPath: string;
     public readonly status: ErrorStatus;
-    public readonly isArchived?: boolean;
-    public readonly archivedBy?: number;
-    public readonly archivedDate?: Date;
+    public readonly resolvedById?: number;
+    public readonly resolvedDate?: Date;
 
     constructor(log: {
         type: ErrorType;
@@ -24,9 +23,8 @@ export class ErrorLog extends EntityBase {
         stackTrace: string;
         requestPath: string;
         status: ErrorStatus;
-        isArchived?: boolean;
-        archivedBy?: number;
-        archivedDate?: Date;
+        resolvedById?: number;
+        resolvedDate?: Date;
         id?: number;
         createdDate?: Date;
         modifiedDate?: Date;
@@ -42,9 +40,8 @@ export class ErrorLog extends EntityBase {
         this.httpMethod = log.httpMethod;
         this.severity = log.severity;
         this.status = log.status;
-        this.isArchived = log.isArchived || false;
-        this.archivedBy = log.archivedBy;
-        this.archivedDate = log.archivedDate;
+        this.resolvedById = log.resolvedById;
+        this.resolvedDate = log.resolvedDate;
         this.validate(log);
     }
 
@@ -108,16 +105,12 @@ export class ErrorLog extends EntityBase {
         return this.status;
     }
 
-    getIsArchived(): boolean | undefined {
-        return this.isArchived;
+    getResolvedById(): number | undefined {
+        return this.resolvedById;
     }
 
-    getArchivedBy(): number | undefined {
-        return this.archivedBy;
-    }
-
-    getArchivedDate(): Date | undefined {
-        return this.archivedDate;
+    getResolvedDate(): Date | undefined {
+        return this.resolvedDate;
     }
 
     equals(log: ErrorLog): boolean {
@@ -142,13 +135,12 @@ export class ErrorLog extends EntityBase {
             stackTrace: this.stackTrace,
             requestPath: this.requestPath,
             status: this.status,
-            isArchived: this.isArchived,
-            archivedBy: this.archivedBy,
-            archivedDate: this.archivedDate,
-            createdDate: this.getCreatedDate(),
-            modifiedDate: this.getModifiedDate(),
+            resolvedById: this.resolvedById,
+            resolvedDate: this.resolvedDate,
             createdById: this.getCreatedById(),
+            createdDate: this.getCreatedDate(),
             modifiedById: this.getModifiedById(),
+            modifiedDate: this.getModifiedDate(),
         };
     }
 
@@ -161,13 +153,12 @@ export class ErrorLog extends EntityBase {
         stackTrace,
         requestPath,
         status,
-        isArchived,
-        archivedBy,
-        archivedDate,
-        createdDate,
-        modifiedDate,
+        resolvedById,
+        resolvedDate,
         createdById,
+        createdDate,
         modifiedById,
+        modifiedDate,
     }: PrismaErrorLog): ErrorLog {
         return new ErrorLog({
             id,
@@ -178,13 +169,12 @@ export class ErrorLog extends EntityBase {
             stackTrace,
             requestPath,
             status: status as ErrorStatus,
-            isArchived: isArchived || false,
-            archivedBy: archivedBy || undefined,
-            archivedDate: archivedDate || undefined,
-            createdDate: createdDate || undefined,
-            modifiedDate: modifiedDate || undefined,
+            resolvedById: resolvedById || undefined,
+            resolvedDate: resolvedDate || undefined,
             createdById: createdById || undefined,
+            createdDate: createdDate || undefined,
             modifiedById: modifiedById || undefined,
+            modifiedDate: modifiedDate || undefined,
         });
     }
 
@@ -224,9 +214,8 @@ export class ErrorLog extends EntityBase {
             stackTrace: string;
             requestPath: string;
             status: ErrorStatus;
-            isArchived?: boolean;
-            archivedBy?: number;
-            archivedDate?: Date;
+            resolvedById?: number;
+            resolvedDate?: Date;
         };
     }): ErrorLog {
         return new ErrorLog({
@@ -238,11 +227,10 @@ export class ErrorLog extends EntityBase {
             httpMethod: updateData.httpMethod ?? existingErrorLog.getHttpMethod(),
             severity: updateData.severity ?? existingErrorLog.getSeverity(),
             status: updateData.status ?? existingErrorLog.getStatus(),
-            isArchived: updateData.isArchived ?? existingErrorLog.getIsArchived(),
-            archivedBy: updateData.archivedBy ?? existingErrorLog.getArchivedBy(),
-            archivedDate: updateData.archivedDate ?? existingErrorLog.getArchivedDate(),
-            createdDate: existingErrorLog.getCreatedDate(),
+            resolvedById: updateData.resolvedById ?? existingErrorLog.getResolvedById(),
+            resolvedDate: updateData.resolvedDate ?? existingErrorLog.getResolvedDate(),
             createdById: existingErrorLog.getCreatedById(),
+            createdDate: existingErrorLog.getCreatedDate(),
             modifiedById: currentUser.getId()!,
         });
     }

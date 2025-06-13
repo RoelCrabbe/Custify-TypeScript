@@ -1,10 +1,11 @@
 import database from '@config/prismaClient';
 import { ErrorStatus } from '@error-log/enums';
 import { ErrorLog } from '@error-log/model';
+import { Prisma } from '@prisma/client';
 
 export const getAllByStatus = async (status: ErrorStatus): Promise<ErrorLog[]> => {
     try {
-        const errorLogPrisma = await database.errorLog.findMany({
+        const results = await database.errorLog.findMany({
             where: {
                 status: status,
             },
@@ -12,7 +13,8 @@ export const getAllByStatus = async (status: ErrorStatus): Promise<ErrorLog[]> =
                 id: 'asc',
             },
         });
-        return errorLogPrisma.map((errorLog: any) => ErrorLog.from(errorLog));
+
+        return results.map((x: any) => ErrorLog.from(x));
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
@@ -21,7 +23,7 @@ export const getAllByStatus = async (status: ErrorStatus): Promise<ErrorLog[]> =
 
 export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
     try {
-        const errorLogPrisma = await database.errorLog.create({
+        const result = await database.errorLog.create({
             data: {
                 type: errorLog.getType(),
                 severity: errorLog.getSeverity(),
@@ -30,9 +32,8 @@ export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
                 stackTrace: errorLog.getStackTrace(),
                 requestPath: errorLog.getRequestPath(),
                 status: errorLog.getStatus(),
-                isArchived: errorLog.getIsArchived(),
-                archivedBy: errorLog.getArchivedBy(),
-                archivedDate: errorLog.getArchivedDate(),
+                resolvedById: errorLog.getResolvedById(),
+                resolvedDate: errorLog.getResolvedDate(),
                 createdDate: errorLog.getCreatedDate(),
                 createdById: errorLog.getCreatedById(),
                 modifiedDate: errorLog.getModifiedDate(),
@@ -40,7 +41,7 @@ export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
             },
         });
 
-        return ErrorLog.from(errorLogPrisma);
+        return ErrorLog.from(result);
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
@@ -49,7 +50,7 @@ export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
 
 export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
     try {
-        const errorLogPrisma = await database.errorLog.update({
+        const result = await database.errorLog.update({
             where: { id: errorLog.getId() },
             data: {
                 type: errorLog.getType(),
@@ -59,9 +60,8 @@ export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
                 stackTrace: errorLog.getStackTrace(),
                 requestPath: errorLog.getRequestPath(),
                 status: errorLog.getStatus(),
-                isArchived: errorLog.getIsArchived(),
-                archivedBy: errorLog.getArchivedBy(),
-                archivedDate: errorLog.getArchivedDate(),
+                resolvedById: errorLog.getResolvedById(),
+                resolvedDate: errorLog.getResolvedDate(),
                 createdDate: errorLog.getCreatedDate(),
                 createdById: errorLog.getCreatedById(),
                 modifiedDate: errorLog.getModifiedDate(),
@@ -69,7 +69,7 @@ export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
             },
         });
 
-        return ErrorLog.from(errorLogPrisma);
+        return ErrorLog.from(result);
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
@@ -78,11 +78,31 @@ export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
 
 export const getErrorLogById = async ({ id }: { id: number }): Promise<ErrorLog | null> => {
     try {
-        const errorLogPrisma = await database.errorLog.findFirst({
+        const result = await database.errorLog.findFirst({
             where: { id },
         });
 
-        return errorLogPrisma ? ErrorLog.from(errorLogPrisma) : null;
+        return result ? ErrorLog.from(result) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+export const deleteResolvedErrorLogsOlderThan = async (
+    cutoffDate: Date,
+): Promise<Prisma.BatchPayload> => {
+    try {
+        const result = await database.errorLog.deleteMany({
+            where: {
+                status: ErrorStatus.Resolved,
+                resolvedDate: {
+                    lt: cutoffDate,
+                },
+            },
+        });
+
+        return result;
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');

@@ -176,9 +176,8 @@ const main = async () => {
             };
 
             if (newErrorLog.getStatus() === ErrorStatus.Resolved) {
-                baseData.isArchived = true;
-                baseData.archivedBy = getRandomAdminId(allUsers);
-                baseData.archivedDate = new Date();
+                baseData.resolvedById = getRandomAdminId(allUsers);
+                baseData.resolvedDate = new Date();
             }
 
             await database.errorLog.create({

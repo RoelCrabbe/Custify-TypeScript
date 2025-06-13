@@ -11,6 +11,8 @@ import { getCurrentUser } from '@user/service';
 import { capitalizeFirstLetter } from '@utils/string';
 import { Request } from 'express';
 
+const ARCHIVE_RETENTION_DAYS = 90;
+
 export const getAllNewErrorLogs = async (): Promise<ErrorLog[]> => {
     return await errorLogRepository.getAllByStatus(ErrorStatus.New);
 };
@@ -21,6 +23,12 @@ export const getAllReviewedErrorLogs = async (): Promise<ErrorLog[]> => {
 
 export const getAllResolvedErrorLogs = async (): Promise<ErrorLog[]> => {
     return await errorLogRepository.getAllByStatus(ErrorStatus.Resolved);
+};
+
+export const cleanupArchivedErrorLogs = async (): Promise<number> => {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - ARCHIVE_RETENTION_DAYS);
+    return (await errorLogRepository.deleteResolvedErrorLogsOlderThan(cutoffDate)).count;
 };
 
 export const createErrorLog = async ({
@@ -84,9 +92,8 @@ export const updateErrorLog = async ({
         stackTrace,
         requestPath,
         status,
-        isArchived,
-        archivedBy,
-        archivedDate,
+        resolvedById,
+        resolvedDate,
     } = errorLogInput;
 
     const existingErrorLog = await getErrorLogById({ errorLogId: id });
@@ -100,15 +107,13 @@ export const updateErrorLog = async ({
         stackTrace,
         requestPath,
         status,
-        isArchived,
-        archivedBy,
-        archivedDate,
+        resolvedById,
+        resolvedDate,
     };
 
     if (status === ErrorStatus.Resolved) {
-        updateData.isArchived = true;
-        updateData.archivedBy = currentUser.getId();
-        updateData.archivedDate = new Date();
+        updateData.resolvedById = currentUser.getId();
+        updateData.resolvedDate = new Date();
     }
 
     const updatedErrorLog = ErrorLog.update({

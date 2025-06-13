@@ -47,9 +47,8 @@ model ErrorLog {
 
     // Lifecycle - Management Fields
     status              String          @default("New")
-    isArchived          Boolean         @default(false)
-    archivedBy          Int?
-    archivedDate        DateTime?
+    resolvedById        Int?
+    resolvedDate        DateTime?
 
     @@map("ErrorLogs")
 }
