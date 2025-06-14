@@ -1,5 +1,5 @@
-import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log/enums';
-import { UserRole, UserStatus } from '@user/enums';
+import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
+import { UserRole, UserStatus } from '@user';
 
 export type AuthenticationResponse = {
     token?: string;

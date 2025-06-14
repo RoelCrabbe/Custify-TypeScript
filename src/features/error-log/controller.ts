@@ -1,4 +1,4 @@
-import { errorLogService } from '@error-log/index';
+import { errorLogService } from '@error-log';
 import { ErrorLogInput, JwtToken } from '@types';
 import express, { NextFunction, Request, Response } from 'express';
 

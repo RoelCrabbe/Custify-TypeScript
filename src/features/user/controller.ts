@@ -1,5 +1,5 @@
 import { JwtToken, UserInput } from '@types';
-import { userService } from '@user/index';
+import { userService } from '@user';
 import express, { NextFunction, Request, Response } from 'express';
 
 const userRouter = express.Router();

@@ -1,5 +1,5 @@
 import { EntityBase } from '@base/entityBase';
-import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log/enums';
+import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
 import { ValidationError } from '@error-log/exceptions';
 import { PrismaErrorLog } from '@prisma/index';
 import { User } from '@user';

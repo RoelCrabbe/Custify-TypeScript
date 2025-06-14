@@ -1,6 +1,5 @@
 import database from '@config/prismaClient';
-import { ErrorStatus } from '@error-log/enums';
-import { ErrorLog } from '@error-log/errorLog';
+import { ErrorLog, ErrorStatus } from '@error-log';
 import { Prisma } from '@prisma/client';
 
 export const getAllByStatus = async (status: ErrorStatus): Promise<ErrorLog[]> => {

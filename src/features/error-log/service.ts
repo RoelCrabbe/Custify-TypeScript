@@ -1,11 +1,11 @@
-import { ErrorLog } from '@error-log/errorLog';
-import { CustifyError, NotFoundError, ValidationError } from '@error-log/exceptions';
 import {
     ErrorHttpMethod,
+    ErrorLog,
     errorLogRepository,
     ErrorStatus,
     isValidErrorHttpMethod,
-} from '@error-log/index';
+} from '@error-log';
+import { CustifyError, NotFoundError, ValidationError } from '@error-log/exceptions';
 import { ErrorLogInput, JwtToken } from '@types';
 import { getCurrentUser } from '@user/service';
 import { capitalizeFirstLetter } from '@utils/string';

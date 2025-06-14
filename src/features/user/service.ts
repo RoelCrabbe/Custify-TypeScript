@@ -1,7 +1,6 @@
 import { AuthenticationError, NotFoundError, ValidationError } from '@error-log/exceptions';
 import { JwtToken, UserInput } from '@types';
-import { User, UserImage } from '@user';
-import { userRepository, userService } from '@user/index';
+import { User, UserImage, userRepository, userService } from '@user';
 import bcrypt from 'bcryptjs';
 
 export const getAllUsers = async (): Promise<User[]> => {
