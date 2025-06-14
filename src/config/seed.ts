@@ -1,8 +1,8 @@
 import database from '@config/prismaClient';
 import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log/enums';
-import { ErrorLog } from '@error-log/model';
+import { ErrorLog } from '@error-log/errorLog';
+import { User } from '@user';
 import { UserRole, UserStatus } from '@user/enums';
-import { User } from '@user/model';
 import bcrypt from 'bcryptjs';
 import casual from 'casual';
 

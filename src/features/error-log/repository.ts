@@ -1,6 +1,6 @@
 import database from '@config/prismaClient';
 import { ErrorStatus } from '@error-log/enums';
-import { ErrorLog } from '@error-log/model';
+import { ErrorLog } from '@error-log/errorLog';
 import { Prisma } from '@prisma/client';
 
 export const getAllByStatus = async (status: ErrorStatus): Promise<ErrorLog[]> => {
@@ -21,55 +21,58 @@ export const getAllByStatus = async (status: ErrorStatus): Promise<ErrorLog[]> =
     }
 };
 
-export const createErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
+export const upsertErrorLog = async ({ errorLog }: { errorLog: ErrorLog }): Promise<ErrorLog> => {
     try {
-        const result = await database.errorLog.create({
-            data: {
-                type: errorLog.getType(),
-                severity: errorLog.getSeverity(),
-                httpMethod: errorLog.getHttpMethod(),
-                errorMessage: errorLog.getErrorMessage(),
-                stackTrace: errorLog.getStackTrace(),
-                requestPath: errorLog.getRequestPath(),
-                status: errorLog.getStatus(),
-                resolvedById: errorLog.getResolvedById(),
-                resolvedDate: errorLog.getResolvedDate(),
-                createdDate: errorLog.getCreatedDate(),
-                createdById: errorLog.getCreatedById(),
-                modifiedDate: errorLog.getModifiedDate(),
-                modifiedById: errorLog.getModifiedById(),
-            },
-        });
+        const errorLogId = errorLog.getId();
+        let errorLogValue = null;
+        if (!errorLogId) {
+            errorLogValue = await database.errorLog.create({
+                data: {
+                    type: errorLog.getType(),
+                    severity: errorLog.getSeverity(),
+                    httpMethod: errorLog.getHttpMethod(),
+                    errorMessage: errorLog.getErrorMessage(),
+                    stackTrace: errorLog.getStackTrace(),
+                    requestPath: errorLog.getRequestPath(),
+                    status: errorLog.getStatus(),
+                    resolvedById: errorLog.getResolvedById(),
+                    resolvedDate: errorLog.getResolvedDate(),
+                    createdById: errorLog.getCreatedById(),
+                },
+            });
+        } else {
+            errorLogValue = await database.errorLog.upsert({
+                where: { id: errorLogId },
+                update: {
+                    type: errorLog.getType(),
+                    severity: errorLog.getSeverity(),
+                    httpMethod: errorLog.getHttpMethod(),
+                    errorMessage: errorLog.getErrorMessage(),
+                    stackTrace: errorLog.getStackTrace(),
+                    requestPath: errorLog.getRequestPath(),
+                    status: errorLog.getStatus(),
+                    resolvedById: errorLog.getResolvedById(),
+                    resolvedDate: errorLog.getResolvedDate(),
+                    createdDate: errorLog.getCreatedDate(),
+                    createdById: errorLog.getCreatedById(),
+                    modifiedById: errorLog.getModifiedById(),
+                },
+                create: {
+                    type: errorLog.getType(),
+                    severity: errorLog.getSeverity(),
+                    httpMethod: errorLog.getHttpMethod(),
+                    errorMessage: errorLog.getErrorMessage(),
+                    stackTrace: errorLog.getStackTrace(),
+                    requestPath: errorLog.getRequestPath(),
+                    status: errorLog.getStatus(),
+                    resolvedById: errorLog.getResolvedById(),
+                    resolvedDate: errorLog.getResolvedDate(),
+                    createdById: errorLog.getCreatedById(),
+                },
+            });
+        }
 
-        return ErrorLog.from(result);
-    } catch (error) {
-        console.error(error);
-        throw new Error('Database error. See server log for details.');
-    }
-};
-
-export const updateErrorLog = async (errorLog: ErrorLog): Promise<ErrorLog> => {
-    try {
-        const result = await database.errorLog.update({
-            where: { id: errorLog.getId() },
-            data: {
-                type: errorLog.getType(),
-                severity: errorLog.getSeverity(),
-                httpMethod: errorLog.getHttpMethod(),
-                errorMessage: errorLog.getErrorMessage(),
-                stackTrace: errorLog.getStackTrace(),
-                requestPath: errorLog.getRequestPath(),
-                status: errorLog.getStatus(),
-                resolvedById: errorLog.getResolvedById(),
-                resolvedDate: errorLog.getResolvedDate(),
-                createdDate: errorLog.getCreatedDate(),
-                createdById: errorLog.getCreatedById(),
-                modifiedDate: errorLog.getModifiedDate(),
-                modifiedById: errorLog.getModifiedById(),
-            },
-        });
-
-        return ErrorLog.from(result);
+        return ErrorLog.from(errorLogValue);
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');

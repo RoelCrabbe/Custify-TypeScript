@@ -25,8 +25,28 @@ model User {
     role                String          @default("Guest")
     status              String          @default("Active")
     phoneNumber         String?
+    profileImage        UserImage?
 
     @@map("Users")
+}
+
+model UserImage {
+    id                  Int             @id @default(autoincrement())
+    createdDate         DateTime?       @default(now())
+    modifiedDate        DateTime?       @updatedAt
+    createdById         Int?
+    modifiedById        Int?
+
+    url                 String
+    altText             String
+    fileName            String
+    mimeType            String
+    fileSize            Int
+
+    userId              Int             @unique 
+    user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    @@map("UserImages")
 }
 
 model ErrorLog {

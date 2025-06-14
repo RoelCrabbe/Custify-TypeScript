@@ -1,7 +1,7 @@
 import { AuthenticationError } from '@error-log/exceptions';
 import { AuthenticationResponse, UserInput } from '@types';
+import { User } from '@user';
 import { isActiveUserStatus, userRepository, userService } from '@user/index';
-import { User } from '@user/model';
 import { generateJwtToken } from '@utils/jwt';
 import bcrypt from 'bcryptjs';
 
@@ -37,19 +37,19 @@ export const registerUser = async ({
     await userService.registrationAssertUserNotExists({ email, userName });
     const hashedPassword = await bcrypt.hash(passWord, 12);
 
-    const nUser = await userRepository.createUser(
-        User.create({
-            currentUser: null,
-            userData: {
-                userName,
-                firstName,
-                lastName,
-                email,
-                passWord: hashedPassword,
-                phoneNumber,
-            },
-        }),
-    );
+    const createdUser = User.create({
+        currentUser: null,
+        userData: {
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            userName,
+            passWord: hashedPassword,
+        },
+    });
+
+    const nUser = await userRepository.upsertUser({ user: createdUser });
 
     return {
         token: generateJwtToken({

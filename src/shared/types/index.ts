@@ -20,6 +20,16 @@ export type UserInput = {
     role: UserRole;
     status: UserStatus;
     phoneNumber?: string;
+    profileImage?: UserImageInput;
+};
+
+export type UserImageInput = {
+    id?: number;
+    url: string;
+    altText: string;
+    fileName: string;
+    fileSize: number;
+    mimeType: string;
 };
 
 export type ErrorLogInput = {

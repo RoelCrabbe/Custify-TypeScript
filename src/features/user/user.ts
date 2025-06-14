@@ -1,10 +1,14 @@
 import { UserBase } from '@base/userBase';
 import { ValidationError } from '@error-log/exceptions';
-import { PrismaUser } from '@prisma/index';
+import { PrismaUser, PrismaUserImage } from '@prisma/index';
+import { UserImage } from '@user';
 import { UserRole, UserStatus, isValidUserRole, isValidUserStatus } from '@user/enums';
 
 export class User extends UserBase {
+    public readonly profileImage?: UserImage;
+
     constructor(user: {
+        profileImage?: UserImage;
         userName: string;
         firstName: string;
         lastName: string;
@@ -14,12 +18,14 @@ export class User extends UserBase {
         status: UserStatus;
         phoneNumber?: string;
         id?: number;
-        createdDate?: Date;
-        modifiedDate?: Date;
         createdById?: number;
+        createdDate?: Date;
         modifiedById?: number;
+        modifiedDate?: Date;
     }) {
         super(user);
+
+        this.profileImage = user.profileImage;
         this.validate(user);
     }
 
@@ -55,6 +61,10 @@ export class User extends UserBase {
         }
     }
 
+    getProfileImage(): UserImage | undefined {
+        return this.profileImage;
+    }
+
     equals(user: User): boolean {
         return (
             this.userName === user.getUserName() &&
@@ -77,6 +87,7 @@ export class User extends UserBase {
             role: this.role,
             status: this.status,
             phoneNumber: this.phoneNumber,
+            profileImage: this.profileImage,
             createdById: this.getCreatedById(),
             createdDate: this.getCreatedDate(),
             modifiedById: this.getModifiedById(),
@@ -94,11 +105,12 @@ export class User extends UserBase {
         role,
         status,
         phoneNumber,
+        profileImage,
         createdById,
         createdDate,
         modifiedById,
         modifiedDate,
-    }: PrismaUser): User {
+    }: PrismaUser & { profileImage?: PrismaUserImage | null }): User {
         return new User({
             id,
             userName,
@@ -109,6 +121,7 @@ export class User extends UserBase {
             role: role as UserRole,
             status: status as UserStatus,
             phoneNumber: phoneNumber || undefined,
+            profileImage: profileImage ? UserImage.from(profileImage) : undefined,
             createdById: createdById || undefined,
             createdDate: createdDate || undefined,
             modifiedById: modifiedById || undefined,
@@ -141,11 +154,11 @@ export class User extends UserBase {
     static update({
         currentUser,
         existingUser,
-        updateData,
+        userData,
     }: {
         currentUser: User;
         existingUser: User;
-        updateData: {
+        userData: {
             userName: string;
             firstName: string;
             lastName: string;
@@ -158,14 +171,14 @@ export class User extends UserBase {
     }): User {
         return new User({
             id: existingUser.getId(),
-            userName: updateData.userName ?? existingUser.getUserName(),
-            firstName: updateData.firstName ?? existingUser.getFirstName(),
-            lastName: updateData.lastName ?? existingUser.getLastName(),
-            email: updateData.email ?? existingUser.getEmail(),
-            passWord: updateData.passWord ?? existingUser.getPassWord(),
-            role: updateData.role ?? existingUser.getRole(),
-            status: updateData.status ?? existingUser.getStatus(),
-            phoneNumber: updateData.phoneNumber ?? existingUser.getPhoneNumber(),
+            userName: userData.userName ?? existingUser.getUserName(),
+            firstName: userData.firstName ?? existingUser.getFirstName(),
+            lastName: userData.lastName ?? existingUser.getLastName(),
+            email: userData.email ?? existingUser.getEmail(),
+            passWord: userData.passWord ?? existingUser.getPassWord(),
+            role: userData.role ?? existingUser.getRole(),
+            status: userData.status ?? existingUser.getStatus(),
+            phoneNumber: userData.phoneNumber ?? existingUser.getPhoneNumber(),
             createdById: existingUser.getCreatedById(),
             createdDate: existingUser.getCreatedDate(),
             modifiedById: currentUser.getId()!,
