@@ -1,9 +1,15 @@
 import database from '@config/prismaClient';
-import { User } from '@user/model';
+import { User, UserImage } from '@user';
 
 export const getAllUsers = async (): Promise<User[]> => {
     try {
-        const usersPrisma = await database.user.findMany({ orderBy: { id: 'asc' } });
+        const usersPrisma = await database.user.findMany({
+            orderBy: { id: 'asc' },
+            include: {
+                profileImage: true,
+            },
+        });
+
         return usersPrisma.map((user: any) => User.from(user));
     } catch (error) {
         console.error(error);
@@ -23,6 +29,9 @@ export const getUserByUserName = async ({
             where: {
                 userName,
                 ...(excludeUserId && { id: { not: excludeUserId } }),
+            },
+            include: {
+                profileImage: true,
             },
         });
 
@@ -46,6 +55,9 @@ export const getUserByEmail = async ({
                 email,
                 ...(excludeUserId && { id: { not: excludeUserId } }),
             },
+            include: {
+                profileImage: true,
+            },
         });
 
         return userPrisma ? User.from(userPrisma) : null;
@@ -59,6 +71,9 @@ export const getUserById = async ({ id }: { id: number }): Promise<User | null> 
     try {
         const userPrisma = await database.user.findFirst({
             where: { id },
+            include: {
+                profileImage: true,
+            },
         });
 
         return userPrisma ? User.from(userPrisma) : null;
@@ -68,10 +83,11 @@ export const getUserById = async ({ id }: { id: number }): Promise<User | null> 
     }
 };
 
-export const createUser = async (user: User): Promise<User> => {
+export const upsertUser = async ({ user }: { user: User }): Promise<User> => {
     try {
-        const userPrisma = await database.user.create({
-            data: {
+        const userPrisma = await database.user.upsert({
+            where: { userName: user.getUserName() },
+            update: {
                 userName: user.getUserName(),
                 firstName: user.getFirstName(),
                 lastName: user.getLastName(),
@@ -82,8 +98,21 @@ export const createUser = async (user: User): Promise<User> => {
                 phoneNumber: user.getPhoneNumber(),
                 createdDate: user.getCreatedDate(),
                 createdById: user.getCreatedById(),
-                modifiedDate: user.getModifiedDate(),
                 modifiedById: user.getModifiedById(),
+            },
+            create: {
+                userName: user.getUserName(),
+                firstName: user.getFirstName(),
+                lastName: user.getLastName(),
+                email: user.getEmail(),
+                passWord: user.getPassWord(),
+                role: user.getRole(),
+                status: user.getStatus(),
+                phoneNumber: user.getPhoneNumber(),
+                createdById: user.getCreatedById(),
+            },
+            include: {
+                profileImage: true,
             },
         });
 
@@ -94,27 +123,34 @@ export const createUser = async (user: User): Promise<User> => {
     }
 };
 
-export const updateUser = async (user: User): Promise<User> => {
+export const upsertUserImage = async ({
+    userId,
+    userImage,
+}: {
+    userId: number;
+    userImage: UserImage;
+}): Promise<UserImage> => {
     try {
-        const userPrisma = await database.user.update({
-            where: { id: user.getId() },
-            data: {
-                userName: user.getUserName(),
-                firstName: user.getFirstName(),
-                lastName: user.getLastName(),
-                email: user.getEmail(),
-                passWord: user.getPassWord(),
-                role: user.getRole(),
-                status: user.getStatus(),
-                phoneNumber: user.getPhoneNumber(),
-                createdDate: user.getCreatedDate(),
-                createdById: user.getCreatedById(),
-                modifiedDate: user.getModifiedDate(),
-                modifiedById: user.getModifiedById(),
+        const userImagePrisma = await database.userImage.upsert({
+            where: { userId },
+            update: {
+                fileName: userImage.fileName,
+                mimeType: userImage.mimeType,
+                fileSize: userImage.fileSize,
+                url: userImage.url,
+                altText: userImage.altText,
+            },
+            create: {
+                userId,
+                fileName: userImage.fileName,
+                mimeType: userImage.mimeType,
+                fileSize: userImage.fileSize,
+                url: userImage.url,
+                altText: userImage.altText,
             },
         });
 
-        return User.from(userPrisma);
+        return UserImage.from(userImagePrisma);
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');

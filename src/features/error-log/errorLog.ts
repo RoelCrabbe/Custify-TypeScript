@@ -1,8 +1,8 @@
 import { EntityBase } from '@base/entityBase';
-import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log/enums';
+import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
 import { ValidationError } from '@error-log/exceptions';
 import { PrismaErrorLog } from '@prisma/index';
-import { User } from '@user/model';
+import { User } from '@user';
 
 export class ErrorLog extends EntityBase {
     public readonly type: ErrorType;
@@ -26,10 +26,10 @@ export class ErrorLog extends EntityBase {
         resolvedById?: number;
         resolvedDate?: Date;
         id?: number;
-        createdDate?: Date;
-        modifiedDate?: Date;
         createdById?: number;
+        createdDate?: Date;
         modifiedById?: number;
+        modifiedDate?: Date;
     }) {
         super(log);
 
@@ -202,11 +202,11 @@ export class ErrorLog extends EntityBase {
     static update({
         currentUser,
         existingErrorLog,
-        updateData,
+        errorData,
     }: {
         currentUser: User;
         existingErrorLog: ErrorLog;
-        updateData: {
+        errorData: {
             type: ErrorType;
             severity: ErrorSeverity;
             httpMethod: ErrorHttpMethod;
@@ -220,15 +220,15 @@ export class ErrorLog extends EntityBase {
     }): ErrorLog {
         return new ErrorLog({
             id: existingErrorLog.getId(),
-            type: updateData.type ?? existingErrorLog.getType(),
-            errorMessage: updateData.errorMessage ?? existingErrorLog.getErrorMessage(),
-            stackTrace: updateData.stackTrace ?? existingErrorLog.getStackTrace(),
-            requestPath: updateData.requestPath ?? existingErrorLog.getRequestPath(),
-            httpMethod: updateData.httpMethod ?? existingErrorLog.getHttpMethod(),
-            severity: updateData.severity ?? existingErrorLog.getSeverity(),
-            status: updateData.status ?? existingErrorLog.getStatus(),
-            resolvedById: updateData.resolvedById ?? existingErrorLog.getResolvedById(),
-            resolvedDate: updateData.resolvedDate ?? existingErrorLog.getResolvedDate(),
+            type: errorData.type ?? existingErrorLog.getType(),
+            errorMessage: errorData.errorMessage ?? existingErrorLog.getErrorMessage(),
+            stackTrace: errorData.stackTrace ?? existingErrorLog.getStackTrace(),
+            requestPath: errorData.requestPath ?? existingErrorLog.getRequestPath(),
+            httpMethod: errorData.httpMethod ?? existingErrorLog.getHttpMethod(),
+            severity: errorData.severity ?? existingErrorLog.getSeverity(),
+            status: errorData.status ?? existingErrorLog.getStatus(),
+            resolvedById: errorData.resolvedById ?? existingErrorLog.getResolvedById(),
+            resolvedDate: errorData.resolvedDate ?? existingErrorLog.getResolvedDate(),
             createdById: existingErrorLog.getCreatedById(),
             createdDate: existingErrorLog.getCreatedDate(),
             modifiedById: currentUser.getId()!,

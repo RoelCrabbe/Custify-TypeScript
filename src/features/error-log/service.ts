@@ -1,11 +1,11 @@
-import { CustifyError, NotFoundError, ValidationError } from '@error-log/exceptions';
 import {
     ErrorHttpMethod,
+    ErrorLog,
     errorLogRepository,
     ErrorStatus,
     isValidErrorHttpMethod,
-} from '@error-log/index';
-import { ErrorLog } from '@error-log/model';
+} from '@error-log';
+import { CustifyError, NotFoundError, ValidationError } from '@error-log/exceptions';
 import { ErrorLogInput, JwtToken } from '@types';
 import { getCurrentUser } from '@user/service';
 import { capitalizeFirstLetter } from '@utils/string';
@@ -46,20 +46,20 @@ export const createErrorLog = async ({
     const rawMethod = capitalizeFirstLetter(req.method);
     const httpMethod: ErrorHttpMethod = isValidErrorHttpMethod(rawMethod) ? rawMethod : 'Get';
 
-    return await errorLogRepository.createErrorLog(
-        ErrorLog.create({
-            currentUser,
-            errorData: {
-                type: err.getType(),
-                severity: err.getSeverity(),
-                httpMethod,
-                errorMessage: err.getMessage(),
-                stackTrace: err.stack || 'No StackTrace Available',
-                requestPath: req.url,
-                status: ErrorStatus.New,
-            },
-        }),
-    );
+    const createdErrorLog = ErrorLog.create({
+        currentUser,
+        errorData: {
+            type: err.getType(),
+            severity: err.getSeverity(),
+            httpMethod,
+            errorMessage: err.getMessage(),
+            stackTrace: err.stack || 'No StackTrace Available',
+            requestPath: req.url,
+            status: ErrorStatus.New,
+        },
+    });
+
+    return await errorLogRepository.upsertErrorLog({ errorLog: createdErrorLog });
 };
 
 export const getErrorLogById = async ({
@@ -99,7 +99,7 @@ export const updateErrorLog = async ({
     const existingErrorLog = await getErrorLogById({ errorLogId: id });
     const currentUser = await getCurrentUser({ auth });
 
-    const updateData = {
+    const errorData = {
         type,
         severity,
         httpMethod,
@@ -112,15 +112,15 @@ export const updateErrorLog = async ({
     };
 
     if (status === ErrorStatus.Resolved) {
-        updateData.resolvedById = currentUser.getId();
-        updateData.resolvedDate = new Date();
+        errorData.resolvedById = currentUser.getId();
+        errorData.resolvedDate = new Date();
     }
 
     const updatedErrorLog = ErrorLog.update({
         currentUser,
         existingErrorLog,
-        updateData,
+        errorData,
     });
 
-    return await errorLogRepository.updateErrorLog(updatedErrorLog);
+    return await errorLogRepository.upsertErrorLog({ errorLog: updatedErrorLog });
 };

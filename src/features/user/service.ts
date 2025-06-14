@@ -1,7 +1,6 @@
 import { AuthenticationError, NotFoundError, ValidationError } from '@error-log/exceptions';
 import { JwtToken, UserInput } from '@types';
-import { userRepository, userService } from '@user/index';
-import { User } from '@user/model';
+import { User, UserImage, userRepository, userService } from '@user';
 import bcrypt from 'bcryptjs';
 
 export const getAllUsers = async (): Promise<User[]> => {
@@ -82,8 +81,18 @@ export const updateUser = async ({
 }): Promise<User> => {
     if (!userInput.id) throw new ValidationError('User id is required');
 
-    const { id, firstName, lastName, email, phoneNumber, userName, passWord, role, status } =
-        userInput;
+    const {
+        id,
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        userName,
+        passWord,
+        role,
+        status,
+        profileImage,
+    } = userInput;
 
     const existingUser = await userService.getUserById({ userId: id });
     const currentUser = await getCurrentUser({ auth });
@@ -102,7 +111,7 @@ export const updateUser = async ({
     const updatedUser = User.update({
         currentUser,
         existingUser,
-        updateData: {
+        userData: {
             firstName,
             lastName,
             email,
@@ -114,5 +123,29 @@ export const updateUser = async ({
         },
     });
 
-    return await userRepository.updateUser(updatedUser);
+    if (profileImage) {
+        const userImageData = {
+            url: profileImage.url,
+            altText: profileImage.altText,
+            fileName: profileImage.fileName,
+            mimeType: profileImage.mimeType,
+            fileSize: profileImage.fileSize,
+        };
+
+        const existingProfileImage = existingUser.getProfileImage();
+        const userImage = existingProfileImage
+            ? UserImage.update({
+                  currentUser,
+                  existingUserImage: existingProfileImage,
+                  userImageData,
+              })
+            : UserImage.create({
+                  currentUser,
+                  userImageData,
+              });
+
+        await userRepository.upsertUserImage({ userId: id, userImage });
+    }
+
+    return await userRepository.upsertUser({ user: updatedUser });
 };

@@ -1,16 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `errorlogs` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `users` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE "errorlogs";
-
--- DropTable
-DROP TABLE "users";
-
 -- CreateTable
 CREATE TABLE "Users" (
     "id" SERIAL NOT NULL,
@@ -31,6 +18,23 @@ CREATE TABLE "Users" (
 );
 
 -- CreateTable
+CREATE TABLE "UserImages" (
+    "id" SERIAL NOT NULL,
+    "createdDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "modifiedDate" TIMESTAMP(3),
+    "createdById" INTEGER,
+    "modifiedById" INTEGER,
+    "url" TEXT NOT NULL,
+    "altText" TEXT NOT NULL,
+    "fileName" TEXT NOT NULL,
+    "mimeType" TEXT NOT NULL,
+    "fileSize" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+
+    CONSTRAINT "UserImages_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "ErrorLogs" (
     "id" SERIAL NOT NULL,
     "createdDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
@@ -44,9 +48,8 @@ CREATE TABLE "ErrorLogs" (
     "stackTrace" TEXT NOT NULL DEFAULT 'No StackTrace Available',
     "requestPath" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'New',
-    "isArchived" BOOLEAN NOT NULL DEFAULT false,
-    "archivedBy" INTEGER,
-    "archivedDate" TIMESTAMP(3),
+    "resolvedById" INTEGER,
+    "resolvedDate" TIMESTAMP(3),
 
     CONSTRAINT "ErrorLogs_pkey" PRIMARY KEY ("id")
 );
@@ -56,3 +59,9 @@ CREATE UNIQUE INDEX "Users_userName_key" ON "Users"("userName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserImages_userId_key" ON "UserImages"("userId");
+
+-- AddForeignKey
+ALTER TABLE "UserImages" ADD CONSTRAINT "UserImages_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

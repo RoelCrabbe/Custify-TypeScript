@@ -1,5 +1,5 @@
 import { EntityBase } from '@base/entityBase';
-import { UserRole, UserStatus } from '@user/enums';
+import { UserRole, UserStatus } from '@user';
 
 export abstract class UserBase extends EntityBase {
     protected userName: string;

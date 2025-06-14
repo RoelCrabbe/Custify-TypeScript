@@ -1,5 +1,5 @@
-import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log/enums';
-import { UserRole, UserStatus } from '@user/enums';
+import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
+import { UserRole, UserStatus } from '@user';
 
 export type AuthenticationResponse = {
     token?: string;
@@ -20,6 +20,16 @@ export type UserInput = {
     role: UserRole;
     status: UserStatus;
     phoneNumber?: string;
+    profileImage?: UserImageInput;
+};
+
+export type UserImageInput = {
+    id?: number;
+    url: string;
+    altText: string;
+    fileName: string;
+    fileSize: number;
+    mimeType: string;
 };
 
 export type ErrorLogInput = {
