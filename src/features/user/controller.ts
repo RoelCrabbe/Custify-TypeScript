@@ -1,4 +1,4 @@
-import { JwtToken, UserInput } from '@types';
+import { JwtToken, UpdatePassWordInput, UserInput } from '@types';
 import { userService } from '@user';
 import express, { NextFunction, Request, Response } from 'express';
 
@@ -43,6 +43,20 @@ userRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =
     try {
         const userId = Number(req.params.id);
         const response = await userService.getUserById({ userId });
+        res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
+userRouter.put('/change-password', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const updatePassWord = <UpdatePassWordInput>req.body;
+        const header = req as Request & { auth: JwtToken };
+        const response = await userService.changePassWord({
+            updatePassWordInput: updatePassWord,
+            auth: header.auth,
+        });
         res.status(200).json(response);
     } catch (error) {
         next(error);

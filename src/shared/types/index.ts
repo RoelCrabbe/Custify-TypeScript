@@ -44,3 +44,10 @@ export type ErrorLogInput = {
     resolvedById?: number;
     resolvedDate?: Date;
 };
+
+export type UpdatePassWordInput = {
+    id?: number;
+    currentPassWord: string;
+    newPassWord: string;
+    confirmPassWord: string;
+};

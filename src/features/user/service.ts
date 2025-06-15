@@ -1,5 +1,5 @@
 import { AuthenticationError, NotFoundError, ValidationError } from '@error-log/exceptions';
-import { JwtToken, UserInput } from '@types';
+import { JwtToken, UpdatePassWordInput, UserInput } from '@types';
 import { User, UserImage, userRepository, userService } from '@user';
 import bcrypt from 'bcryptjs';
 
@@ -105,9 +105,6 @@ export const updateUser = async ({
         await userService.updateAssertUserNotExists({ userName, excludeUserId: id });
     }
 
-    let hashedPassword;
-    if (passWord && passWord.trim()) hashedPassword = await bcrypt.hash(passWord, 12);
-
     const updatedUser = User.update({
         currentUser,
         existingUser,
@@ -117,7 +114,7 @@ export const updateUser = async ({
             email,
             phoneNumber,
             userName,
-            passWord: hashedPassword || existingUser.getPassWord(),
+            passWord: existingUser.getPassWord(),
             role,
             status,
         },
@@ -146,6 +143,42 @@ export const updateUser = async ({
 
         await userRepository.upsertUserImage({ userId: id, userImage });
     }
+
+    return await userRepository.upsertUser({ user: updatedUser });
+};
+
+export const changePassWord = async ({
+    updatePassWordInput,
+    auth,
+}: {
+    updatePassWordInput: UpdatePassWordInput;
+    auth: JwtToken;
+}): Promise<User> => {
+    const { currentPassWord, newPassWord, confirmPassWord } = updatePassWordInput;
+    const currentUser = await getCurrentUser({ auth });
+
+    if (newPassWord !== confirmPassWord)
+        throw new ValidationError('New password and confirmation do not match');
+
+    const isCorrectPassword = await bcrypt.compare(currentPassWord, currentUser.getPassWord());
+    if (!isCorrectPassword) throw new AuthenticationError('Invalid credentials.');
+
+    const hashedPassword = await bcrypt.hash(newPassWord, 12);
+
+    const updatedUser = User.update({
+        currentUser,
+        existingUser: currentUser,
+        userData: {
+            firstName: currentUser.getFirstName(),
+            lastName: currentUser.getLastName(),
+            email: currentUser.getEmail(),
+            phoneNumber: currentUser.getPhoneNumber(),
+            userName: currentUser.getUserName(),
+            passWord: hashedPassword,
+            role: currentUser.getRole(),
+            status: currentUser.getStatus(),
+        },
+    });
 
     return await userRepository.upsertUser({ user: updatedUser });
 };
