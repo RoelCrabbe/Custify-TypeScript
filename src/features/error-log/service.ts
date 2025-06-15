@@ -1,8 +1,8 @@
 import {
     ErrorHttpMethod,
     ErrorLog,
-    errorLogRepository,
     ErrorStatus,
+    errorLogRepository,
     isValidErrorHttpMethod,
 } from '@error-log';
 import { CustifyError, NotFoundError, ValidationError } from '@error-log/exceptions';

@@ -6,7 +6,7 @@ import userRouter from '@user/controller';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { expressjwt } from 'express-jwt';
 import helmet from 'helmet';
 import swaggerJSDoc from 'swagger-jsdoc';
@@ -68,8 +68,8 @@ app.use('/users', userRouter);
 app.use('/error-logs', errorLogRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use(async (err: Error, req: Request, res: Response, next: NextFunction) => {
-    await handleErrorMiddleware({ err, req, res, next });
+app.use(async (err: Error, req: Request, res: Response) => {
+    await handleErrorMiddleware({ err, req, res });
 });
 
 app.listen(publicApiPort, () => {
