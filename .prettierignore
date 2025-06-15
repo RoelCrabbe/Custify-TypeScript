@@ -1,17 +1,70 @@
-.DS_Store
-node_modules
-/build
-dist
-dev
-tests/output
-/.svelte-kit
-/package
-.env
-.env.*
-!.env.example
+# -------------------------------
+# OS-generated files
+# -------------------------------
 
-# Ignore files for PNPM, NPM and YARN
+.DS_Store         # macOS Finder metadata
+Thumbs.db         # Windows thumbnail cache
+ehthumbs.db       # More Windows thumbnails
+
+# -------------------------------
+# Dependency directories
+# -------------------------------
+
+node_modules/     # Installed packages (always ignore)
+.package/         # PNPM packages sometimes installed here
+
+# -------------------------------
+# Build outputs
+# -------------------------------
+
+dist/             # Distribution build folder
+build/            # Generic build folder
+dev/              # Development artifacts
+coverage/         # Code coverage reports from tools like Jest
+.cache/           # Tooling cache (e.g., Babel, Vite, Jest, etc.)
+storybook-static/ # Storybook's static export folder
+tests/output/     # Output from integration/unit tests
+
+# -------------------------------
+# SvelteKit-specific (if applicable)
+# -------------------------------
+
+.svelte-kit/      # SvelteKit build folder (ignore if not used)
+
+# -------------------------------
+# Environment variables
+# -------------------------------
+
+.env              # Root .env file
+.env.*            # All other env variants (e.g., .env.local, .env.production)
+!.env.example     # EXCEPTION: keep the example env file visible (for docs or templates)
+
+# -------------------------------
+# Package manager lock files
+# -------------------------------
+
 pnpm-lock.yaml
-/.changeset
 package-lock.json
 yarn.lock
+/.changeset       # Changeset versioning config folder
+
+# -------------------------------
+# Editor & IDE settings
+# -------------------------------
+
+.vscode/          # VS Code settings
+.idea/            # JetBrains IDE settings
+*.sublime-project # Sublime Text project files
+*.sublime-workspace
+
+# -------------------------------
+# Logs and temporary files
+# -------------------------------
+
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tmp
+*.temp
