@@ -5,5 +5,7 @@
     "bracketSameLine": true,
     "tabWidth": 4,
     "useTabs": false,
-    "endOfLine": "lf"
+    "endOfLine": "lf",
+    "semi": true,
+    "bracketSpacing": true
 }
