@@ -1,18 +1,16 @@
 import { errorLogService } from '@error-log';
 import { CustifyError } from '@error-log/exceptions';
 import { JwtToken } from '@types';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 export const handleErrorMiddleware = async ({
     err,
     req,
     res,
-    next,
 }: {
     err: Error;
     req: Request;
     res: Response;
-    next: NextFunction;
 }) => {
     if (err instanceof CustifyError) {
         const header = req as Request & { auth: JwtToken };

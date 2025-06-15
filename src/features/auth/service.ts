@@ -1,6 +1,6 @@
 import { AuthenticationError } from '@error-log/exceptions';
 import { AuthenticationResponse, UserInput } from '@types';
-import { isActiveUserStatus, User, userRepository, userService } from '@user';
+import { User, isActiveUserStatus, userRepository, userService } from '@user';
 import { generateJwtToken } from '@utils/jwt';
 import bcrypt from 'bcryptjs';
 

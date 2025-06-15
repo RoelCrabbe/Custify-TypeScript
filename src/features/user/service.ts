@@ -8,7 +8,7 @@ export const getAllUsers = async (): Promise<User[]> => {
 };
 
 export const getCurrentUser = async ({ auth }: { auth: JwtToken }): Promise<User> => {
-    const { role, userId } = auth;
+    const { userId } = auth;
     return await getUserById({ userId });
 };
 
@@ -81,18 +81,8 @@ export const updateUser = async ({
 }): Promise<User> => {
     if (!userInput.id) throw new ValidationError('User id is required');
 
-    const {
-        id,
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        userName,
-        passWord,
-        role,
-        status,
-        profileImage,
-    } = userInput;
+    const { id, firstName, lastName, email, phoneNumber, userName, role, status, profileImage } =
+        userInput;
 
     const existingUser = await userService.getUserById({ userId: id });
     const currentUser = await getCurrentUser({ auth });
