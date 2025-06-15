@@ -56,7 +56,7 @@ const generateStackTrace = (errorType: string, message: string): string => {
 };
 
 const getRandomAdminId = (users: any[]): number | null => {
-    const admins = users.filter(user => user.role === UserRole.Admin);
+    const admins = users.filter((user) => user.role === UserRole.Admin);
     if (admins.length === 0) return null;
     return casual.random_element(admins).id as number;
 };
@@ -70,7 +70,7 @@ const main = async () => {
 
     // Seed custom users
     const createdCustomUsers = await Promise.all(
-        customUsers.map(async user => {
+        customUsers.map(async (user) => {
             const hashedPassword = await bcrypt.hash(user.passWord, 12);
             const newUser = new User({ ...user, passWord: hashedPassword });
 
