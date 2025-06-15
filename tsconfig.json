@@ -17,7 +17,6 @@
             "@shared/*": ["shared/*"],
             "@prisma/*": ["prisma/*"],
             "@prisma": ["prisma/index.ts"],
-            // Features
             "@auth/*": ["features/auth/*"],
             "@auth": ["features/auth/index.ts"],
             "@error-log/*": ["features/error-log/*"],

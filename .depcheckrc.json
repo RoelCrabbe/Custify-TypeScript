@@ -1,0 +1,14 @@
+{
+    "ignoreMatches": [
+        "@base*",
+        "@config*",
+        "@types*",
+        "@utils*",
+        "@shared*",
+        "@prisma*",
+        "@auth*",
+        "@error-log*",
+        "@exceptions*",
+        "@user*"
+    ]
+}
