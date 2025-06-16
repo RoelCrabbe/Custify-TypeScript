@@ -182,11 +182,11 @@ export class Notification extends EntityBase {
     }: {
         currentUser: User;
         notificationData: {
+            title: string;
             body: string;
             category: NotificationCategory;
             priority: NotificationPriority;
             status: NotificationStatus;
-            title: string;
             recipient: User;
             sender?: User;
         };
@@ -204,11 +204,11 @@ export class Notification extends EntityBase {
     }: {
         existingNotification: Notification;
         notificationData: {
+            title: string;
             body: string;
             category: NotificationCategory;
             priority: NotificationPriority;
             status: NotificationStatus;
-            title: string;
             readDate?: Date;
             recipient: User;
             sender?: User;
@@ -217,11 +217,11 @@ export class Notification extends EntityBase {
     }): Notification {
         return new Notification({
             id: existingNotification.getId(),
+            title: notificationData.title ?? existingNotification.getTitle(),
             body: notificationData.body ?? existingNotification.getBody(),
             category: notificationData.category ?? existingNotification.getCategory(),
             priority: notificationData.priority ?? existingNotification.getPriority(),
             status: notificationData.status ?? existingNotification.getStatus(),
-            title: notificationData.title ?? existingNotification.getTitle(),
             readDate: notificationData.readDate ?? existingNotification.getReadDate(),
             sentDate: existingNotification.getSentDate(),
             recipient: notificationData.recipient ?? existingNotification.getRecipient(),

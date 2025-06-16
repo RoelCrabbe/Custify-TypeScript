@@ -149,7 +149,7 @@ export class UserImage extends EntityBase {
     }): UserImage {
         return new UserImage({
             ...userImageData,
-            createdById: currentUser?.getId() ?? undefined,
+            createdById: currentUser ? currentUser.getId() : undefined,
         });
     }
 

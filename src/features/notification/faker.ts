@@ -1,0 +1,76 @@
+import database from '@config/prismaClient';
+import {
+    Notification,
+    NotificationCategory,
+    NotificationPriority,
+    NotificationStatus,
+} from '@notification';
+import { User } from '@user/user';
+import casual from 'casual';
+
+const notificationStatus = Object.values(NotificationStatus);
+const notificationCategory = Object.values(NotificationCategory);
+const notificationPriority = Object.values(NotificationPriority);
+
+export const createFakeNotifications = async (users: User[]) => {
+    await database.notification.deleteMany();
+
+    const createdNotifications = await Promise.all(
+        Array.from({ length: 50 }).map(async () => {
+            const sender = casual.random_element(users) as User;
+            const recipientCandidates = users.filter((u) => u.getId() !== sender.getId());
+            const recipient = casual.random_element(recipientCandidates);
+
+            const newNotification = Notification.create({
+                currentUser: sender,
+                notificationData: {
+                    title: casual.title,
+                    body: casual.sentences(2),
+                    status: casual.random_element(notificationStatus),
+                    category: casual.random_element(notificationCategory),
+                    priority: casual.random_element(notificationPriority),
+                    recipient: recipient,
+                },
+            });
+
+            const senderId = newNotification.getSender()?.getId();
+            const recipientId = newNotification.getRecipient().getId();
+
+            if (!senderId || !recipientId) return;
+
+            return database.notification.create({
+                data: {
+                    title: newNotification.getTitle(),
+                    body: newNotification.getBody(),
+                    status: newNotification.getStatus(),
+                    category: newNotification.getCategory(),
+                    priority: newNotification.getPriority(),
+                    readDate: newNotification.getReadDate(),
+                    sender: {
+                        connect: { id: senderId },
+                    },
+                    recipient: {
+                        connect: { id: recipientId },
+                    },
+                    createdById: newNotification.getCreatedById(),
+                },
+                include: {
+                    sender: true,
+                    recipient: true,
+                },
+            });
+        }),
+    );
+
+    const validNotifications = createdNotifications.filter(
+        (n): n is NonNullable<typeof n> => n !== undefined,
+    );
+
+    const notificationInstances = validNotifications.map((notificationData) =>
+        Notification.from(notificationData),
+    );
+
+    return {
+        notifications: notificationInstances,
+    };
+};
