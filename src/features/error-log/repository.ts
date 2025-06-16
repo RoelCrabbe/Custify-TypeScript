@@ -5,9 +5,7 @@ import { Prisma } from '@prisma/client';
 export const getAllByStatus = async (status: ErrorStatus): Promise<ErrorLog[]> => {
     try {
         const results = await database.errorLog.findMany({
-            where: {
-                status: status,
-            },
+            where: { status },
             orderBy: {
                 id: 'asc',
             },

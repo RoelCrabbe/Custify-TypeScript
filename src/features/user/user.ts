@@ -1,6 +1,6 @@
 import { UserBase } from '@base/userBase';
 import { ValidationError } from '@error-log/exceptions';
-import { PrismaUser, PrismaUserImage } from '@prisma/index';
+import { PrismaUser, PrismaUserImage } from '@prisma';
 import { UserImage, UserRole, UserStatus, isValidUserRole, isValidUserStatus } from '@user';
 
 export class User extends UserBase {

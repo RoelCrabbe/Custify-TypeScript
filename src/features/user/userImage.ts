@@ -1,6 +1,6 @@
 import { EntityBase } from '@base/entityBase';
 import { ValidationError } from '@error-log/exceptions';
-import { PrismaUserImage } from '@prisma/index';
+import { PrismaUserImage } from '@prisma';
 import { User } from '@user';
 
 export class UserImage extends EntityBase {
