@@ -1,5 +1,12 @@
 import database from '@config/prismaClient';
-import { ErrorHttpMethod, ErrorLog, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
+import {
+    ErrorHttpMethod,
+    ErrorLog,
+    errorLogRepository,
+    ErrorSeverity,
+    ErrorStatus,
+    ErrorType,
+} from '@error-log';
 import { User } from '@user';
 import casual from 'casual';
 
@@ -105,28 +112,11 @@ export const createFakeErrorLogs = async (customUsers: User[], randomUsers: User
                 });
             }
 
-            return await database.errorLog.create({
-                data: {
-                    type: newErrorLog.getType(),
-                    severity: newErrorLog.getSeverity(),
-                    httpMethod: newErrorLog.getHttpMethod(),
-                    errorMessage: newErrorLog.getErrorMessage(),
-                    stackTrace: newErrorLog.getStackTrace(),
-                    requestPath: newErrorLog.getRequestPath(),
-                    status: newErrorLog.getStatus(),
-                    resolvedById: newErrorLog.getResolvedById(),
-                    resolvedDate: newErrorLog.getResolvedDate(),
-                    createdDate: newErrorLog.getCreatedDate(),
-                    createdById: newErrorLog.getCreatedById(),
-                    modifiedById: newErrorLog.getModifiedById(),
-                },
-            });
+            return await errorLogRepository.upsertErrorLog({ errorLog: newErrorLog });
         }),
     );
 
-    const errorLogInstances = createdErrorLogs.map((errorLogData) => ErrorLog.from(errorLogData));
-
     return {
-        errorLogs: errorLogInstances,
+        errorLogs: createdErrorLogs,
     };
 };

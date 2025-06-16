@@ -1,6 +1,8 @@
 import database from '@config/prismaClient';
 import { UserRole, UserStatus } from '@user/enums';
+import { userRepository } from '@user/index';
 import { User } from '@user/user';
+import { UserImage } from '@user/userImage';
 import bcrypt from 'bcryptjs';
 import casual from 'casual';
 
@@ -11,7 +13,7 @@ const customUsers = [
         userName: 'Roel_Crabbe',
         email: 'roel.crabbe@example.com',
         passWord: '@Roel_Crabbe123',
-        phoneNumber: '0612345678',
+        phoneNumber: '061-234-5678',
         status: UserStatus.Active,
         role: UserRole.Admin,
     },
@@ -21,7 +23,7 @@ const customUsers = [
         userName: 'Daan_Crabbe',
         email: 'daan.crabbe@example.com',
         passWord: '@Daan_Crabbe123',
-        phoneNumber: '0612345678',
+        phoneNumber: '061-234-5678',
         status: UserStatus.Active,
         role: UserRole.Admin,
     },
@@ -34,7 +36,7 @@ export const createFakeUsers = async () => {
         customUsers.map(async (user) => {
             const hashedPassword = await bcrypt.hash(user.passWord, 12);
 
-            const createdUser = User.create({
+            const newUser = User.create({
                 currentUser: null,
                 userData: {
                     firstName: user.firstName,
@@ -46,25 +48,11 @@ export const createFakeUsers = async () => {
                 },
             });
 
-            createdUser.roleAdmin();
+            newUser.roleAdmin();
 
-            return database.user.create({
-                data: {
-                    userName: createdUser.getUserName(),
-                    firstName: createdUser.getFirstName(),
-                    lastName: createdUser.getLastName(),
-                    email: createdUser.getEmail(),
-                    passWord: createdUser.getPassWord(),
-                    role: createdUser.getRole(),
-                    status: createdUser.getStatus(),
-                    phoneNumber: createdUser.getPhoneNumber(),
-                    createdById: createdUser.getCreatedById(),
-                },
-            });
+            return await userRepository.upsertUser({ user: newUser });
         }),
     );
-
-    const customUsersInstances = createdCustomUsers.map((userData) => User.from(userData));
 
     const createdRandomUsers = await Promise.all(
         Array.from({ length: 10 }).map(async () => {
@@ -75,7 +63,7 @@ export const createFakeUsers = async () => {
             const plainPassword = `@${userName}123`;
             const hashedPassword = await bcrypt.hash(plainPassword, 12);
 
-            const creatingUser = casual.random_element(customUsersInstances) as User;
+            const creatingUser = casual.random_element(createdCustomUsers) as User;
 
             const newUser = User.create({
                 currentUser: creatingUser,
@@ -97,27 +85,34 @@ export const createFakeUsers = async () => {
             if (chanceInactive) newUser.statusInActive();
             else if (chanceDelete) newUser.statusDelete();
 
-            return database.user.create({
-                data: {
-                    userName: newUser.getUserName(),
-                    firstName: newUser.getFirstName(),
-                    lastName: newUser.getLastName(),
-                    email: newUser.getEmail(),
-                    passWord: newUser.getPassWord(),
-                    role: newUser.getRole(),
-                    status: newUser.getStatus(),
-                    phoneNumber: newUser.getPhoneNumber(),
-                    createdById: newUser.getCreatedById(),
-                },
-            });
+            return await userRepository.upsertUser({ user: newUser });
         }),
     );
 
-    const randomUsersInstances = createdRandomUsers.map((userData) => User.from(userData));
+    const allUsers = [...createdCustomUsers, ...createdRandomUsers];
+
+    await Promise.all(
+        allUsers.map(async (user) => {
+            if (user.getId() === undefined) return;
+
+            const userImage = UserImage.create({
+                currentUser: user,
+                userImageData: {
+                    url: `https://api.dicebear.com/7.x/bottts/svg?seed=${user.getUserName()}&size=200`,
+                    altText: `${user.getFirstName()} ${user.getLastName()}'s avatar`,
+                    fileName: `${user.getUserName()}.svg`,
+                    mimeType: 'image/svg+xml',
+                    fileSize: 100,
+                },
+            });
+
+            await userRepository.upsertUserImage({ userId: user.getId()!, userImage });
+        }),
+    );
 
     return {
-        allUsers: [...customUsersInstances, ...randomUsersInstances],
-        customUsers: customUsersInstances,
-        randomUsers: randomUsersInstances,
+        allUsers: allUsers,
+        customUsers: createdCustomUsers,
+        randomUsers: createdRandomUsers,
     };
 };
