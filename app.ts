@@ -46,7 +46,7 @@ app.use(
     cors({
         origin: publicFrontEndUrl,
     }),
-    bodyParser.json(),
+    bodyParser.json({ limit: '256kb' }),
 );
 
 app.get('/status', (req, res) => {
