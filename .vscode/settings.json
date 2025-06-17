@@ -14,6 +14,9 @@
     "[feature]": {
         "editor.defaultFormatter": "alexkrechik.cucumberautocomplete"
     },
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
     "cSpell.words": [
         "autoincrement",
         "badeball",

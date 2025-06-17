@@ -1,5 +1,5 @@
 generator client {
-    provider     = "prisma-client-js"
+    provider      = "prisma-client-js"
     binaryTargets = ["native", "windows"]
 }
 
@@ -10,101 +10,101 @@ datasource db {
 
 model User {
     // ModelBase - Database managed metadata
-    id             Int             @id @default(autoincrement())
-    createdDate    DateTime?       @default(now())
-    modifiedDate   DateTime?       @updatedAt
-    createdById    Int?
-    modifiedById   Int?
+    id           Int       @id @default(autoincrement())
+    createdDate  DateTime? @default(now())
+    modifiedDate DateTime? @updatedAt
+    createdById  Int?
+    modifiedById Int?
 
     // User Model - Business fields
-    userName       String          @unique
-    firstName      String
-    lastName       String
-    email          String          @unique
-    passWord       String
-    role           String          @default("Guest")
-    status         String          @default("Active")
-    phoneNumber    String?
+    userName    String  @unique
+    firstName   String
+    lastName    String
+    email       String  @unique
+    passWord    String
+    role        String  @default("Guest")
+    status      String  @default("Active")
+    phoneNumber String?
 
     // Relationships
-    profileImage           UserImage?
-    sentNotifications      Notification[]    @relation("SentNotifications")
-    receivedNotifications  Notification[]    @relation("ReceivedNotifications")
+    profileImage          UserImage?
+    sentNotifications     Notification[] @relation("SentNotifications")
+    receivedNotifications Notification[] @relation("ReceivedNotifications")
 
     @@map("Users")
 }
 
 model UserImage {
     // ModelBase - Database managed metadata
-    id             Int             @id @default(autoincrement())
-    createdDate    DateTime?       @default(now())
-    modifiedDate   DateTime?       @updatedAt
-    createdById    Int?
-    modifiedById   Int?
+    id           Int       @id @default(autoincrement())
+    createdDate  DateTime? @default(now())
+    modifiedDate DateTime? @updatedAt
+    createdById  Int?
+    modifiedById Int?
 
     // UserImage Model - Business fields
-    url            String
-    altText        String
-    fileName       String
-    mimeType       String
-    fileSize       Int
+    url      String
+    altText  String
+    fileName String
+    mimeType String
+    fileSize Int
 
     // Relationships
-    userId         Int             @unique
-    user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int  @unique
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("UserImages")
 }
 
 model ErrorLog {
     // ModelBase - Database managed metadata
-    id             Int             @id @default(autoincrement())
-    createdDate    DateTime?       @default(now())
-    modifiedDate   DateTime?       @updatedAt
-    createdById    Int?
-    modifiedById   Int?
+    id           Int       @id @default(autoincrement())
+    createdDate  DateTime? @default(now())
+    modifiedDate DateTime? @updatedAt
+    createdById  Int?
+    modifiedById Int?
 
     // ErrorLog Model - Business fields
-    type           String          @default("Application Error")
-    severity       String          @default("Handled")
-    httpMethod     String          @default("Post")
-    errorMessage   String
-    stackTrace     String          @default("No StackTrace Available")
-    requestPath    String
+    type         String @default("Application Error")
+    severity     String @default("Handled")
+    httpMethod   String @default("Post")
+    errorMessage String
+    stackTrace   String @default("No StackTrace Available")
+    requestPath  String
 
     // Lifecycle - Management Fields
-    status         String          @default("New")
-    resolvedById   Int?
-    resolvedDate   DateTime?
+    status       String    @default("New")
+    resolvedById Int?
+    resolvedDate DateTime?
 
     @@map("ErrorLogs")
 }
 
 model Notification {
     // ModelBase - Database managed metadata
-    id             Int             @id @default(autoincrement())
-    createdDate    DateTime?       @default(now())
-    modifiedDate   DateTime?       @updatedAt
-    createdById    Int?
-    modifiedById   Int?
+    id           Int       @id @default(autoincrement())
+    createdDate  DateTime? @default(now())
+    modifiedDate DateTime? @updatedAt
+    createdById  Int?
+    modifiedById Int?
 
     // Notification Model - Business fields
-    title          String
-    body           String
-    status         String          @default("Pending")
-    category       String          @default("General")
-    priority       String          @default("Medium")
+    title    String
+    body     String
+    status   String @default("Pending")
+    category String @default("General")
+    priority String @default("Medium")
 
     // Lifecycle - Management Fields
-    sentDate       DateTime        @default(now())
-    readDate       DateTime?
+    sentDate DateTime  @default(now())
+    readDate DateTime?
 
     // Relationships
-    sentById       Int?
-    sender         User?           @relation("SentNotifications", fields: [sentById], references: [id])
+    sentById Int?
+    sender   User? @relation("SentNotifications", fields: [sentById], references: [id])
 
-    recipientById    Int
-    recipient      User            @relation("ReceivedNotifications", fields: [recipientById], references: [id], onDelete: Cascade)
+    recipientById Int
+    recipient     User @relation("ReceivedNotifications", fields: [recipientById], references: [id], onDelete: Cascade)
 
     @@map("Notifications")
 }
