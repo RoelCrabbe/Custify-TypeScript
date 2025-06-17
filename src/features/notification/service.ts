@@ -59,3 +59,13 @@ export const createNotification = async ({
         notification: newNotification,
     });
 };
+
+export const getUnreadProfilePictureReports = async ({
+    userId,
+}: {
+    userId: number;
+}): Promise<Notification[]> => {
+    return await notificationRepository.getUnreadProfilePictureReportsByUserId({
+        recipientById: userId,
+    });
+};

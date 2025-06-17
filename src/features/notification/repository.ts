@@ -130,3 +130,31 @@ export const upsertNotification = async ({
         throw new Error('Database error. See server log for details.');
     }
 };
+
+export const getUnreadProfilePictureReportsByUserId = async ({
+    recipientById,
+}: {
+    recipientById: number;
+}): Promise<Notification[]> => {
+    try {
+        const results = await database.notification.findMany({
+            where: {
+                recipientById,
+                readDate: null,
+                title: 'Reported Profile Picture',
+            },
+            orderBy: {
+                sentDate: 'desc',
+            },
+            include: {
+                sender: true,
+                recipient: true,
+            },
+        });
+
+        return results.map((x: any) => Notification.from(x));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};

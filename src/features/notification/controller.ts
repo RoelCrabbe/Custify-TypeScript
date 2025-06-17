@@ -28,4 +28,14 @@ notificationRouter.post('/', async (req: Request, res: Response, next: NextFunct
     }
 });
 
+notificationRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = Number(req.params.id);
+        const response = await notificationService.getUnreadProfilePictureReports({ userId });
+        res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export default notificationRouter;
