@@ -19,13 +19,13 @@ export const getNotificationById = async ({ id }: { id: number }): Promise<Notif
 };
 
 export const getByUserId = async ({
-    recipientId,
+    recipientById,
 }: {
-    recipientId: number;
+    recipientById: number;
 }): Promise<Notification[]> => {
     try {
         const results = await database.notification.findMany({
-            where: { recipientId, readDate: null },
+            where: { recipientById, readDate: null },
             orderBy: {
                 sentDate: 'desc',
             },
@@ -49,8 +49,8 @@ export const upsertNotification = async ({
 }): Promise<Notification> => {
     try {
         const notificationId = notification.getId();
-        const senderId = notification.getSender()?.getId();
-        const recipientId = notification.getRecipient().getId();
+        const senderById = notification.getSender()?.getId();
+        const recipientById = notification.getRecipient().getId();
         let notificationValue = null;
 
         if (!notificationId) {
@@ -62,13 +62,13 @@ export const upsertNotification = async ({
                     category: notification.getCategory(),
                     priority: notification.getPriority(),
                     readDate: notification.getReadDate(),
-                    sender: senderId
+                    sender: senderById
                         ? {
-                              connect: { id: senderId },
+                              connect: { id: senderById },
                           }
                         : undefined,
                     recipient: {
-                        connect: { id: recipientId },
+                        connect: { id: recipientById },
                     },
                     createdById: notification.getCreatedById(),
                 },
@@ -88,13 +88,13 @@ export const upsertNotification = async ({
                     priority: notification.getPriority(),
                     sentDate: notification.getSentDate(),
                     readDate: notification.getReadDate(),
-                    sender: senderId
+                    sender: senderById
                         ? {
-                              connect: { id: senderId },
+                              connect: { id: senderById },
                           }
                         : undefined,
                     recipient: {
-                        connect: { id: recipientId },
+                        connect: { id: recipientById },
                     },
                     createdDate: notification.getCreatedDate(),
                     createdById: notification.getCreatedById(),
@@ -107,13 +107,13 @@ export const upsertNotification = async ({
                     category: notification.getCategory(),
                     priority: notification.getPriority(),
                     readDate: notification.getReadDate(),
-                    sender: senderId
+                    sender: senderById
                         ? {
-                              connect: { id: senderId },
+                              connect: { id: senderById },
                           }
                         : undefined,
                     recipient: {
-                        connect: { id: recipientId },
+                        connect: { id: recipientById },
                     },
                     createdById: notification.getCreatedById(),
                 },

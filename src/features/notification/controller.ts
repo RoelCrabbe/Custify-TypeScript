@@ -1,5 +1,5 @@
 import { notificationService } from '@notification/index';
-import { JwtToken } from '@types';
+import { JwtToken, NotificationInput } from '@types';
 import express, { NextFunction, Request, Response } from 'express';
 
 const notificationRouter = express.Router();
@@ -9,6 +9,20 @@ notificationRouter.get('/', async (req: Request, res: Response, next: NextFuncti
         const header = req as Request & { auth: JwtToken };
         const response = await notificationService.getByCurrentUser(header);
         res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
+notificationRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const notification = <NotificationInput>req.body;
+        const header = req as Request & { auth: JwtToken };
+        const response = await notificationService.createNotification({
+            notificationInput: notification,
+            auth: header.auth,
+        });
+        res.status(201).json(response);
     } catch (error) {
         next(error);
     }

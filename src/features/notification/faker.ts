@@ -30,6 +30,7 @@ export const createFakeNotifications = async (users: User[]) => {
                     status: casual.random_element(notificationStatus),
                     category: casual.random_element(notificationCategory),
                     priority: casual.random_element(notificationPriority),
+                    sender: sender,
                     recipient: recipient,
                 },
             });

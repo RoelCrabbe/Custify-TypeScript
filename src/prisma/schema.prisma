@@ -103,8 +103,8 @@ model Notification {
     sentById       Int?
     sender         User?           @relation("SentNotifications", fields: [sentById], references: [id])
 
-    recipientId    Int
-    recipient      User            @relation("ReceivedNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
+    recipientById    Int
+    recipient      User            @relation("ReceivedNotifications", fields: [recipientById], references: [id], onDelete: Cascade)
 
     @@map("Notifications")
 }

@@ -1,4 +1,9 @@
 import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
+import {
+    NotificationCategory,
+    NotificationPriority,
+    NotificationStatus,
+} from '@notification/enums';
 import { UserRole, UserStatus } from '@user';
 
 export type AuthenticationResponse = {
@@ -50,4 +55,17 @@ export type UpdatePassWordInput = {
     currentPassWord: string;
     newPassWord: string;
     confirmPassWord: string;
+};
+
+export type NotificationInput = {
+    id?: number;
+    title: string;
+    body: string;
+    status: NotificationStatus;
+    category: NotificationCategory;
+    priority: NotificationPriority;
+    sentDate?: Date;
+    readDate?: Date;
+    sentById?: number;
+    recipientById: number;
 };
