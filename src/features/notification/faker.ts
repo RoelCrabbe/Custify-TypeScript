@@ -17,10 +17,10 @@ export const createFakeNotifications = async (users: User[]) => {
     await database.notification.deleteMany();
 
     const createdNotifications = await Promise.all(
-        Array.from({ length: 50 }).map(async () => {
+        Array.from({ length: 300 }).map(async () => {
             const sender = casual.random_element(users) as User;
             const recipientCandidates = users.filter((u) => u.getId() !== sender.getId());
-            const recipient = casual.random_element(recipientCandidates);
+            const recipient = casual.random_element(recipientCandidates) as User;
 
             const newNotification = Notification.create({
                 currentUser: sender,
@@ -33,11 +33,6 @@ export const createFakeNotifications = async (users: User[]) => {
                     recipient: recipient,
                 },
             });
-
-            const senderId = newNotification.getSender()?.getId();
-            const recipientId = newNotification.getRecipient().getId();
-
-            if (!senderId || !recipientId) return;
 
             return notificationRepository.upsertNotification({ notification: newNotification });
         }),

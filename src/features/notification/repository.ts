@@ -31,6 +31,7 @@ export const getByUserId = async ({
             },
             include: {
                 sender: true,
+                recipient: true,
             },
         });
 

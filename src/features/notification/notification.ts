@@ -188,11 +188,11 @@ export class Notification extends EntityBase {
             priority: NotificationPriority;
             status: NotificationStatus;
             recipient: User;
-            sender?: User;
         };
     }): Notification {
         return new Notification({
             ...notificationData,
+            sender: currentUser,
             createdById: currentUser.getId(),
         });
     }
