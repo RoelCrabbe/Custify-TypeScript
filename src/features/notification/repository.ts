@@ -40,3 +40,92 @@ export const getByUserId = async ({
         throw new Error('Database error. See server log for details.');
     }
 };
+
+export const upsertNotification = async ({
+    notification,
+}: {
+    notification: Notification;
+}): Promise<Notification> => {
+    try {
+        const notificationId = notification.getId();
+        const senderId = notification.getSender()?.getId();
+        const recipientId = notification.getRecipient().getId();
+        let notificationValue = null;
+
+        if (!notificationId) {
+            notificationValue = await database.notification.create({
+                data: {
+                    title: notification.getTitle(),
+                    body: notification.getBody(),
+                    status: notification.getStatus(),
+                    category: notification.getCategory(),
+                    priority: notification.getPriority(),
+                    readDate: notification.getReadDate(),
+                    sender: senderId
+                        ? {
+                              connect: { id: senderId },
+                          }
+                        : undefined,
+                    recipient: {
+                        connect: { id: recipientId },
+                    },
+                    createdById: notification.getCreatedById(),
+                },
+                include: {
+                    sender: true,
+                    recipient: true,
+                },
+            });
+        } else {
+            notificationValue = await database.notification.upsert({
+                where: { id: notificationId },
+                update: {
+                    title: notification.getTitle(),
+                    body: notification.getBody(),
+                    status: notification.getStatus(),
+                    category: notification.getCategory(),
+                    priority: notification.getPriority(),
+                    sentDate: notification.getSentDate(),
+                    readDate: notification.getReadDate(),
+                    sender: senderId
+                        ? {
+                              connect: { id: senderId },
+                          }
+                        : undefined,
+                    recipient: {
+                        connect: { id: recipientId },
+                    },
+                    createdDate: notification.getCreatedDate(),
+                    createdById: notification.getCreatedById(),
+                    modifiedById: notification.getModifiedById(),
+                },
+                create: {
+                    title: notification.getTitle(),
+                    body: notification.getBody(),
+                    status: notification.getStatus(),
+                    category: notification.getCategory(),
+                    priority: notification.getPriority(),
+                    readDate: notification.getReadDate(),
+                    sender: senderId
+                        ? {
+                              connect: { id: senderId },
+                          }
+                        : undefined,
+                    recipient: {
+                        connect: { id: recipientId },
+                    },
+                    createdById: notification.getCreatedById(),
+                },
+                include: {
+                    sender: true,
+                    recipient: true,
+                },
+            });
+        }
+
+        return Notification.from(notificationValue);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};

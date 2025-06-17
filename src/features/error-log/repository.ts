@@ -22,6 +22,7 @@ export const upsertErrorLog = async ({ errorLog }: { errorLog: ErrorLog }): Prom
     try {
         const errorLogId = errorLog.getId();
         let errorLogValue = null;
+
         if (!errorLogId) {
             errorLogValue = await database.errorLog.create({
                 data: {

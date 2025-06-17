@@ -110,9 +110,17 @@ export const createFakeUsers = async () => {
         }),
     );
 
+    const validUsers = allUsers.filter((n): n is NonNullable<typeof n> => n !== undefined);
+    const validCustoms = createdCustomUsers.filter(
+        (n): n is NonNullable<typeof n> => n !== undefined,
+    );
+    const validRandoms = createdRandomUsers.filter(
+        (n): n is NonNullable<typeof n> => n !== undefined,
+    );
+
     return {
-        allUsers: allUsers,
-        customUsers: createdCustomUsers,
-        randomUsers: createdRandomUsers,
+        allUsers: validUsers,
+        customUsers: validCustoms,
+        randomUsers: validRandoms,
     };
 };

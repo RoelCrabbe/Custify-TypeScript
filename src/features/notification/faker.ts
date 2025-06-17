@@ -3,6 +3,7 @@ import {
     Notification,
     NotificationCategory,
     NotificationPriority,
+    notificationRepository,
     NotificationStatus,
 } from '@notification';
 import { User } from '@user/user';
@@ -38,27 +39,7 @@ export const createFakeNotifications = async (users: User[]) => {
 
             if (!senderId || !recipientId) return;
 
-            return database.notification.create({
-                data: {
-                    title: newNotification.getTitle(),
-                    body: newNotification.getBody(),
-                    status: newNotification.getStatus(),
-                    category: newNotification.getCategory(),
-                    priority: newNotification.getPriority(),
-                    readDate: newNotification.getReadDate(),
-                    sender: {
-                        connect: { id: senderId },
-                    },
-                    recipient: {
-                        connect: { id: recipientId },
-                    },
-                    createdById: newNotification.getCreatedById(),
-                },
-                include: {
-                    sender: true,
-                    recipient: true,
-                },
-            });
+            return notificationRepository.upsertNotification({ notification: newNotification });
         }),
     );
 
@@ -66,11 +47,7 @@ export const createFakeNotifications = async (users: User[]) => {
         (n): n is NonNullable<typeof n> => n !== undefined,
     );
 
-    const notificationInstances = validNotifications.map((notificationData) =>
-        Notification.from(notificationData),
-    );
-
     return {
-        notifications: notificationInstances,
+        notifications: validNotifications,
     };
 };

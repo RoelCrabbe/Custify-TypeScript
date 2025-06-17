@@ -116,7 +116,11 @@ export const createFakeErrorLogs = async (customUsers: User[], randomUsers: User
         }),
     );
 
+    const validErrorLogs = createdErrorLogs.filter(
+        (n): n is NonNullable<typeof n> => n !== undefined,
+    );
+
     return {
-        errorLogs: createdErrorLogs,
+        errorLogs: validErrorLogs,
     };
 };
