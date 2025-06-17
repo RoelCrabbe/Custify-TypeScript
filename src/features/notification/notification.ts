@@ -198,10 +198,11 @@ export class Notification extends EntityBase {
     }
 
     static update({
+        currentUser,
         existingNotification,
         notificationData,
-        currentUser,
     }: {
+        currentUser: User;
         existingNotification: Notification;
         notificationData: {
             title: string;
@@ -213,7 +214,6 @@ export class Notification extends EntityBase {
             recipient: User;
             sender?: User;
         };
-        currentUser: User;
     }): Notification {
         return new Notification({
             id: existingNotification.getId(),

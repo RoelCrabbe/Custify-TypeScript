@@ -38,4 +38,14 @@ notificationRouter.get('/:id', async (req: Request, res: Response, next: NextFun
     }
 });
 
+notificationRouter.put('/', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const header = req as Request & { auth: JwtToken };
+        const response = await notificationService.markAllAsRead(header);
+        res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export default notificationRouter;

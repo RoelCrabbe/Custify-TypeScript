@@ -1,5 +1,5 @@
 import { NotFoundError } from '@error-log/exceptions';
-import { Notification, notificationRepository } from '@notification';
+import { Notification, notificationRepository, NotificationStatus } from '@notification';
 import { JwtToken, NotificationInput } from '@types';
 import { userService } from '@user/index';
 import { getCurrentUser } from '@user/service';
@@ -68,4 +68,35 @@ export const getUnreadProfilePictureReports = async ({
     return await notificationRepository.getUnreadProfilePictureReportsByUserId({
         recipientById: userId,
     });
+};
+
+export const markAllAsRead = async ({ auth }: { auth: JwtToken }): Promise<Notification[]> => {
+    const currentUser = await getCurrentUser({ auth });
+    const unreadNotifications = await getByUserId({ userId: currentUser.getId()! });
+
+    if (unreadNotifications.length === 0) throw new NotFoundError(`You have no unread messages.`);
+
+    const readDate = new Date();
+    const updatedNotifications = unreadNotifications.map((existingNotification) =>
+        Notification.update({
+            currentUser,
+            existingNotification,
+            notificationData: {
+                title: existingNotification.getTitle(),
+                body: existingNotification.getBody(),
+                category: existingNotification.getCategory(),
+                priority: existingNotification.getPriority(),
+                status: NotificationStatus.Read,
+                readDate,
+                recipient: existingNotification.getRecipient(),
+                sender: existingNotification.getSender(),
+            },
+        }),
+    );
+
+    return await Promise.all(
+        updatedNotifications.map((notification) =>
+            notificationRepository.upsertNotification({ notification }),
+        ),
+    );
 };
