@@ -1,5 +1,6 @@
-import { ErrorLog, User, UserImage } from '@prisma/client';
+import { ErrorLog, Notification, User, UserImage } from '@prisma/client';
 
 export type PrismaUser = User;
 export type PrismaUserImage = UserImage;
 export type PrismaErrorLog = ErrorLog;
+export type PrismaNotification = Notification;

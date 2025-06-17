@@ -1,6 +1,7 @@
 import { authRouter } from '@auth/index';
 import errorLogRouter from '@error-log/controller';
 import { handleErrorMiddleware } from '@error-log/handler';
+import notificationRouter from '@notification/controller';
 import { processEnv } from '@shared/index';
 import userRouter from '@user/controller';
 import * as bodyParser from 'body-parser';
@@ -66,6 +67,7 @@ app.use(
 
 app.use('/users', userRouter);
 app.use('/error-logs', errorLogRouter);
+app.use('/notifications', notificationRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(async (err: Error, req: Request, res: Response) => {

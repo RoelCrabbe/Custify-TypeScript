@@ -1,7 +1,7 @@
 import { EntityBase } from '@base/entityBase';
 import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
 import { ValidationError } from '@error-log/exceptions';
-import { PrismaErrorLog } from '@prisma/index';
+import { PrismaErrorLog } from '@prisma';
 import { User } from '@user';
 
 export class ErrorLog extends EntityBase {
@@ -42,6 +42,7 @@ export class ErrorLog extends EntityBase {
         this.status = log.status;
         this.resolvedById = log.resolvedById;
         this.resolvedDate = log.resolvedDate;
+
         this.validate(log);
     }
 

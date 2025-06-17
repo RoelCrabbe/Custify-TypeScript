@@ -24,7 +24,9 @@
             "@exceptions/*": ["features/error-log/exceptions/*"],
             "@exceptions": ["features/error-log/exceptions/index.ts"],
             "@user/*": ["features/user/*"],
-            "@user": ["features/user/index.ts"]
+            "@user": ["features/user/index.ts"],
+            "@notification/*": ["features/notification/*"],
+            "@notification": ["features/notification/index.ts"]
         },
         "skipLibCheck": true,
         "strict": true,
