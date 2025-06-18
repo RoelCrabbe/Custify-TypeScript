@@ -1,4 +1,4 @@
-import { NotFoundError } from '@error-log/exceptions';
+import { NotFoundError, ValidationError } from '@error-log/exceptions';
 import { Notification, notificationRepository, NotificationStatus } from '@notification';
 import { JwtToken, NotificationInput } from '@types';
 import { userService } from '@user/index';
@@ -99,4 +99,39 @@ export const markAllAsRead = async ({ auth }: { auth: JwtToken }): Promise<Notif
             notificationRepository.upsertNotification({ notification }),
         ),
     );
+};
+
+export const markAsReadById = async ({
+    notificationId,
+    auth,
+}: {
+    notificationId: number;
+    auth: JwtToken;
+}): Promise<Notification> => {
+    if (!notificationId) throw new ValidationError(`Notification id is required.`);
+
+    const currentUser = await getCurrentUser({ auth });
+    const unreadNotification = await getNotificationById({ notificationId });
+
+    const recipientId = unreadNotification.getRecipient().getId();
+    if (recipientId !== currentUser.getId())
+        throw new ValidationError(`You are not the recipient of this notification.`);
+
+    const readDate = new Date();
+    const updatedNotifications = Notification.update({
+        currentUser,
+        existingNotification: unreadNotification,
+        notificationData: {
+            title: unreadNotification.getTitle(),
+            body: unreadNotification.getBody(),
+            category: unreadNotification.getCategory(),
+            priority: unreadNotification.getPriority(),
+            status: NotificationStatus.Read,
+            readDate,
+            recipient: unreadNotification.getRecipient(),
+            sender: unreadNotification.getSender(),
+        },
+    });
+
+    return await notificationRepository.upsertNotification({ notification: updatedNotifications });
 };
