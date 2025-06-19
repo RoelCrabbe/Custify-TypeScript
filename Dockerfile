@@ -7,8 +7,6 @@ WORKDIR /usr/src/app
 # Copy package files and install dependencies
 COPY package*.json ./
 RUN npm ci
-
-# Copy the rest of your application code
 COPY . .
 
 # Generate Prisma client
@@ -17,8 +15,5 @@ RUN npx prisma generate
 # Build your TypeScript app (optional — comment out if not needed)
 RUN npm run build
 
-# ✅ Expose the actual port used in server code
 EXPOSE 3000
-
-# Start the app using npm start (for production)
 CMD ["npm", "start"]
