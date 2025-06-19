@@ -14,7 +14,7 @@
     "scripts": {
         "dev": "tsup app.ts --watch --onSuccess \"node dist/app.js\"",
         "build": "npx prisma generate && tsup app.ts --format cjs --dts",
-        "start": "node dist/app.js",
+        "start": "npx prisma migrate deploy && npm run seed && node dist/app.js",
         "type-check": "tsc --noEmit",
         "seed": "ts-node -r tsconfig-paths/register src/config/seed.ts",
         "migrate": "npx prisma migrate dev && npx prisma generate",
