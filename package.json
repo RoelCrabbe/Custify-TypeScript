@@ -12,7 +12,7 @@
         "schema": "src/prisma/schema.prisma"
     },
     "scripts": {
-        "dev": "npx prisma generate && tsup app.ts --watch --onSuccess \"node dist/app.js\"",
+        "dev": "tsup app.ts --watch --onSuccess \"node dist/app.js\"",
         "build": "npx prisma generate && tsup app.ts --format cjs --dts",
         "start": "node dist/app.js",
         "type-check": "tsc --noEmit",
