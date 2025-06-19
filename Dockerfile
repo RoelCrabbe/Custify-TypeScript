@@ -17,8 +17,8 @@ RUN npx prisma generate
 # Build your TypeScript app (optional — comment out if not needed)
 RUN npm run build
 
-# Expose the port your app runs on
-EXPOSE 8080
+# ✅ Expose the actual port used in server code
+EXPOSE 3000
 
 # Start the app using npm start (for production)
 CMD ["npm", "start"]
