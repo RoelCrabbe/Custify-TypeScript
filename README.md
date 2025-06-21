@@ -138,54 +138,6 @@ const dbConfig = {
 };
 ```
 
-## 📱 Usage
-
-### Authentication
-
-The API uses JWT (JSON Web Tokens) for authentication. Include the token in the Authorization header:
-
-```bash
-curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-     http://localhost:8080/api/customers
-```
-
-### Authentication Flow Example
-
-```typescript
-// Login request
-const response = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-});
-
-const { token, user } = await response.json();
-
-// Use token for authenticated requests
-const customersResponse = await fetch('/api/customers', {
-    headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-    },
-});
-```
-
-### API Endpoints
-
-```typescript
-// Example API endpoints
-GET    /api/customers          // Get all customers
-POST   /api/customers          // Create customer
-GET    /api/customers/:id      // Get customer by ID
-PUT    /api/customers/:id      // Update customer
-DELETE /api/customers/:id      // Delete customer
-
-POST   /api/auth/login         // User login
-POST   /api/auth/register      // User registration
-POST   /api/auth/logout        // User logout
-GET    /api/auth/me            // Get current user
-```
-
 ## 🤝 Contributing
 
 We welcome contributions to the Custify Backend! Here's how you can help:
