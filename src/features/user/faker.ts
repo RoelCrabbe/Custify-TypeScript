@@ -37,8 +37,8 @@ export const createFakeUsers = async () => {
             const hashedPassword = await bcrypt.hash(user.passWord, 12);
 
             const newUser = User.create({
-                currentUser: null,
-                userData: {
+                createUser: null,
+                createData: {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email,
@@ -66,8 +66,8 @@ export const createFakeUsers = async () => {
             const creatingUser = casual.random_element(createdCustomUsers) as User;
 
             const newUser = User.create({
-                currentUser: creatingUser,
-                userData: {
+                createUser: creatingUser,
+                createData: {
                     firstName,
                     lastName,
                     email,
@@ -96,8 +96,8 @@ export const createFakeUsers = async () => {
             if (user.getId() === undefined) return;
 
             const userImage = UserImage.create({
-                currentUser: user,
-                userImageData: {
+                createUser: user,
+                createData: {
                     url: `https://api.dicebear.com/7.x/bottts/svg?seed=${user.getUserName()}&size=200`,
                     altText: `${user.getFirstName()} ${user.getLastName()}'s avatar`,
                     fileName: `${user.getUserName()}.svg`,

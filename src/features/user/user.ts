@@ -129,11 +129,11 @@ export class User extends UserBase {
     }
 
     static create({
-        currentUser,
-        userData,
+        createUser,
+        createData,
     }: {
-        currentUser: User | null;
-        userData: {
+        createUser: User | null;
+        createData: {
             userName: string;
             firstName: string;
             lastName: string;
@@ -143,21 +143,20 @@ export class User extends UserBase {
         };
     }): User {
         return new User({
-            ...userData,
+            ...createData,
             role: UserRole.Guest,
             status: UserStatus.Active,
-            createdById: currentUser?.getId() ?? undefined,
+            createdById: createUser?.getId(),
         });
     }
 
     static update({
-        currentUser,
-        existingUser,
-        userData,
+        updateUser,
+        updateData,
+        updateEntity,
     }: {
-        currentUser: User;
-        existingUser: User;
-        userData: {
+        updateUser: User;
+        updateData: {
             userName: string;
             firstName: string;
             lastName: string;
@@ -167,20 +166,21 @@ export class User extends UserBase {
             status: UserStatus;
             phoneNumber?: string;
         };
+        updateEntity: User;
     }): User {
         return new User({
-            id: existingUser.getId(),
-            userName: userData.userName ?? existingUser.getUserName(),
-            firstName: userData.firstName ?? existingUser.getFirstName(),
-            lastName: userData.lastName ?? existingUser.getLastName(),
-            email: userData.email ?? existingUser.getEmail(),
-            passWord: userData.passWord ?? existingUser.getPassWord(),
-            role: userData.role ?? existingUser.getRole(),
-            status: userData.status ?? existingUser.getStatus(),
-            phoneNumber: userData.phoneNumber ?? existingUser.getPhoneNumber(),
-            createdById: existingUser.getCreatedById(),
-            createdDate: existingUser.getCreatedDate(),
-            modifiedById: currentUser.getId()!,
+            id: updateEntity.getId(),
+            userName: updateData.userName ?? updateEntity.getUserName(),
+            firstName: updateData.firstName ?? updateEntity.getFirstName(),
+            lastName: updateData.lastName ?? updateEntity.getLastName(),
+            email: updateData.email ?? updateEntity.getEmail(),
+            passWord: updateData.passWord ?? updateEntity.getPassWord(),
+            role: updateData.role ?? updateEntity.getRole(),
+            status: updateData.status ?? updateEntity.getStatus(),
+            phoneNumber: updateData.phoneNumber ?? updateEntity.getPhoneNumber(),
+            createdById: updateEntity.getCreatedById(),
+            createdDate: updateEntity.getCreatedDate(),
+            modifiedById: updateUser.getId()!,
         });
     }
 

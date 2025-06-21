@@ -47,8 +47,8 @@ export const createErrorLog = async ({
     const httpMethod: ErrorHttpMethod = isValidErrorHttpMethod(rawMethod) ? rawMethod : 'Get';
 
     const createdErrorLog = ErrorLog.create({
-        currentUser,
-        errorData: {
+        createUser: currentUser,
+        createData: {
             type: err.getType(),
             severity: err.getSeverity(),
             httpMethod,
@@ -117,9 +117,9 @@ export const updateErrorLog = async ({
     }
 
     const updatedErrorLog = ErrorLog.update({
-        currentUser,
-        existingErrorLog,
-        errorData,
+        updateUser: currentUser,
+        updateData: errorData,
+        updateEntity: existingErrorLog,
     });
 
     return await errorLogRepository.upsertErrorLog({ errorLog: updatedErrorLog });

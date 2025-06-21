@@ -46,7 +46,7 @@ export class ErrorLog extends EntityBase {
         this.validate(log);
     }
 
-    private validate(log: {
+    protected validate(log: {
         type: ErrorType;
         severity: ErrorSeverity;
         httpMethod: ErrorHttpMethod;
@@ -180,11 +180,11 @@ export class ErrorLog extends EntityBase {
     }
 
     static create({
-        currentUser,
-        errorData,
+        createUser,
+        createData,
     }: {
-        currentUser: User | null;
-        errorData: {
+        createUser: User | null;
+        createData: {
             type: ErrorType;
             severity: ErrorSeverity;
             httpMethod: ErrorHttpMethod;
@@ -195,19 +195,18 @@ export class ErrorLog extends EntityBase {
         };
     }): ErrorLog {
         return new ErrorLog({
-            ...errorData,
-            createdById: currentUser?.getId() ?? undefined,
+            ...createData,
+            createdById: createUser?.getId(),
         });
     }
 
     static update({
-        currentUser,
-        existingErrorLog,
-        errorData,
+        updateUser,
+        updateData,
+        updateEntity,
     }: {
-        currentUser: User;
-        existingErrorLog: ErrorLog;
-        errorData: {
+        updateUser: User;
+        updateData: {
             type: ErrorType;
             severity: ErrorSeverity;
             httpMethod: ErrorHttpMethod;
@@ -218,21 +217,22 @@ export class ErrorLog extends EntityBase {
             resolvedById?: number;
             resolvedDate?: Date;
         };
+        updateEntity: ErrorLog;
     }): ErrorLog {
         return new ErrorLog({
-            id: existingErrorLog.getId(),
-            type: errorData.type ?? existingErrorLog.getType(),
-            errorMessage: errorData.errorMessage ?? existingErrorLog.getErrorMessage(),
-            stackTrace: errorData.stackTrace ?? existingErrorLog.getStackTrace(),
-            requestPath: errorData.requestPath ?? existingErrorLog.getRequestPath(),
-            httpMethod: errorData.httpMethod ?? existingErrorLog.getHttpMethod(),
-            severity: errorData.severity ?? existingErrorLog.getSeverity(),
-            status: errorData.status ?? existingErrorLog.getStatus(),
-            resolvedById: errorData.resolvedById ?? existingErrorLog.getResolvedById(),
-            resolvedDate: errorData.resolvedDate ?? existingErrorLog.getResolvedDate(),
-            createdById: existingErrorLog.getCreatedById(),
-            createdDate: existingErrorLog.getCreatedDate(),
-            modifiedById: currentUser.getId()!,
+            id: updateEntity.getId(),
+            type: updateData.type ?? updateEntity.getType(),
+            errorMessage: updateData.errorMessage ?? updateEntity.getErrorMessage(),
+            stackTrace: updateData.stackTrace ?? updateEntity.getStackTrace(),
+            requestPath: updateData.requestPath ?? updateEntity.getRequestPath(),
+            httpMethod: updateData.httpMethod ?? updateEntity.getHttpMethod(),
+            severity: updateData.severity ?? updateEntity.getSeverity(),
+            status: updateData.status ?? updateEntity.getStatus(),
+            resolvedById: updateData.resolvedById ?? updateEntity.getResolvedById(),
+            resolvedDate: updateData.resolvedDate ?? updateEntity.getResolvedDate(),
+            createdById: updateEntity.getCreatedById(),
+            createdDate: updateEntity.getCreatedDate(),
+            modifiedById: updateUser.getId()!,
         });
     }
 }

@@ -43,15 +43,15 @@ export const createNotification = async ({
     const currentUser = await getCurrentUser({ auth });
 
     const newNotification = Notification.create({
-        currentUser: currentUser,
-        notificationData: {
+        createUser: currentUser,
+        createData: {
             title,
             body,
             category,
             priority,
             status,
-            sender,
             recipient,
+            sender,
         },
     });
 
@@ -79,18 +79,17 @@ export const markAllAsRead = async ({ auth }: { auth: JwtToken }): Promise<Notif
     const readDate = new Date();
     const updatedNotifications = unreadNotifications.map((existingNotification) =>
         Notification.update({
-            currentUser,
-            existingNotification,
-            notificationData: {
+            updateUser: currentUser,
+            updateData: {
                 title: existingNotification.getTitle(),
                 body: existingNotification.getBody(),
                 category: existingNotification.getCategory(),
                 priority: existingNotification.getPriority(),
                 status: NotificationStatus.Read,
-                readDate,
                 recipient: existingNotification.getRecipient(),
-                sender: existingNotification.getSender(),
+                readDate,
             },
+            updateEntity: existingNotification,
         }),
     );
 
@@ -119,18 +118,17 @@ export const markAsReadById = async ({
 
     const readDate = new Date();
     const updatedNotifications = Notification.update({
-        currentUser,
-        existingNotification: unreadNotification,
-        notificationData: {
+        updateUser: currentUser,
+        updateData: {
             title: unreadNotification.getTitle(),
             body: unreadNotification.getBody(),
             category: unreadNotification.getCategory(),
             priority: unreadNotification.getPriority(),
             status: NotificationStatus.Read,
-            readDate,
             recipient: unreadNotification.getRecipient(),
-            sender: unreadNotification.getSender(),
+            readDate,
         },
+        updateEntity: unreadNotification,
     });
 
     return await notificationRepository.upsertNotification({ notification: updatedNotifications });

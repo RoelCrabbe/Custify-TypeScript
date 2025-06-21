@@ -53,7 +53,7 @@ export class Notification extends EntityBase {
         this.validate(notification);
     }
 
-    private validate(notification: {
+    protected validate(notification: {
         title: string;
         body: string;
         status: NotificationStatus;
@@ -177,58 +177,57 @@ export class Notification extends EntityBase {
     }
 
     static create({
-        currentUser,
-        notificationData,
+        createUser,
+        createData,
     }: {
-        currentUser: User;
-        notificationData: {
+        createUser: User;
+        createData: {
             title: string;
             body: string;
             category: NotificationCategory;
             priority: NotificationPriority;
             status: NotificationStatus;
-            sender?: User;
             recipient: User;
+            sender?: User;
         };
     }): Notification {
         return new Notification({
-            ...notificationData,
-            createdById: currentUser.getId(),
+            ...createData,
+            createdById: createUser.getId(),
         });
     }
 
     static update({
-        currentUser,
-        existingNotification,
-        notificationData,
+        updateUser,
+        updateData,
+        updateEntity,
     }: {
-        currentUser: User;
-        existingNotification: Notification;
-        notificationData: {
+        updateUser: User;
+        updateData: {
             title: string;
             body: string;
             category: NotificationCategory;
             priority: NotificationPriority;
             status: NotificationStatus;
-            readDate?: Date;
             recipient: User;
-            sender?: User;
+            readDate?: Date;
         };
+        updateEntity: Notification;
     }): Notification {
         return new Notification({
-            id: existingNotification.getId(),
-            title: notificationData.title ?? existingNotification.getTitle(),
-            body: notificationData.body ?? existingNotification.getBody(),
-            category: notificationData.category ?? existingNotification.getCategory(),
-            priority: notificationData.priority ?? existingNotification.getPriority(),
-            status: notificationData.status ?? existingNotification.getStatus(),
-            readDate: notificationData.readDate ?? existingNotification.getReadDate(),
-            sentDate: existingNotification.getSentDate(),
-            recipient: notificationData.recipient ?? existingNotification.getRecipient(),
-            sender: existingNotification.getSender(),
-            createdById: existingNotification.getCreatedById(),
-            createdDate: existingNotification.getCreatedDate(),
-            modifiedById: currentUser.getId(),
+            id: updateEntity.getId(),
+            title: updateData.title ?? updateEntity.getTitle(),
+            body: updateData.body ?? updateEntity.getBody(),
+            category: updateData.category ?? updateEntity.getCategory(),
+            priority: updateData.priority ?? updateEntity.getPriority(),
+            status: updateData.status ?? updateEntity.getStatus(),
+            recipient: updateData.recipient ?? updateEntity.getRecipient(),
+            readDate: updateData.readDate ?? updateEntity.getReadDate(),
+            sender: updateEntity.getSender(),
+            sentDate: updateEntity.getSentDate(),
+            createdById: updateEntity.getCreatedById(),
+            createdDate: updateEntity.getCreatedDate(),
+            modifiedById: updateUser.getId(),
         });
     }
 }

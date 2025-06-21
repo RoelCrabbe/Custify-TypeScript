@@ -100,11 +100,11 @@ model Notification {
     readDate DateTime?
 
     // Relationships
-    sentById Int?
-    sender   User? @relation("SentNotifications", fields: [sentById], references: [id])
-
     recipientById Int
     recipient     User @relation("ReceivedNotifications", fields: [recipientById], references: [id], onDelete: Cascade)
+
+    sentById Int?
+    sender   User? @relation("SentNotifications", fields: [sentById], references: [id])
 
     @@map("Notifications")
 }

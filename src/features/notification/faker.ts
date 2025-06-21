@@ -23,10 +23,10 @@ export const createFakeNotifications = async (users: User[]) => {
             const recipient = casual.random_element(recipientCandidates) as User;
 
             const newNotification = Notification.create({
-                currentUser: sender,
-                notificationData: {
+                createUser: sender,
+                createData: {
                     title: casual.title,
-                    body: casual.sentences(2),
+                    body: casual.sentences(3),
                     status: casual.random_element(notificationStatus),
                     category: casual.random_element(notificationCategory),
                     priority: casual.random_element(notificationPriority),

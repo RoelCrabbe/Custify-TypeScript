@@ -29,10 +29,11 @@ export class UserImage extends EntityBase {
         this.fileName = userImage.fileName;
         this.mimeType = userImage.mimeType;
         this.fileSize = userImage.fileSize;
+
         this.validate(userImage);
     }
 
-    private validate(userImage: {
+    protected validate(userImage: {
         url: string;
         altText: string;
         fileName: string;
@@ -53,13 +54,6 @@ export class UserImage extends EntityBase {
         }
         if (!userImage.fileSize || userImage.fileSize <= 0) {
             throw new ValidationError('UserImage validation: File Size must be greater than zero');
-        }
-
-        const MAX_FILE_SIZE = 5 * 1024 * 1024;
-        if (userImage.fileSize > MAX_FILE_SIZE) {
-            throw new ValidationError(
-                `UserImage validation: File Size must not exceed ${MAX_FILE_SIZE / (1024 * 1024)} MB`,
-            );
         }
     }
 
@@ -135,11 +129,11 @@ export class UserImage extends EntityBase {
     }
 
     static create({
-        currentUser,
-        userImageData,
+        createUser,
+        createData,
     }: {
-        currentUser: User | null;
-        userImageData: {
+        createUser: User | null;
+        createData: {
             url: string;
             altText: string;
             fileName: string;
@@ -148,36 +142,36 @@ export class UserImage extends EntityBase {
         };
     }): UserImage {
         return new UserImage({
-            ...userImageData,
-            createdById: currentUser ? currentUser.getId() : undefined,
+            ...createData,
+            createdById: createUser?.getId(),
         });
     }
 
     static update({
-        currentUser,
-        existingUserImage,
-        userImageData,
+        updateUser,
+        updateData,
+        updateEntity,
     }: {
-        currentUser: User;
-        existingUserImage: UserImage;
-        userImageData: {
+        updateUser: User;
+        updateData: {
             url: string;
             altText: string;
             fileName: string;
             mimeType: string;
             fileSize: number;
         };
+        updateEntity: UserImage;
     }): UserImage {
         return new UserImage({
-            id: existingUserImage.getId(),
-            url: userImageData.url ?? existingUserImage.getUrl(),
-            altText: userImageData.altText ?? existingUserImage.getAltText(),
-            fileName: userImageData.fileName ?? existingUserImage.getFileName(),
-            mimeType: userImageData.mimeType ?? existingUserImage.getMimeType(),
-            fileSize: userImageData.fileSize ?? existingUserImage.getFileSize(),
-            createdById: existingUserImage.getCreatedById(),
-            createdDate: existingUserImage.getCreatedDate(),
-            modifiedById: currentUser.getId()!,
+            id: updateEntity.getId(),
+            url: updateData.url ?? updateEntity.getUrl(),
+            altText: updateData.altText ?? updateEntity.getAltText(),
+            fileName: updateData.fileName ?? updateEntity.getFileName(),
+            mimeType: updateData.mimeType ?? updateEntity.getMimeType(),
+            fileSize: updateData.fileSize ?? updateEntity.getFileSize(),
+            createdById: updateEntity.getCreatedById(),
+            createdDate: updateEntity.getCreatedDate(),
+            modifiedById: updateUser.getId(),
         });
     }
 }

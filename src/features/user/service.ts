@@ -96,9 +96,8 @@ export const updateUser = async ({
     }
 
     const updatedUser = User.update({
-        currentUser,
-        existingUser,
-        userData: {
+        updateUser: currentUser,
+        updateData: {
             firstName,
             lastName,
             email,
@@ -108,6 +107,7 @@ export const updateUser = async ({
             role,
             status,
         },
+        updateEntity: existingUser,
     });
 
     if (profileImage) {
@@ -122,13 +122,13 @@ export const updateUser = async ({
         const existingProfileImage = existingUser.getProfileImage();
         const userImage = existingProfileImage
             ? UserImage.update({
-                  currentUser,
-                  existingUserImage: existingProfileImage,
-                  userImageData,
+                  updateUser: currentUser,
+                  updateData: userImageData,
+                  updateEntity: existingProfileImage,
               })
             : UserImage.create({
-                  currentUser,
-                  userImageData,
+                  createUser: currentUser,
+                  createData: userImageData,
               });
 
         await userRepository.upsertUserImage({ userId: id, userImage });
@@ -156,9 +156,8 @@ export const changePassWord = async ({
     const hashedPassword = await bcrypt.hash(newPassWord, 12);
 
     const updatedUser = User.update({
-        currentUser,
-        existingUser: currentUser,
-        userData: {
+        updateUser: currentUser,
+        updateData: {
             firstName: currentUser.getFirstName(),
             lastName: currentUser.getLastName(),
             email: currentUser.getEmail(),
@@ -168,6 +167,7 @@ export const changePassWord = async ({
             role: currentUser.getRole(),
             status: currentUser.getStatus(),
         },
+        updateEntity: currentUser,
     });
 
     return await userRepository.upsertUser({ user: updatedUser });

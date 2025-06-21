@@ -79,8 +79,8 @@ export const createFakeErrorLogs = async (customUsers: User[], randomUsers: User
             const status = casual.random_element(errorStatuses);
 
             let newErrorLog = ErrorLog.create({
-                currentUser: randomUser,
-                errorData: {
+                createUser: randomUser,
+                createData: {
                     type: casual.random_element(errorTypes),
                     severity: casual.random_element(errorSeverities),
                     httpMethod: casual.random_element(httpMethods),
@@ -96,9 +96,8 @@ export const createFakeErrorLogs = async (customUsers: User[], randomUsers: User
 
             if (newErrorLog.getStatus() === ErrorStatus.Resolved) {
                 newErrorLog = ErrorLog.update({
-                    currentUser: customUser,
-                    existingErrorLog: newErrorLog,
-                    errorData: {
+                    updateUser: customUser,
+                    updateData: {
                         type: newErrorLog.getType(),
                         severity: newErrorLog.getSeverity(),
                         httpMethod: newErrorLog.getHttpMethod(),
@@ -109,6 +108,7 @@ export const createFakeErrorLogs = async (customUsers: User[], randomUsers: User
                         resolvedById: customUser.getId(),
                         resolvedDate: new Date(),
                     },
+                    updateEntity: newErrorLog,
                 });
             }
 
