@@ -1,4 +1,4 @@
-import { AuthenticationError, NotFoundError, ValidationError } from '@error-log/exceptions';
+import { AuthenticationError, NotFoundError, ValidationError } from '@errorLog/exceptions';
 import { JwtToken, UpdatePassWordInput, UserInput } from '@types';
 import { User, UserImage, userRepository, userService } from '@user';
 import bcrypt from 'bcryptjs';

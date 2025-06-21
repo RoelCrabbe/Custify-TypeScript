@@ -1,5 +1,5 @@
 import database from '@config/prismaClient';
-import { createFakeErrorLogs } from '@error-log/faker';
+import { createFakeErrorLogs } from '@errorLog/faker';
 import { createFakeNotifications } from '@notification/faker';
 import { createFakeUsers } from '@user/faker';
 

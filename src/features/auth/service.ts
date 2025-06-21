@@ -1,4 +1,4 @@
-import { AuthenticationError } from '@error-log/exceptions';
+import { AuthenticationError } from '@errorLog/exceptions';
 import { AuthenticationResponse, UserInput } from '@types';
 import { User, isActiveUserStatus, userRepository, userService } from '@user';
 import { generateJwtToken } from '@utils/jwt';

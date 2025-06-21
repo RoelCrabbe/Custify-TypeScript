@@ -1,6 +1,6 @@
 import { EntityBase } from '@base/entityBase';
-import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
-import { ValidationError } from '@error-log/exceptions';
+import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@errorLog';
+import { ValidationError } from '@errorLog/exceptions';
 import { PrismaErrorLog } from '@prisma';
 import { User } from '@user';
 

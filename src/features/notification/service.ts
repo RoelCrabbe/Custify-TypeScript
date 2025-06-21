@@ -1,4 +1,4 @@
-import { NotFoundError, ValidationError } from '@error-log/exceptions';
+import { NotFoundError, ValidationError } from '@errorLog/exceptions';
 import { Notification, notificationRepository, NotificationStatus } from '@notification';
 import { JwtToken, NotificationInput } from '@types';
 import { userService } from '@user/index';

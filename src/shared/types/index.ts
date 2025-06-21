@@ -1,4 +1,4 @@
-import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@error-log';
+import { ErrorHttpMethod, ErrorSeverity, ErrorStatus, ErrorType } from '@errorLog';
 import {
     NotificationCategory,
     NotificationPriority,

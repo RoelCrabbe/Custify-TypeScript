@@ -1,5 +1,5 @@
 import { EntityBase } from '@base/entityBase';
-import { ValidationError } from '@error-log/exceptions';
+import { ValidationError } from '@errorLog/exceptions';
 import {
     isValidNotificationCategory,
     isValidNotificationPriority,

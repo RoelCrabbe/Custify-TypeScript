@@ -6,7 +6,7 @@ import {
     ErrorSeverity,
     ErrorStatus,
     ErrorType,
-} from '@error-log';
+} from '@errorLog';
 import { User } from '@user';
 import casual from 'casual';
 

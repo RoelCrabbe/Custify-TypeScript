@@ -1,5 +1,5 @@
-import { errorLogService } from '@error-log';
-import { CustifyError } from '@error-log/exceptions';
+import { errorLogService } from '@errorLog';
+import { CustifyError } from '@errorLog/exceptions';
 import { JwtToken } from '@types';
 import { Request, Response } from 'express';
 

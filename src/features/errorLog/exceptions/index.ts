@@ -1,4 +1,4 @@
-import { ErrorSeverity, ErrorType } from '@error-log';
+import { ErrorSeverity, ErrorType } from '@errorLog';
 
 export class CustifyError extends Error {
     public readonly statusCode: number;
