@@ -2,7 +2,8 @@ import database from '@config/prismaClient';
 import { UserRole, UserStatus } from '@user/enums';
 import { userRepository } from '@user/index';
 import { User } from '@user/user';
-import { UserImage } from '@user/userImage';
+import { userImageRepository } from '@userImage/index';
+import { UserImage } from '@userImage/userImage';
 import bcrypt from 'bcryptjs';
 import casual from 'casual';
 
@@ -93,7 +94,8 @@ export const createFakeUsers = async () => {
 
     await Promise.all(
         allUsers.map(async (user) => {
-            if (user.getId() === undefined) return;
+            const userId = user.getId();
+            if (!userId) return;
 
             const userImage = UserImage.create({
                 createUser: user,
@@ -106,7 +108,7 @@ export const createFakeUsers = async () => {
                 },
             });
 
-            await userRepository.upsertUserImage({ userId: user.getId()!, userImage });
+            await userImageRepository.upsertUserImage({ userId, userImage });
         }),
     );
 

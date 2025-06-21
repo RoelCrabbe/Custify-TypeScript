@@ -1,6 +1,7 @@
 import { AuthenticationError, NotFoundError, ValidationError } from '@errorLog/exceptions';
 import { JwtToken, UpdatePassWordInput, UserInput } from '@types';
-import { User, UserImage, userRepository, userService } from '@user';
+import { User, userRepository } from '@user';
+import { userImageService } from '@userImage/index';
 import bcrypt from 'bcryptjs';
 
 export const getAllUsers = async (): Promise<User[]> => {
@@ -81,18 +82,18 @@ export const updateUser = async ({
 }): Promise<User> => {
     if (!userInput.id) throw new ValidationError('User id is required');
 
-    const { id, firstName, lastName, email, phoneNumber, userName, role, status, profileImage } =
+    const { id, firstName, lastName, email, phoneNumber, userName, role, status, userImage } =
         userInput;
 
-    const existingUser = await userService.getUserById({ userId: id });
+    const existingUser = await getUserById({ userId: id });
     const currentUser = await getCurrentUser({ auth });
 
     if (email && email !== existingUser.getEmail()) {
-        await userService.updateAssertUserNotExists({ email, excludeUserId: id });
+        await updateAssertUserNotExists({ email, excludeUserId: id });
     }
 
     if (userName && userName !== existingUser.getUserName()) {
-        await userService.updateAssertUserNotExists({ userName, excludeUserId: id });
+        await updateAssertUserNotExists({ userName, excludeUserId: id });
     }
 
     const updatedUser = User.update({
@@ -110,28 +111,12 @@ export const updateUser = async ({
         updateEntity: existingUser,
     });
 
-    if (profileImage) {
-        const userImageData = {
-            url: profileImage.url,
-            altText: profileImage.altText,
-            fileName: profileImage.fileName,
-            mimeType: profileImage.mimeType,
-            fileSize: profileImage.fileSize,
-        };
-
-        const existingProfileImage = existingUser.getProfileImage();
-        const userImage = existingProfileImage
-            ? UserImage.update({
-                  updateUser: currentUser,
-                  updateData: userImageData,
-                  updateEntity: existingProfileImage,
-              })
-            : UserImage.create({
-                  createUser: currentUser,
-                  createData: userImageData,
-              });
-
-        await userRepository.upsertUserImage({ userId: id, userImage });
+    if (userImage) {
+        await userImageService.createOrUpdateUserImage({
+            actionUser: currentUser,
+            userImageInput: userImage,
+            user: updatedUser,
+        });
     }
 
     return await userRepository.upsertUser({ user: updatedUser });

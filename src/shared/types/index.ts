@@ -25,7 +25,7 @@ export type UserInput = {
     role: UserRole;
     status: UserStatus;
     phoneNumber?: string;
-    profileImage?: UserImageInput;
+    userImage?: UserImageInput;
 };
 
 export type UserImageInput = {

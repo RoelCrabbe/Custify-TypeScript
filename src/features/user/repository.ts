@@ -1,5 +1,5 @@
 import database from '@config/prismaClient';
-import { User, UserImage } from '@user';
+import { User } from '@user';
 
 export const getAllUsers = async (): Promise<User[]> => {
     try {
@@ -117,40 +117,6 @@ export const upsertUser = async ({ user }: { user: User }): Promise<User> => {
         });
 
         return User.from(userPrisma);
-    } catch (error) {
-        console.error(error);
-        throw new Error('Database error. See server log for details.');
-    }
-};
-
-export const upsertUserImage = async ({
-    userId,
-    userImage,
-}: {
-    userId: number;
-    userImage: UserImage;
-}): Promise<UserImage> => {
-    try {
-        const userImagePrisma = await database.userImage.upsert({
-            where: { userId },
-            update: {
-                fileName: userImage.fileName,
-                mimeType: userImage.mimeType,
-                fileSize: userImage.fileSize,
-                url: userImage.url,
-                altText: userImage.altText,
-            },
-            create: {
-                userId,
-                fileName: userImage.fileName,
-                mimeType: userImage.mimeType,
-                fileSize: userImage.fileSize,
-                url: userImage.url,
-                altText: userImage.altText,
-            },
-        });
-
-        return UserImage.from(userImagePrisma);
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');

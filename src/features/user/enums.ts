@@ -10,6 +10,10 @@ export const isValidUserRole = (role: unknown): role is UserRole => {
     return typeof role === 'string' && Object.values(UserRole).includes(role as UserRole);
 };
 
+export const isActiveUserStatus = (status: UserStatus): boolean => {
+    return status === UserStatus.Active;
+};
+
 export const UserStatus = {
     Active: 'Active',
     InActive: 'Inactive',
