@@ -33,7 +33,7 @@ export const registerUser = async ({
 }): Promise<AuthenticationResponse> => {
     const { firstName, lastName, email, phoneNumber, userName, passWord } = userInput;
 
-    await userService.registrationAssertUserNotExists({ email, userName });
+    await userService.assertUserNotExistsForRegistration({ email, userName });
     const hashedPassword = await bcrypt.hash(passWord, 12);
 
     const createdUser = User.create({

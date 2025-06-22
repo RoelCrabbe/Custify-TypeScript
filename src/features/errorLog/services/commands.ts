@@ -1,35 +1,11 @@
-import {
-    ErrorHttpMethod,
-    ErrorLog,
-    ErrorStatus,
-    errorLogRepository,
-    isValidErrorHttpMethod,
-} from '@errorLog';
-import { CustifyError, NotFoundError, ValidationError } from '@errorLog/exceptions';
+import { ErrorHttpMethod, ErrorStatus, isValidErrorHttpMethod } from '@errorLog/enums';
+import { ErrorLog } from '@errorLog/errorLog';
+import { CustifyError, ValidationError } from '@errorLog/exceptions';
+import { errorLogRepository, errorLogService } from '@errorLog/index';
 import { ErrorLogInput, JwtToken } from '@types';
-import { getCurrentUser } from '@user/service';
+import { userService } from '@user/index';
 import { capitalizeFirstLetter } from '@utils/string';
 import { Request } from 'express';
-
-const ARCHIVE_RETENTION_DAYS = 90;
-
-export const getAllNewErrorLogs = async (): Promise<ErrorLog[]> => {
-    return await errorLogRepository.getAllByStatus(ErrorStatus.New);
-};
-
-export const getAllReviewedErrorLogs = async (): Promise<ErrorLog[]> => {
-    return await errorLogRepository.getAllByStatus(ErrorStatus.Reviewed);
-};
-
-export const getAllResolvedErrorLogs = async (): Promise<ErrorLog[]> => {
-    return await errorLogRepository.getAllByStatus(ErrorStatus.Resolved);
-};
-
-export const cleanupArchivedErrorLogs = async (): Promise<number> => {
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - ARCHIVE_RETENTION_DAYS);
-    return (await errorLogRepository.deleteResolvedErrorLogsOlderThan(cutoffDate)).count;
-};
 
 export const createErrorLog = async ({
     err,
@@ -41,7 +17,7 @@ export const createErrorLog = async ({
     auth: JwtToken;
 }): Promise<ErrorLog> => {
     let currentUser = null;
-    if (auth) currentUser = await getCurrentUser({ auth });
+    if (auth) currentUser = await userService.getCurrentUser({ auth });
 
     const rawMethod = capitalizeFirstLetter(req.method);
     const httpMethod: ErrorHttpMethod = isValidErrorHttpMethod(rawMethod) ? rawMethod : 'Get';
@@ -60,18 +36,6 @@ export const createErrorLog = async ({
     });
 
     return await errorLogRepository.upsertErrorLog({ errorLog: createdErrorLog });
-};
-
-export const getErrorLogById = async ({
-    errorLogId,
-}: {
-    errorLogId: number;
-}): Promise<ErrorLog> => {
-    const errorLog = await errorLogRepository.getErrorLogById({ id: errorLogId });
-    if (!errorLog) {
-        throw new NotFoundError(`ErrorLog with id <${errorLogId}> does not exist.`);
-    }
-    return errorLog;
 };
 
 export const updateErrorLog = async ({
@@ -96,8 +60,8 @@ export const updateErrorLog = async ({
         resolvedDate,
     } = errorLogInput;
 
-    const existingErrorLog = await getErrorLogById({ errorLogId: id });
-    const currentUser = await getCurrentUser({ auth });
+    const existingErrorLog = await errorLogService.getErrorLogById({ errorLogId: id });
+    const currentUser = await userService.getCurrentUser({ auth });
 
     const errorData = {
         type,

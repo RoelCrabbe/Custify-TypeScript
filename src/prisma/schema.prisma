@@ -8,6 +8,30 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model ErrorLog {
+    // ModelBase - Database managed metadata
+    id           Int       @id @default(autoincrement())
+    createdDate  DateTime? @default(now())
+    modifiedDate DateTime? @updatedAt
+    createdById  Int?
+    modifiedById Int?
+
+    // ErrorLog Model - Business fields
+    type         String @default("Application Error")
+    severity     String @default("Handled")
+    httpMethod   String @default("Post")
+    errorMessage String
+    stackTrace   String @default("No StackTrace Available")
+    requestPath  String
+
+    // Lifecycle - Management Fields
+    status       String    @default("New")
+    resolvedById Int?
+    resolvedDate DateTime?
+
+    @@map("ErrorLogs")
+}
+
 model User {
     // ModelBase - Database managed metadata
     id           Int       @id @default(autoincrement())
@@ -54,30 +78,6 @@ model ProfileImage {
     user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("ProfileImages")
-}
-
-model ErrorLog {
-    // ModelBase - Database managed metadata
-    id           Int       @id @default(autoincrement())
-    createdDate  DateTime? @default(now())
-    modifiedDate DateTime? @updatedAt
-    createdById  Int?
-    modifiedById Int?
-
-    // ErrorLog Model - Business fields
-    type         String @default("Application Error")
-    severity     String @default("Handled")
-    httpMethod   String @default("Post")
-    errorMessage String
-    stackTrace   String @default("No StackTrace Available")
-    requestPath  String
-
-    // Lifecycle - Management Fields
-    status       String    @default("New")
-    resolvedById Int?
-    resolvedDate DateTime?
-
-    @@map("ErrorLogs")
 }
 
 model Notification {
