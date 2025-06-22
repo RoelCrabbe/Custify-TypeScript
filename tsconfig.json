@@ -27,8 +27,8 @@
             "@user": ["features/user/index.ts"],
             "@notification/*": ["features/notification/*"],
             "@notification": ["features/notification/index.ts"],
-            "@userImage/*": ["features/userImage/*"],
-            "@userImage": ["features/userImage/index.ts"]
+            "@profileImage/*": ["features/profileImage/*"],
+            "@profileImage": ["features/profileImage/index.ts"]
         },
         "skipLibCheck": true,
         "strict": true,

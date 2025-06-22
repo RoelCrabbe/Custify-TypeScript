@@ -1,4 +1,3 @@
-export { UserImage } from '../userImage/userImage';
 export { default as userRouter } from './controller';
 export * from './enums';
 export * as userFaker from './faker';

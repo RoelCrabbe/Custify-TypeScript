@@ -1,16 +1,16 @@
 import { EntityBase } from '@base/entityBase';
 import { ValidationError } from '@errorLog/exceptions';
-import { PrismaUserImage } from '@prisma';
+import { PrismaProfileImage } from '@prisma/index';
 import { User } from '@user';
 
-export class UserImage extends EntityBase {
+export class ProfileImage extends EntityBase {
     public readonly url: string;
     public readonly altText: string;
     public readonly fileName: string;
     public readonly mimeType: string;
     public readonly fileSize: number;
 
-    constructor(userImage: {
+    constructor(profileImage: {
         url: string;
         altText: string;
         fileName: string;
@@ -22,38 +22,40 @@ export class UserImage extends EntityBase {
         modifiedById?: number;
         modifiedDate?: Date;
     }) {
-        super(userImage);
+        super(profileImage);
 
-        this.url = userImage.url;
-        this.altText = userImage.altText;
-        this.fileName = userImage.fileName;
-        this.mimeType = userImage.mimeType;
-        this.fileSize = userImage.fileSize;
+        this.url = profileImage.url;
+        this.altText = profileImage.altText;
+        this.fileName = profileImage.fileName;
+        this.mimeType = profileImage.mimeType;
+        this.fileSize = profileImage.fileSize;
 
-        this.validate(userImage);
+        this.validate(profileImage);
     }
 
-    protected validate(userImage: {
+    protected validate(profileImage: {
         url: string;
         altText: string;
         fileName: string;
         mimeType: string;
         fileSize: number;
     }): void {
-        if (!userImage.url?.trim()) {
-            throw new ValidationError('UserImage validation: Url is required');
+        if (!profileImage.url?.trim()) {
+            throw new ValidationError('ProfileImage validation: Url is required');
         }
-        if (!userImage.altText?.trim()) {
-            throw new ValidationError('UserImage validation: Alt Text is required');
+        if (!profileImage.altText?.trim()) {
+            throw new ValidationError('ProfileImage validation: Alt Text is required');
         }
-        if (!userImage.fileName?.trim()) {
-            throw new ValidationError('UserImage validation: File Name is required');
+        if (!profileImage.fileName?.trim()) {
+            throw new ValidationError('ProfileImage validation: File Name is required');
         }
-        if (!userImage.mimeType?.trim()) {
-            throw new ValidationError('UserImage validation: Mime Type is required');
+        if (!profileImage.mimeType?.trim()) {
+            throw new ValidationError('ProfileImage validation: Mime Type is required');
         }
-        if (!userImage.fileSize || userImage.fileSize <= 0) {
-            throw new ValidationError('UserImage validation: File Size must be greater than zero');
+        if (!profileImage.fileSize || profileImage.fileSize <= 0) {
+            throw new ValidationError(
+                'ProfileImage validation: File Size must be greater than zero',
+            );
         }
     }
 
@@ -77,13 +79,13 @@ export class UserImage extends EntityBase {
         return this.fileSize;
     }
 
-    equals(userImage: UserImage): boolean {
+    equals(profileImage: ProfileImage): boolean {
         return (
-            this.url === userImage.getUrl() &&
-            this.altText === userImage.getAltText() &&
-            this.fileName === userImage.getFileName() &&
-            this.mimeType === userImage.getMimeType() &&
-            this.fileSize === userImage.getFileSize()
+            this.url === profileImage.getUrl() &&
+            this.altText === profileImage.getAltText() &&
+            this.fileName === profileImage.getFileName() &&
+            this.mimeType === profileImage.getMimeType() &&
+            this.fileSize === profileImage.getFileSize()
         );
     }
 
@@ -113,8 +115,8 @@ export class UserImage extends EntityBase {
         createdDate,
         modifiedById,
         modifiedDate,
-    }: PrismaUserImage): UserImage {
-        return new UserImage({
+    }: PrismaProfileImage): ProfileImage {
+        return new ProfileImage({
             id,
             url,
             altText,
@@ -140,8 +142,8 @@ export class UserImage extends EntityBase {
             mimeType: string;
             fileSize: number;
         };
-    }): UserImage {
-        return new UserImage({
+    }): ProfileImage {
+        return new ProfileImage({
             ...createData,
             createdById: createUser?.getId(),
         });
@@ -160,9 +162,9 @@ export class UserImage extends EntityBase {
             mimeType: string;
             fileSize: number;
         };
-        updateEntity: UserImage;
-    }): UserImage {
-        return new UserImage({
+        updateEntity: ProfileImage;
+    }): ProfileImage {
+        return new ProfileImage({
             id: updateEntity.getId(),
             url: updateData.url ?? updateEntity.getUrl(),
             altText: updateData.altText ?? updateEntity.getAltText(),

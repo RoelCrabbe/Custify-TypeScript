@@ -1,13 +1,14 @@
 import { UserBase } from '@base/userBase';
 import { ValidationError } from '@errorLog/exceptions';
-import { PrismaUser, PrismaUserImage } from '@prisma';
-import { UserImage, UserRole, UserStatus, isValidUserRole, isValidUserStatus } from '@user';
+import { PrismaProfileImage, PrismaUser } from '@prisma';
+import { ProfileImage } from '@profileImage/index';
+import { UserRole, UserStatus, isValidUserRole, isValidUserStatus } from '@user';
 
 export class User extends UserBase {
-    public readonly profileImage?: UserImage;
+    public readonly profileImage?: ProfileImage;
 
     constructor(user: {
-        profileImage?: UserImage;
+        profileImage?: ProfileImage;
         userName: string;
         firstName: string;
         lastName: string;
@@ -60,7 +61,7 @@ export class User extends UserBase {
         }
     }
 
-    getProfileImage(): UserImage | undefined {
+    getProfileImage(): ProfileImage | undefined {
         return this.profileImage;
     }
 
@@ -109,7 +110,7 @@ export class User extends UserBase {
         createdDate,
         modifiedById,
         modifiedDate,
-    }: PrismaUser & { profileImage?: PrismaUserImage | null }): User {
+    }: PrismaUser & { profileImage?: PrismaProfileImage | null }): User {
         return new User({
             id,
             userName,
@@ -120,7 +121,7 @@ export class User extends UserBase {
             role: role as UserRole,
             status: status as UserStatus,
             phoneNumber: phoneNumber || undefined,
-            profileImage: profileImage ? UserImage.from(profileImage) : undefined,
+            profileImage: profileImage ? ProfileImage.from(profileImage) : undefined,
             createdById: createdById || undefined,
             createdDate: createdDate || undefined,
             modifiedById: modifiedById || undefined,

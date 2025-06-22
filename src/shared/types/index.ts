@@ -25,10 +25,10 @@ export type UserInput = {
     role: UserRole;
     status: UserStatus;
     phoneNumber?: string;
-    userImage?: UserImageInput;
+    profileImage?: ProfileImageInput;
 };
 
-export type UserImageInput = {
+export type ProfileImageInput = {
     id?: number;
     url: string;
     altText: string;

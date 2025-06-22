@@ -1,9 +1,8 @@
 import database from '@config/prismaClient';
+import { ProfileImage, profileImageRepository } from '@profileImage/index';
 import { UserRole, UserStatus } from '@user/enums';
 import { userRepository } from '@user/index';
 import { User } from '@user/user';
-import { userImageRepository } from '@userImage/index';
-import { UserImage } from '@userImage/userImage';
 import bcrypt from 'bcryptjs';
 import casual from 'casual';
 
@@ -97,7 +96,7 @@ export const createFakeUsers = async () => {
             const userId = user.getId();
             if (!userId) return;
 
-            const userImage = UserImage.create({
+            const profileImage = ProfileImage.create({
                 createUser: user,
                 createData: {
                     url: `https://api.dicebear.com/7.x/bottts/svg?seed=${user.getUserName()}&size=200`,
@@ -108,7 +107,7 @@ export const createFakeUsers = async () => {
                 },
             });
 
-            await userImageRepository.upsertUserImage({ userId, userImage });
+            await profileImageRepository.upsertProfileImage({ userId, profileImage });
         }),
     );
 

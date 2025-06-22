@@ -1,7 +1,7 @@
 import { AuthenticationError, NotFoundError, ValidationError } from '@errorLog/exceptions';
+import { profileImageService } from '@profileImage/index';
 import { JwtToken, UpdatePassWordInput, UserInput } from '@types';
 import { User, userRepository } from '@user';
-import { userImageService } from '@userImage/index';
 import bcrypt from 'bcryptjs';
 
 export const getAllUsers = async (): Promise<User[]> => {
@@ -82,7 +82,7 @@ export const updateUser = async ({
 }): Promise<User> => {
     if (!userInput.id) throw new ValidationError('User id is required');
 
-    const { id, firstName, lastName, email, phoneNumber, userName, role, status, userImage } =
+    const { id, firstName, lastName, email, phoneNumber, userName, role, status, profileImage } =
         userInput;
 
     const existingUser = await getUserById({ userId: id });
@@ -111,10 +111,10 @@ export const updateUser = async ({
         updateEntity: existingUser,
     });
 
-    if (userImage) {
-        await userImageService.createOrUpdateUserImage({
+    if (profileImage) {
+        await profileImageService.createOrUpdateProfileImage({
             actionUser: currentUser,
-            userImageInput: userImage,
+            profileImageInput: profileImage,
             user: updatedUser,
         });
     }

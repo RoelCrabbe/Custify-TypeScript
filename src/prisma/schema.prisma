@@ -27,14 +27,14 @@ model User {
     phoneNumber String?
 
     // Relationships
-    profileImage          UserImage?
+    profileImage          ProfileImage?
     sentNotifications     Notification[] @relation("SentNotifications")
     receivedNotifications Notification[] @relation("ReceivedNotifications")
 
     @@map("Users")
 }
 
-model UserImage {
+model ProfileImage {
     // ModelBase - Database managed metadata
     id           Int       @id @default(autoincrement())
     createdDate  DateTime? @default(now())
@@ -42,7 +42,7 @@ model UserImage {
     createdById  Int?
     modifiedById Int?
 
-    // UserImage Model - Business fields
+    // ProfileImage Model - Business fields
     url      String
     altText  String
     fileName String
@@ -53,7 +53,7 @@ model UserImage {
     userId Int  @unique
     user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@map("UserImages")
+    @@map("ProfileImages")
 }
 
 model ErrorLog {
